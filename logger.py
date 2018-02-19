@@ -16,8 +16,12 @@ adc = Adafruit_ADS1x15.ADS1115()
 # See table 3 in the ADS1015/ADS1115 datasheet for more info on gain.
 GAIN = 1
 
-
 print("Beginning Test...");
 while(2==2):
-    print(adc.read_adc(0, gain=GAIN));
-    time.sleep(0.5);
+    value = adc.read_adc(3, gain=GAIN);
+    print("Value:", value);
+    voltage = (value * (0.125));
+    print("Voltage:", voltage);
+    temp = (voltage-500)/10;
+    print("Temperature:", temp);
+    time.sleep(2);
