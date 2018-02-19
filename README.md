@@ -2,6 +2,6 @@
 Data Logging
 More to come
 
-See documents on system for more
+See technical documentation for more.
 
-
+Requires install of Adafruit libraries. These are included here for reference.
