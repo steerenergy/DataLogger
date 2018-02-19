@@ -18,6 +18,6 @@ GAIN = 1
 
 
 print("Beginning Test...");
-while(2==2)
-    print(adc.read_adc(0, gain=GAIN);
+while(2==2):
+    print(adc.read_adc(0, gain=GAIN));
     time.sleep(0.5);
