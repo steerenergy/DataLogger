@@ -1,1 +1,1 @@
-temp
+print("Hello World");
