@@ -1,10 +1,10 @@
-#Import Time for Delay functions .etc
+#Import Time for Delay functions etc
 import time
 # Import the ADS1x15 module.
 import Adafruit_ADS1x15
 
 # Create an ADS1115 ADC (16-bit) instance.
-adc = Adafruit_ADS1x15.ADS1015(address=0x48, busnum=1)
+adc = Adafruit_ADS1x15.ADS1115(address=0x48, busnum=1)
 
 # Choose a gain of 1 for reading voltages from 0 to 4.09V.
 # Or pick a different gain to change the range of voltages that are read:
