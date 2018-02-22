@@ -20,14 +20,19 @@ GAIN = 1
 #Max Raw Data Value (15 bit)/Max voltage. Finds how many mV 1 bit represents. Note if gain is adjusted this will also need to be changed.
 voltageConvert = 4096.0/32767.0;
 
+#Chooses which A/D convertor is selected by default
+currentAdc = adc0
+currentAdcText = "1st A/D Convertor";
 time.sleep(2);
 ("Beginning Test...");
 while(True):
-    print("Start: \n");
+    print("Reading Begin | Currently Selected:",currentAdcText);
+    print("-" *37,"\n");
+    time.sleep(0.5);
     for currentPin in range(4):
         print("Current Pin: Pin A" + str(currentPin));
         #Prints raw data from the A/D convertion , straight from the I2C Bus
-        raw = adc0.read_adc(currentPin, gain=GAIN, data_rate=860);
+        raw = currentAdc.read_adc(currentPin, gain=GAIN, data_rate=860);
         print("Raw Data:", raw);
         #Converted to voltage using above conversion variable (voltageConvert)
         voltage = (raw * voltageConvert);
@@ -36,23 +41,12 @@ while(True):
         temp = (voltage-500)/10;
         print("Temperature:", round(temp,2), "°C\n");
         #split data to make easier to read and pause 2 seconds
-        print("-" *37);
-        time.sleep(2);
-
-
-
-    
-    '''print("2nd A/D Convertor:");
-    #Prints raw data from the A/D convertion straight orm the I2C Bus
-    raw = adc1.read_adc(3, gain=GAIN);
-    print("Raw Data:", raw);
-    #Converted to voltage using above conversion variable (voltageConvert)
-    voltage = round((raw * voltageConvert),2);
-    print("Voltage:", round(voltage,2), "mV");
-    #Convert and print to temperature and line break
-    temp = (voltage-500)/10;
-    print("Temperature:", round(temp,2), "°C\n");
-    #split data to make easier to read and pause 2 seconds
-    print("-" *37);
-    time.sleep(2);'''
+        time.sleep(1);
+    #Select next A/D Convertor
+    if currentAdc == adc0:
+        currentAdc = adc1;
+        currentAdcText = "2nd A/D Convertor";
+    else:
+        currentAdc = adc0;
+        currentAdcText = "1st A/D Convertor";
 
