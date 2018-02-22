@@ -1,9 +1,10 @@
+#Import Time for Delay functions .etc
 import time
 # Import the ADS1x15 module.
 import Adafruit_ADS1x15
 
 # Create an ADS1115 ADC (16-bit) instance.
-adc = Adafruit_ADS1x15.ADS1115()
+adc = Adafruit_ADS1x15.ADS1015(address=0x48, busnum=1)
 
 # Choose a gain of 1 for reading voltages from 0 to 4.09V.
 # Or pick a different gain to change the range of voltages that are read:
@@ -17,11 +18,13 @@ adc = Adafruit_ADS1x15.ADS1115()
 GAIN = 1
 
 print("Beginning Test...");
-while(2==2):
+while(True):
+    print("1st A/D Convertor");
     value = adc.read_adc(3, gain=GAIN);
     print("Value:", value);
     voltage = (value * (0.125));
     print("Voltage:", voltage);
     temp = (voltage-500)/10;
-    print("Temperature:", temp);
+    print("Temperature:", temp, "\n");
     time.sleep(2);
+
