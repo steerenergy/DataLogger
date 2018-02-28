@@ -52,7 +52,7 @@ with open('data.csv', 'w', newline='') as csvfile:
             tempCSV[currentPin] = temp;
             time.sleep(0.01);
         #Export Data to Spreadsheet and reset
-        writer.writerow(tempCSV);
+        writer.writerow(tempCSV + [currentAdcText]);
         print("CSV Values to Write:", tempCSV, "\n");
         tempCSV = [0,0,0,0];
         
