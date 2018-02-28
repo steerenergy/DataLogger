@@ -29,8 +29,8 @@ tempCSV = [0,0,0,0];
 currentAdc = adc0;
 currentAdcText = "1st A/D Convertor";
 time.sleep(2);
-with open('data.csv', 'w', newline='') as csvfile:
-    writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL);
+with open('temperature.csv', 'w', newline='') as csvfile:
+    writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL);
     ("Beginning Test...");
     writer.writerow(["A0","A1","A2","A3"]);
     while(True):
