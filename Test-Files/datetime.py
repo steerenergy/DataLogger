@@ -1,3 +1,3 @@
 import datetime
-x = datetime.datetime.now()
-print(x)
+t = datetime.time(1, 2, 3)
+print(t)
