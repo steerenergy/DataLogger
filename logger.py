@@ -51,11 +51,11 @@ with open('temperature.csv', 'w', newline='') as csvfile:
             #split data to make easier to read and pause 2 seconds
             tempCSV[currentPin] = temp;
             time.sleep(0.01);
-        #Export Data to Spreadsheet and reset
+        #Export Data to Spreadsheet and Reset list values
         writer.writerow(tempCSV + [currentAdcText]);
         print("CSV Values to Write:", tempCSV, "\n");
         tempCSV = [0,0,0,0];
-        
+
         #Select next A/D Convertor
         if currentAdc == adc0:
             currentAdc = adc1;
