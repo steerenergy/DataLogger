@@ -7,9 +7,12 @@ import Adafruit_ADS1x15;
 #Import CSV Logging Module
 import csv;
 
-# Create an ADS1115 ADC (16-bit) instance.
+# Create 4 instaces of  ADS1115 ADC (16-bit) according to Adafruit Libaries
 adc0 = Adafruit_ADS1x15.ADS1115(address=0x48, busnum=1);
 adc1 = Adafruit_ADS1x15.ADS1115(address=0x49, busnum=1);
+adc2 = Adafruit_ADS1x15.ADS1115(address=0x4a, busnum=1);
+adc3 = Adafruit_ADS1x15.ADS1115(address=0x4b, busnum=1);
+adcUnits = [adc0,adc1,adc2,adc3]
 
 # Choose a gain of 1 for reading voltages from 0 to 4.09V.
 # Or pick a different gain to change the range of voltages that are read:
@@ -28,7 +31,9 @@ voltageConvert = 4096.0/32767.0;
 tempCSV = [0,0,0,0];
 
 #Chooses which A/D convertor is selected by default
-currentAdc = adc0;
+#currentAdc = adc0;
+n = 0
+currentAdc = adcUnits[n]
 currentAdcText = "1st A/D Convertor";
 #time.sleep(0.01);
 with open('temperature.csv', 'w', newline='') as csvfile:
@@ -38,7 +43,7 @@ with open('temperature.csv', 'w', newline='') as csvfile:
     while(True):
         print("Reading Begin | Currently Selected:",currentAdcText);
         print("-" *53,"\n");
-        #time.sleep(0.01);
+        time.sleep(0.1);
         for currentPin in range(4):
             print("Current Pin: Pin A" + str(currentPin));
             #Prints raw data from the A/D convertion , straight from the I2C Bus
@@ -52,7 +57,7 @@ with open('temperature.csv', 'w', newline='') as csvfile:
             print("Temperature:", round(temp,2), "°C\n");
             #split data to make easier to read and pause 2 seconds
             tempCSV[currentPin] = temp;
-            #time.sleep(0.01);
+            time.sleep(0.01;
         #Get time and send to log Log
         currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S");
         #Export Data to Spreadsheet and Reset list values
@@ -60,9 +65,18 @@ with open('temperature.csv', 'w', newline='') as csvfile:
         tempCSV = [0,0,0,0];
 
         #Select next A/D Convertor
-        if currentAdc == adc0:
+        if n == 3:
+            n = 0;
+        n = n + 1;
+        '''if currentAdc == adc0:
             currentAdc = adc1;
             currentAdcText = "2nd A/D Convertor";
+        elif currentAdc == adc1:
+             currentAdc == adc2;
+             currentAdcText = "3rd A/D Convertor";
+        elif currentAdc == adc2:
+             currentAdc == adc3
+             currentAdcText = "4th A/D Convertor";
         else:
             currentAdc = adc0;
-            currentAdcText = "1st A/D Convertor";
+            currentAdcText = "1st A/D Convertor";'''
