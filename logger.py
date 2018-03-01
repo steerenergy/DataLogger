@@ -7,7 +7,7 @@ import Adafruit_ADS1x15;
 #Import CSV Logging Module
 import csv;
 
-# Create 4 instaces of  ADS1115 ADC (16-bit) according to Adafruit Libaries
+# Create 4 instaces of  ADS1115 ADC (16-bit) according to Adafruit Libaries. These are placed into a table
 adc0 = Adafruit_ADS1x15.ADS1115(address=0x48, busnum=1);
 adc1 = Adafruit_ADS1x15.ADS1115(address=0x49, busnum=1);
 adc2 = Adafruit_ADS1x15.ADS1115(address=0x4a, busnum=1);
@@ -31,28 +31,21 @@ voltageConvert = 4096.0/32767.0;
 tempCSV = [0,0,0,0];
 
 #Chooses which A/D convertor is selected by default
-#currentAdc = adc0;
-#n = unit number
+#n = ADC unit number - 0 is first unit 3 is 4th unit etc.
 n = 0
 
-time.sleep(1);
-currentAdcText = "1st A/D Convertor";
 time.sleep(1);
 with open('temperature.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL);
     print("Beginning Test...");
-    writer.writerow(["Date/Time","A0","A1","A2","A3"]);
+    writer.writerow(["Date/Time","A/D Unit","A0","A1","A2","A3"]);
     while(True):
-        print(adcUnit[n]);
-        #print("Reading Begin | Currently Selected:",currentAdcText);
         #Print current A/D selected - from 0 to 3
         print("Reading Begin | Current A/D Selected:",n)
         print("-" *53,"\n");
-        #time.sleep(1);
         for currentPin in range(4):
             print("Current Pin: Pin A" + str(currentPin));
             #Prints raw data from the A/D convertion , straight from the I2C Bus
-            #raw = currentAdc.read_adc(currentPin, gain=GAIN, data_rate=860);
             raw = adcUnit[n].read_adc(currentPin, gain=GAIN, data_rate=860);
             print("Raw Data:", raw);
             #Converted to voltage using above conversion variable (voltageConvert)
@@ -63,28 +56,14 @@ with open('temperature.csv', 'w', newline='') as csvfile:
             print("Temperature:", round(temp,2), "°C\n");
             #split data to make easier to read and pause 2 seconds
             tempCSV[currentPin] = temp;
-            #time.sleep(1);
         #Get time and send to log Log
         currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S");
         #Export Data to Spreadsheet and Reset list values
-        #writer.writerow([currentDateTime] + tempCSV + [currentAdcText]);
-        writer.writerow([currentDateTime] + tempCSV + [n]);
+        writer.writerow([currentDateTime] + [n] + tempCSV);
         tempCSV = [0,0,0,0];
 
-        #Select next A/D Convertor
+        #Select next A/D convertor
         if n == 3:
             n = 0;
         else:
             n = n + 1;
-        '''if currentAdc == adc0:
-            currentAdc = adc1;
-            currentAdcText = "2nd A/D Convertor";
-        elif currentAdc == adc1:
-             currentAdc == adc2;
-             currentAdcText = "3rd A/D Convertor";
-        elif currentAdc == adc2:
-             currentAdc == adc3
-             currentAdcText = "4th A/D Convertor";
-        else:
-            currentAdc = adc0;
-            currentAdcText = "1st A/D Convertor";'''
