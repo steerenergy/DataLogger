@@ -36,20 +36,20 @@ with open('temperature.csv', 'w', newline='') as csvfile:
     print("Beginning Test...");
     writer.writerow(["Date/Time","A0","A1","A2","A3"]);
     while(True):
-        #print("Reading Begin | Currently Selected:",currentAdcText);
-        #print("-" *53,"\n");
+        print("Reading Begin | Currently Selected:",currentAdcText);
+        print("-" *53,"\n");
         #time.sleep(0.01);
         for currentPin in range(4):
-            #print("Current Pin: Pin A" + str(currentPin));
+            print("Current Pin: Pin A" + str(currentPin));
             #Prints raw data from the A/D convertion , straight from the I2C Bus
             raw = currentAdc.read_adc(currentPin, gain=GAIN, data_rate=860);
-            #print("Raw Data:", raw);
+            print("Raw Data:", raw);
             #Converted to voltage using above conversion variable (voltageConvert)
             voltage = (raw * voltageConvert);
-            #print("Voltage:", round(voltage,2), "mV");
+            print("Voltage:", round(voltage,2), "mV");
             #Convert and print to temperature and line break
             temp = (voltage-500)/10;
-            #print("Temperature:", round(temp,2), "°C\n");
+            print("Temperature:", round(temp,2), "°C\n");
             #split data to make easier to read and pause 2 seconds
             tempCSV[currentPin] = temp;
             #time.sleep(0.01);
