@@ -41,7 +41,8 @@ with open('temperature.csv', 'w', newline='') as csvfile:
     print("Beginning Test...");
     writer.writerow(["Date/Time","A0","A1","A2","A3"]);
     while(True):
-        print("Reading Begin | Currently Selected:",currentAdcText);
+        #print("Reading Begin | Currently Selected:",currentAdcText);
+        print("Reading Begin | Current A/D Selected:",n+1)
         print("-" *53,"\n");
         time.sleep(0.1);
         for currentPin in range(4):
@@ -57,7 +58,7 @@ with open('temperature.csv', 'w', newline='') as csvfile:
             print("Temperature:", round(temp,2), "°C\n");
             #split data to make easier to read and pause 2 seconds
             tempCSV[currentPin] = temp;
-            time.sleep(0.01;
+            time.sleep(0.01);
         #Get time and send to log Log
         currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S");
         #Export Data to Spreadsheet and Reset list values
@@ -67,7 +68,8 @@ with open('temperature.csv', 'w', newline='') as csvfile:
         #Select next A/D Convertor
         if n == 3:
             n = 0;
-        n = n + 1;
+        else:
+            n = n + 1;
         '''if currentAdc == adc0:
             currentAdc = adc1;
             currentAdcText = "2nd A/D Convertor";
