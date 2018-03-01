@@ -1,5 +1,7 @@
 #Import Time for Delay functions etc
 import time;
+#Import datetime for Logging
+from datetime import datetime
 # Import the ADS1x15 module.
 import Adafruit_ADS1x15;
 #Import CSV Logging Module
@@ -36,7 +38,7 @@ with open('temperature.csv', 'w', newline='') as csvfile:
     while(True):
         print("Reading Begin | Currently Selected:",currentAdcText);
         print("-" *37,"\n");
-        time.sleep(0.1);
+        time.sleep(2);
         for currentPin in range(4):
             print("Current Pin: Pin A" + str(currentPin));
             #Prints raw data from the A/D convertion , straight from the I2C Bus
@@ -50,9 +52,12 @@ with open('temperature.csv', 'w', newline='') as csvfile:
             print("Temperature:", round(temp,2), "°C\n");
             #split data to make easier to read and pause 2 seconds
             tempCSV[currentPin] = temp;
-            time.sleep(0.01);
+            time.sleep(0.1);
+        #Get time and send to log Log
+        currentDateTime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S");
+        print(currentDateTime);
         #Export Data to Spreadsheet and Reset list values
-        writer.writerow(tempCSV + [currentAdcText]);
+        writer.writerow([currentDateTime] + tempCSV + [currentAdcText]);
         print("CSV Values to Write:", tempCSV, "\n");
         tempCSV = [0,0,0,0];
 

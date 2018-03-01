@@ -1,4 +1,7 @@
 # Adafruit Python ADS1x15
+NOTE! These files are here for reference only. The import command does not link to these libaries. You can however install them from here.
+
+
 Python code to use the ADS1015 and ADS1115 analog to digital converters with a Raspberry Pi or BeagleBone black.
 
 ## Installation
