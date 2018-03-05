@@ -28,17 +28,17 @@ GAIN = 1;
 voltageConvert = 4096.0/32767.0;
 
 #set up list to be printed
-tempCSV = [0,0,0,0];
+adcValues = [0,0,0,0];
 
 #Chooses which A/D convertor is selected by default
 #n = ADC unit number - 0 is first unit 3 is 4th unit etc.
 n = 0
 
 time.sleep(1);
-with open('temperature.csv', 'w', newline='') as csvfile:
+with open('voltage.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL);
     print("Beginning Test...");
-    writer.writerow(["Date/Time","A/D Unit","A0","A1","A2","A3"]);
+    writer.writerow(["Date/Time","A/D Unit","A0 (mV)","A1 (mV)","A2 (mV)","A3 (mV)"]);
     while(True):
         #Print current A/D selected - from 0 to 3
         print("Reading Begin | Current A/D Selected:",n)
@@ -50,17 +50,14 @@ with open('temperature.csv', 'w', newline='') as csvfile:
             print("Raw Data:", raw);
             #Converted to voltage using above conversion variable (voltageConvert)
             voltage = (raw * voltageConvert);
-            print("Voltage:", round(voltage,2), "mV");
-            #Convert and print to temperature and line break
-            temp = (voltage-500)/10;
-            print("Temperature:", round(temp,2), "°C\n");
-            #split data to make easier to read and pause 2 seconds
-            tempCSV[currentPin] = temp;
+            print("Voltage:", round(voltage,2), "mV \n");
+            #split data to make easier to read
+            adcValues[currentPin] = voltage;
         #Get time and send to log Log
         currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S");
-        #Export Data to Spreadsheet and Reset list values
-        writer.writerow([currentDateTime] + [n] + tempCSV);
-        tempCSV = [0,0,0,0];
+        #Export Data to Spreadsheet and Reset list values (so we can see if code fails)
+        writer.writerow([currentDateTime] + [n] + adcValues);
+        adcValues = [0,0,0,0];
 
         #Select next A/D convertor
         if n == 3:
