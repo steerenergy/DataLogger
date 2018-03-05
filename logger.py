@@ -51,7 +51,7 @@ with open('voltage.csv', 'w', newline='') as csvfile:
             #Converted to voltage using above conversion variable (voltageConvert)
             voltage = (raw * voltageConvert);
             print("Voltage:", round(voltage,2), "mV \n");
-            #split data to make easier to read
+            #set voltage to value in table
             adcValues[currentPin] = voltage;
         #Get time and send to log Log
         currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S");
