@@ -7,9 +7,12 @@ import Adafruit_ADS1x15;
 #Import CSV Logging Module
 import csv;
 
-# Create an ADS1115 ADC (16-bit) instance.
+# Create 4 instaces of  ADS1115 ADC (16-bit) according to Adafruit Libaries. These are placed into a table
 adc0 = Adafruit_ADS1x15.ADS1115(address=0x48, busnum=1);
 adc1 = Adafruit_ADS1x15.ADS1115(address=0x49, busnum=1);
+adc2 = Adafruit_ADS1x15.ADS1115(address=0x4a, busnum=1);
+adc3 = Adafruit_ADS1x15.ADS1115(address=0x4b, busnum=1);
+adcUnit = [adc0,adc1,adc2,adc3]
 
 # Choose a gain of 1 for reading voltages from 0 to 4.09V.
 # Or pick a different gain to change the range of voltages that are read:
@@ -25,44 +28,39 @@ GAIN = 1;
 voltageConvert = 4096.0/32767.0;
 
 #set up list to be printed
-tempCSV = [0,0,0,0];
+adcValues = [0,0,0,0];
 
 #Chooses which A/D convertor is selected by default
-currentAdc = adc0;
-currentAdcText = "1st A/D Convertor";
-#time.sleep(0.01);
-with open('temperature.csv', 'w', newline='') as csvfile:
+#n = ADC unit number - 0 is first unit 3 is 4th unit etc.
+n = 0
+
+time.sleep(1);
+with open('voltage.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL);
     print("Beginning Test...");
-    writer.writerow(["Date/Time","A0","A1","A2","A3"]);
+    writer.writerow(["Date/Time","A/D Unit","A0 (mV)","A1 (mV)","A2 (mV)","A3 (mV)"]);
     while(True):
-        print("Reading Begin | Currently Selected:",currentAdcText);
+        #Print current A/D selected - from 0 to 3
+        print("Reading Begin | Current A/D Selected:",n)
         print("-" *53,"\n");
-        #time.sleep(0.01);
         for currentPin in range(4):
             print("Current Pin: Pin A" + str(currentPin));
             #Prints raw data from the A/D convertion , straight from the I2C Bus
-            raw = currentAdc.read_adc(currentPin, gain=GAIN, data_rate=860);
+            raw = adcUnit[n].read_adc(currentPin, gain=GAIN, data_rate=860);
             print("Raw Data:", raw);
             #Converted to voltage using above conversion variable (voltageConvert)
             voltage = (raw * voltageConvert);
-            print("Voltage:", round(voltage,2), "mV");
-            #Convert and print to temperature and line break
-            temp = (voltage-500)/10;
-            print("Temperature:", round(temp,2), "°C\n");
-            #split data to make easier to read and pause 2 seconds
-            tempCSV[currentPin] = temp;
-            #time.sleep(0.01);
+            print("Voltage:", round(voltage,2), "mV \n");
+            #set voltage to value in table
+            adcValues[currentPin] = voltage;
         #Get time and send to log Log
         currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S");
-        #Export Data to Spreadsheet and Reset list values
-        writer.writerow([currentDateTime] + tempCSV + [currentAdcText]);
-        tempCSV = [0,0,0,0];
+        #Export Data to Spreadsheet and Reset list values (so we can see if code fails)
+        writer.writerow([currentDateTime] + [n] + adcValues);
+        adcValues = [0,0,0,0];
 
-        #Select next A/D Convertor
-        if currentAdc == adc0:
-            currentAdc = adc1;
-            currentAdcText = "2nd A/D Convertor";
+        #Select next A/D convertor
+        if n == 3:
+            n = 0;
         else:
-            currentAdc = adc0;
-            currentAdcText = "1st A/D Convertor";
+            n = n + 1;
