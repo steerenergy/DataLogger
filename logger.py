@@ -53,6 +53,8 @@ with open('voltage.csv', 'w', newline='') as csvfile:
             print("Voltage:", round(voltage,2), "mV \n");
             #set voltage to value in table
             adcValues[currentPin] = voltage;
+            #Temproary sleep to stop values being written over top of each other
+            time.sleep(0.5)
         #Get time and send to log Log
         currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S");
         #Export Data to Spreadsheet and Reset list values (so we can see if code fails)

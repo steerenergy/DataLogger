@@ -8,7 +8,7 @@ import Adafruit_ADS1x15
 
 
 # Create an ADS1115 ADC (16-bit) instance.
-adc = Adafruit_ADS1x15.ADS1115()
+adc = Adafruit_ADS1x15.ADS1115(address=0x48)
 
 # Or create an ADS1015 ADC (12-bit) instance.
 #adc = Adafruit_ADS1x15.ADS1015()
@@ -50,7 +50,7 @@ while (time.time() - start) <= 5.0:
     # continuous conversion!
     print('Channel 0: {0}'.format(value))
     # Sleep for half a second.
-    time.sleep(0.5)
+    #time.sleep(0.5)
 
 # Stop continuous conversion.  After this point you can't get data from get_last_result!
 adc.stop_adc()
