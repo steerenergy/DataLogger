@@ -26,13 +26,13 @@ adcUnit = [adc0,adc1,adc2,adc3]
 GAIN = 1;
 #Max Raw Data Value (15 bit)/Max voltage. Finds how many mV 1 bit represents. Note if gain is adjusted this will also need to be changed.
 voltageConvert = 4096.0/32767.0;
-
 #set up list to be printed
 adcValues = [0,0,0,0];
-
 #Chooses which A/D convertor is selected by default
 #n = ADC unit number - 0 is first unit 3 is 4th unit etc.
 n = 0
+#Choose data rate (must be certain value see datasheet/documentaion for more)
+dataRate=860
 
 time.sleep(1);
 with open('voltage.csv', 'w', newline='') as csvfile:
@@ -46,13 +46,15 @@ with open('voltage.csv', 'w', newline='') as csvfile:
         for currentPin in range(4):
             print("Current Pin: Pin A" + str(currentPin));
             #Prints raw data from the A/D convertion , straight from the I2C Bus
-            raw = adcUnit[n].read_adc(currentPin, gain=GAIN, data_rate=860);
+            raw = adcUnit[n].read_adc(currentPin, gain=GAIN, data_rate=dataRate);
             print("Raw Data:", raw);
             #Converted to voltage using above conversion variable (voltageConvert)
             voltage = (raw * voltageConvert);
             print("Voltage:", round(voltage,2), "mV \n");
             #set voltage to value in table
             adcValues[currentPin] = voltage;
+            #Temproary sleep to stop values being written over top of each other
+            time.sleep(0.5)
         #Get time and send to log Log
         currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S");
         #Export Data to Spreadsheet and Reset list values (so we can see if code fails)
