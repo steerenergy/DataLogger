@@ -34,12 +34,21 @@ n = 0
 #Choose data rate (must be certain value see datasheet/documentaion for more)
 dataRate=860
 
+#Ask user for frequency of logging
+timeDelay = float(input("How many seconds between each log??\n"))
+
 time.sleep(1);
+
 with open('voltage.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL);
     print("Beginning Test...");
     writer.writerow(["Date/Time","A/D Unit","A0 (mV)","A1 (mV)","A2 (mV)","A3 (mV)"]);
+
+    #Set startime
+    starttime=time.time()
+
     while(True):
+
         #Print current A/D selected - from 0 to 3
         #print("Reading Begin | Current A/D Selected:",n)
         #print("-" *53,"\n");
@@ -62,3 +71,6 @@ with open('voltage.csv', 'w', newline='') as csvfile:
             n = 0;
         else:
             n = n + 1;
+
+         #Work out time delay needed until next set of values taken based on user given value (using some clever maths)
+         time.sleep(timeDelay - ((time.time() - starttime) % timeDelay))
