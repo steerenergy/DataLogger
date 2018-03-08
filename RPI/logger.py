@@ -41,20 +41,18 @@ with open('voltage.csv', 'w', newline='') as csvfile:
     writer.writerow(["Date/Time","A/D Unit","A0 (mV)","A1 (mV)","A2 (mV)","A3 (mV)"]);
     while(True):
         #Print current A/D selected - from 0 to 3
-        print("Reading Begin | Current A/D Selected:",n)
-        print("-" *53,"\n");
+        #print("Reading Begin | Current A/D Selected:",n)
+        #print("-" *53,"\n");
         for currentPin in range(4):
-            print("Current Pin: Pin A" + str(currentPin));
-            #Prints raw data from the A/D convertion , straight from the I2C Bus
+            #Get Raw data from A/D, convert to voltage and add to adcValues list corresponding to the current pin
             raw = adcUnit[n].read_adc(currentPin, gain=GAIN, data_rate=dataRate);
-            print("Raw Data:", raw);
-            #Converted to voltage using above conversion variable (voltageConvert)
-            voltage = (raw * voltageConvert);
-            print("Voltage:", round(voltage,2), "mV \n");
-            #set voltage to value in table
-            adcValues[currentPin] = voltage;
-            #Temproary sleep to stop values being written over top of each other
-            time.sleep(0.5)
+            adcValues[currentPin] = (raw * voltageConvert);
+
+            #Optional Debugging Print Statements - Uncomment to Use
+            #print("Current Pin: Pin A" + str(currentPin));
+            #print("Raw Data:", raw);
+            #print("Voltage:", round(adcValues[currentPin],2), "mV \n");
+
         #Get time and send to log Log
         currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S");
         #Export Data to Spreadsheet and Reset list values (so we can see if code fails)
