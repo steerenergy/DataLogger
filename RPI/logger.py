@@ -72,5 +72,5 @@ with open('voltage.csv', 'w', newline='') as csvfile:
         else:
             n = n + 1;
 
-         #Work out time delay needed until next set of values taken based on user given value (using some clever maths)
-         time.sleep(timeDelay - ((time.time() - starttime) % timeDelay))
+        #Work out time delay needed until next set of values taken based on user given value (using some clever maths)
+        time.sleep(timeDelay - ((time.time() - starttime) % timeDelay))
