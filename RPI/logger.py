@@ -47,12 +47,10 @@ with open('voltage.csv', 'w', newline='') as csvfile:
             #Get Raw data from A/D, convert to voltage and add to adcValues list corresponding to the current pin
             raw = adcUnit[n].read_adc(currentPin, gain=GAIN, data_rate=dataRate);
             adcValues[currentPin] = (raw * voltageConvert);
-
             #Optional Debugging Print Statements - Uncomment to Use
             #print("Current Pin: Pin A" + str(currentPin));
             #print("Raw Data:", raw);
             #print("Voltage:", round(adcValues[currentPin],2), "mV \n");
-
         #Get time and send to log Log
         currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S");
         #Export Data to Spreadsheet and Reset list values (so we can see if code fails)
