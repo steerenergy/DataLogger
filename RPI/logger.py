@@ -6,6 +6,7 @@ from datetime import datetime
 import Adafruit_ADS1x15
 #Import CSV Logging Module
 import csv
+import random
 
 # Create 4 instaces of  ADS1115 ADC (16-bit) according to Adafruit Libaries. These are placed into a table
 adc0 = Adafruit_ADS1x15.ADS1115(address=0x48, busnum=1)
@@ -51,11 +52,13 @@ try:
         startTime=time.perf_counter()
 
         while(True):
-
+            #Get time and send to Log
+            currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S %f");
             #Print current A/D selected - from 0 to 3
             #print("Reading Begin | Current A/D Selected:",n)
             #print("-" *53,"\n");
             for currentPin in range(4):
+                time.sleep(random.uniform(0.1, 1.4))
                 #Get Raw data from A/D, convert to voltage and add to adcValues list corresponding to the current pin
                 raw = adcUnit[n].read_adc(currentPin, gain=GAIN, data_rate=dataRate)
                 adcValues[currentPin] = (raw * voltageConvert)
@@ -63,8 +66,6 @@ try:
                 #print("Current Pin: Pin A" + str(currentPin))
                 #print("Raw Data:", raw);
                 #print("Voltage:", round(adcValues[currentPin],2), "mV \n")
-            #Get time and send to log Log
-            currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S %f");
             #Export Data to Spreadsheet inc current datetime and time elasped and Reset list values (so we can see if code fails)
             writer.writerow([currentDateTime] + [time.perf_counter() - startTime] + [n] + adcValues)
             adcValues = [0,0,0,0]
