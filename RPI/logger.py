@@ -50,9 +50,17 @@ try:
     #CSV setup
     with open('voltage.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        print("Logging Begin")
         writer.writerow(["Date/Time","Time Elapsed (Seconds)","0A0 (mV)","0A1 (mV)","0A2 (mV)","0A3 (mV)","1A0 (mV)","1A1 (mV)","1A2 (mV)","1A3 (mV)","2A0 (mV)","2A1 (mV)","2A2 (mV)","2A3 (mV)","3A0 (mV)","3A1 (mV)","3A2 (mV)","3A3 (mV)"])
 
+        #Logging Process beginning
+
+        #Syncing clock up to try and centre values
+        print("Syncing Clock")
+        begin = time.perf_counter()
+        while ((time.perf_counter()-begin) % timeDelay) < (timeDelay/2):
+            pass
+
+        print("Logging Begin\n")
         #Set startTime (method used ignores changes in system clock time)
         startTime=time.perf_counter()
 
