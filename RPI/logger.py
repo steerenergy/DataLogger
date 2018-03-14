@@ -45,10 +45,10 @@ try:
     with open('voltage.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         print("Logging Begin")
-        writer.writerow(["Date/Time","A/D Unit","A0 (mV)","A1 (mV)","A2 (mV)","A3 (mV)"])
+        writer.writerow(["Date/Time","Time Elapsed (Seconds)","A/D Unit","A0 (mV)","A1 (mV)","A2 (mV)","A3 (mV)"])
 
         #Set startime
-        starttime=time.time()
+        startTime=time.perf_counter()
 
         while(True):
 
@@ -65,15 +65,16 @@ try:
                 #print("Voltage:", round(adcValues[currentPin],2), "mV \n")
             #Get time and send to log Log
             currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S %f");
-            #Export Data to Spreadsheet and Reset list values (so we can see if code fails)
-            writer.writerow([currentDateTime] + [n] + adcValues)
+            #Export Data to Spreadsheet inc current datetime and time elasped and Reset list values (so we can see if code fails)
+            writer.writerow([currentDateTime] + [time.perf_counter() - startTime] + [n] + adcValues)
             adcValues = [0,0,0,0]
 
             #Select next A/D convertor
             if n == 3:
                 n = 0
                 #Work out time delay needed until next set of values taken based on user given value (using some clever maths)
-                time.sleep(timeDelay - ((time.time() - starttime) % timeDelay))
+                timeDiff=(time.perf_counter() - startTime)
+                time.sleep(timeDelay - (timeDiff % timeDelay))
             else:
                 n = n + 1
 
