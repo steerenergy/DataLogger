@@ -3,7 +3,6 @@ import time
 from datetime import datetime
 import Adafruit_ADS1x15
 import csv
-
 #Variables
 
 # See table 3 in the ADS1015/ADS1115 datasheet for more info on gain.
@@ -66,13 +65,15 @@ try:
 
         #Beginning of reading script
         while(True):
+            #Get time and send to Log
+            currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S %f");
+            timeElapsed = round(time.perf_counter() - startTime,4)
             for currentPin in range(16):
                 #Get Raw data from A/D, convert to voltage and add to adcValues list corresponding to the current pin
                 adcValues[currentPin] = (adcPinRead[currentPin] * voltageConvert)
-            #Get time and send to Log
-            currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S %f");
+
             #Export Data to Spreadsheet inc current datetime and time elasped and Reset list values (so we can see if code fails)
-            writer.writerow([currentDateTime] + [round(time.perf_counter() - startTime,4)] + adcValues)
+            writer.writerow([currentDateTime] + [timeElapsed] + adcValues)
             adcValues = [0]*16
             #Work out time delay needed until next set of values taken based on user given value (using some clever maths)
             timeDiff=(time.perf_counter() - startTime)
