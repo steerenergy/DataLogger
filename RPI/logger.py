@@ -47,7 +47,7 @@ timeDelay = float(input("How many seconds between each log?\n"))
 #Try is for error handlng
 try:
     #CSV setup
-    with open('voltage.csv', 'w', newline='') as csvfile:
+    with open('/home/pi/Github/DataLogger/RPI/voltage.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         writer.writerow(["Date/Time","Time Elapsed (Seconds)","0A0 (mV)","0A1 (mV)","0A2 (mV)","0A3 (mV)","1A0 (mV)","1A1 (mV)","1A2 (mV)","1A3 (mV)","2A0 (mV)","2A1 (mV)","2A2 (mV)","2A3 (mV)","3A0 (mV)","3A1 (mV)","3A2 (mV)","3A3 (mV)"])
 
