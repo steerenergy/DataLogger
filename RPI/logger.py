@@ -39,7 +39,7 @@ print("Python Data Logger")
 #Ask user for frequency of logging
 timeDelay = float(input("How many seconds between each log?\n"))
 
-time.sleep(1)
+time.sleep(0.5)
 
 try:
     with open('voltage.csv', 'w', newline='') as csvfile:
@@ -64,7 +64,7 @@ try:
                 #print("Raw Data:", raw);
                 #print("Voltage:", round(adcValues[currentPin],2), "mV \n")
             #Get time and send to log Log
-            currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S");
+            currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S %f");
             #Export Data to Spreadsheet and Reset list values (so we can see if code fails)
             writer.writerow([currentDateTime] + [n] + adcValues)
             adcValues = [0,0,0,0]
@@ -72,10 +72,11 @@ try:
             #Select next A/D convertor
             if n == 3:
                 n = 0
+                #Work out time delay needed until next set of values taken based on user given value (using some clever maths)
+                time.sleep(timeDelay - ((time.time() - starttime) % timeDelay))
             else:
                 n = n + 1
 
-            #Work out time delay needed until next set of values taken based on user given value (using some clever maths)
-            time.sleep(timeDelay - ((time.time() - starttime) % timeDelay))
+
 except KeyboardInterrupt:
        print("Logging Finished") 
