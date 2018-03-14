@@ -60,13 +60,11 @@ try:
         while(True):
             for currentPin in range(16):
                 #Get Raw data from A/D, convert to voltage and add to adcValues list corresponding to the current pin
-                raw = adcPinRead[currentPin]
-                adcValues[currentPin] = (raw * voltageConvert)
-                print(currentPin)
+                adcValues[currentPin] = (adcPinRead[currentPin] * voltageConvert)
             #Get time and send to Log
             currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S %f");
             #Export Data to Spreadsheet inc current datetime and time elasped and Reset list values (so we can see if code fails)
-            writer.writerow([currentDateTime] + [time.perf_counter() - startTime] + adcValues)
+            writer.writerow([currentDateTime] + [round(time.perf_counter() - startTime,4)] + adcValues)
             adcValues = [0]*16
             #Work out time delay needed until next set of values taken based on user given value (using some clever maths)
             timeDiff=(time.perf_counter() - startTime)
