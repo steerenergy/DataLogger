@@ -15,13 +15,13 @@ try:
     #stdin, stdout and stderr and file like objects and require file methods to be used
     stdin,stdout,stderr = ssh.exec_command("python3 Github/DataLogger/RPI/logger.py")
 
-    timeout = 5
+    '''timeout = 5
     endtime = time.time() + timeout
     while not stdout.channel.eof_received:
         time.sleep(1)
         if time.time() > endtime:
             stdout.channel.close()
-            break
+            break'''
     #print(stdout.readlines())
     '''for line in stdout:
         #Process each line in the remote output
@@ -32,13 +32,15 @@ try:
 
     #Stop Log
     input("Press Enter to Stop...")
-    stdin,stdout,stderr = ssh.exec_command("(\032)")
-    for line in stdout:
+    #stdin.write("\032")
+    #stdin.flush()
+    #stdin,stdout,stderr = ssh.exec_command("(\032)")
+    '''for line in stdout:
         # Process each line in the remote output
         print(line)
     for line in stderr:
         # Process each line in the remote output
-        print(line)
+        print(line)'''
 
     #Grab data
     input("Press Enter to Grab Data...")
