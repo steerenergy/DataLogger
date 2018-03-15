@@ -32,7 +32,7 @@ try:
 
     #Stop Log
     input("Press Enter to Stop...")
-    stdin,stdout,stderr = ssh.exec_command("(\x003)")
+    stdin,stdout,stderr = ssh.exec_command("(\032)")
     for line in stdout:
         # Process each line in the remote output
         print(line)
