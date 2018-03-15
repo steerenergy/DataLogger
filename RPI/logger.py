@@ -41,8 +41,8 @@ adc3.read_adc(3, gain=GAIN, data_rate=dataRate)]
 #Process Begin
 #First Line intro
 print("Python Data Logger")
-#Ask user for frequency of logging
-timeDelay = float(input("How many seconds between each log?\n"))
+#Set Frequency of Logging
+timeDelay = 1
 
 #Try is for error handlng
 try:
