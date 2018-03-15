@@ -42,7 +42,7 @@ adc3.read_adc(3, gain=GAIN, data_rate=dataRate)]
 #First Line intro
 print("Python Data Logger")
 #Set Frequency of Logging
-timeDelay = 1
+timeDelay = 2
 
 #Try is for error handlng
 try:
