@@ -1,5 +1,5 @@
 import socket
-TCP_IP = '127.0.0.1'
+TCP_IP = 'raspberrypi'
 TCP_PORT = 5005
 BUFFER_SIZE = 1024
 var = 0
