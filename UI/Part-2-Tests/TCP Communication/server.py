@@ -2,8 +2,8 @@
 
 import socket
 
-
-TCP_IP = '192.168.1.101'
+#TCP_IP line represents which network interface on the pi to use. It is not for restricting incoming messages
+TCP_IP = '0.0.0.0'
 TCP_PORT = 5005
 BUFFER_SIZE = 1024  # Normally 1024, but we want fast response
 
