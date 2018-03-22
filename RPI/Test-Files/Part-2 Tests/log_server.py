@@ -18,7 +18,7 @@ try:
     conn, addr = s.accept()
     print('Connection address:', addr)
 
-    
+
     while True:
         data = conn.recv(BUFFER_SIZE)
         print("received data:", data.decode())
@@ -41,7 +41,7 @@ try:
             break
         else:
             pass
-        time.sleep(0)
+        time.sleep(0.5)
 
 finally:
     conn.close()
