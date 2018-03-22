@@ -37,8 +37,6 @@ try:
     remotePath = '/home/pi/Github/DataLogger/RPI/logConf.ini'
     localPath = 'logConf.ini'
     sftp.put(localPath, remotePath)
-    sftp.close()
-    transport.close()
 
 
     #Logging Trigger Stage
@@ -46,18 +44,40 @@ try:
     TCP_IP = 'raspberrypi'
     TCP_PORT = 5005
     BUFFER_SIZE = 1024
-    MESSAGE = "Read-Config"
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((TCP_IP, TCP_PORT))
-    s.send(MESSAGE.encode())
 
-    time.sleep(5)
-    data = s.recv(BUFFER_SIZE)
-    print(data.decode())
+    s.sendall("Read-Config".encode())
+    messageFinished = False
+    while messageFinished == False:
+        data = s.recv(BUFFER_SIZE)
+        print("From Pi:", data.decode())
+        if "Done" in data.decode():
+            messageFinished = True
+
+    input("Press Enter to Stop")
+
+    s.sendall("Stop-Log".encode())
+    messageFinished = False
+    while messageFinished == False:
+        data = s.recv(BUFFER_SIZE)
+        print("From Pi:", data.decode())
+        if "Done" in data.decode():
+            messageFinished = True
+
+    input("Press to Close")
+    s.sendall("Close".encode())
+
+    print("CSV Download")
+    # Download
+    remotePath = 'Github/DataLogger/RPI/voltage.csv'
+    localPath = 'voltage.csv'
+    sftp.get(remotePath, localPath)
 
 finally:
     # Close All
     sftp.close()
     transport.close()
     s.close()
+    print("All Done")
