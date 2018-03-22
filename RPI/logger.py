@@ -42,7 +42,7 @@ adc3.read_adc(3, gain=GAIN, data_rate=dataRate)]
 #First Line intro
 print("Python Data Logger")
 #Set Frequency of Logging
-timeDelay = 2
+timeInterval = 2
 
 #Try is for error handlng
 try:
@@ -56,7 +56,7 @@ try:
         #Syncing clock up to try and centre values
         print("Syncing Clock")
         begin = time.perf_counter()
-        while ((time.perf_counter()-begin) % timeDelay) < (timeDelay/2):
+        while ((time.perf_counter()-begin) % timeInterval) < (timeInterval/2):
             pass
 
         print("Logging Begin\n")
@@ -77,6 +77,6 @@ try:
             adcValues = [0]*16
             #Work out time delay needed until next set of values taken based on user given value (using some clever maths)
             timeDiff=(time.perf_counter() - startTime)
-            time.sleep(timeDelay - (timeDiff % timeDelay))
+            time.sleep(timeInterval - (timeDiff % timeInterval))
 except KeyboardInterrupt:
        print("Logging Finished")
