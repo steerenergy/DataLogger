@@ -8,26 +8,34 @@ class Menu:
     def main(self):
         #Main Menu
         while True:
-            option = input("Main Menu: \nChoose a Option (based on the correspnding number): \n1. Option 1 \n2. Option 2 \n3. Option 3 \n4. Exit \nOption: ")
+            option = input("Main Menu: \nChoose a Option (based on the correspnding number): \n1. Logger Control\n2. Process Data \n3. General Settings \n4. About \n5. Quit \nOption: ")
             #Set Menu Names
             if option == "1":
-                menu.option1()
+                menu.loggerControl()
             elif option == "2":
-                menu.option2()
+                menu.processData()
             elif option == "3":
-                menu.option3()
+                menu.generalSettings()
             elif option == "4":
-                menu.option4()
+                menu.about()
+            elif option == "5":
+                menu.quit()
             else:
                 print("Invalid Option. Please Try Again\n")
 
-    def option1(self):
+    def loggerControl(self):
         print("\nOption 1\n")
-    def option2(self):
+
+    def processData(self):
         print("\nOption 2\n")
-    def option3(self):
+
+    def generalSettings(self):
         print("\nOption 3\n")
-    def option4(self):
+
+    def about(self):
+        print("\nOption 4\n")
+
+    def quit(self):
         print("\nGoodbye\n")
         sys.exit()
 
