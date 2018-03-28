@@ -46,17 +46,19 @@ class main:
     def loggerControl(self):
         try:
             while True:
-                option = input("\nLogger Control Menu: \nChoose a Option (based on the correspnding number): \n1. Change Logger Config\n2. Download Data \n3. Realtime Data Output \n4. Back \n5. Quit \nOption Chosen: ")
                 #Set Menu Names
+                option = input("\nLogger Control Menu: \nChoose a Option (based on the correspnding number): \n1. Control (Start/Stop) Logging \n2. Change Logger Config\n3. Download Data \n4. Realtime Data Output \n5. Back \n6. Quit \nOption Chosen: ")
                 if option == "1":
-                    logCtrl.config(self)
+                    logCtrl.control(self)
                 elif option == "2":
-                    logCtrl.downloadData(self)
+                    logCtrl.config(self)
                 elif option == "3":
-                    logCtrl.realTime(self)
+                    logCtrl.downloadData(self)
                 elif option == "4":
-                    common.back(self)
+                    logCtrl.realTime(self)
                 elif option == "5":
+                    common.back(self)
+                elif option =="6":
                     common.quit(self)
                 else:
                     print("Invalid Option. Please Try Again\n")
