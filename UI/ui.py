@@ -1,10 +1,10 @@
 import sys
-class Menu:
+class common:
     #Top 3 are used consistantly in menu system
     def init(self):
         print("Data Logger Pre Release Version Whatver")
         print("-"*50,'')
-        menu.main()
+        main.init(self)
 
     def quit(self):
         print("\nGoodbye\n")
@@ -13,44 +13,44 @@ class Menu:
     def back(self):
         raise StopIteration()
 
-    #Main Menu
-    def main(self):
-        #Main Menu
+#Main Menu
+class main:
+    def init(self):
         try:
             while True:
                 option = input("\nMain Menu: \nChoose a Option (based on the correspnding number): \n1. Logger Control\n2. Process Data \n3. General Settings \n4. About \n5. Quit \nOption Chosen: ")
                 #Set Menu Names
                 if option == "1":
-                    menu.loggerControl()
+                    main.loggerControl(self)
                 elif option == "2":
-                    menu.processData()
+                    main.processData(self)
                 elif option == "3":
-                    menu.generalSettings()
+                    main.generalSettings(self)
                 elif option == "4":
-                    menu.about()
+                    main.about(self)
                 elif option == "5":
-                    menu.quit()
+                    common.quit(self)
                 else:
                     print("Invalid Option. Please Try Again\n")
         except StopIteration:
             pass
 
-    #Top Menu Comands
+            #Top Menu Comands
     def loggerControl(self):
         try:
             while True:
                 option = input("\nLogger Control Menu: \nChoose a Option (based on the correspnding number): \n1. Change Logger Config\n2. Download Data \n3. Realtime Data Output \n4. Back \n5. Quit \nOption Chosen: ")
                 #Set Menu Names
                 if option == "1":
-                    menu.loggerConfig()
+                    logCtrl.config(self)
                 elif option == "2":
-                    menu.downloadData()
+                    logCtrl.downloadData(self)
                 elif option == "3":
-                    menu.realtimeData()
+                    logCtrl.realTime(self)
                 elif option == "4":
-                    menu.back()
+                    common.back(self)
                 elif option == "5":
-                    menu.quit()
+                    common.quit(self)
                 else:
                     print("Invalid Option. Please Try Again\n")
         except StopIteration:
@@ -65,14 +65,15 @@ class Menu:
     def about(self):
         print("\nOption 4\n")
 
-    #Logger Control Comands
-    def loggerConfig(self):
+#Logger Control Comands
+class logCtrl():
+    def config(self):
         pass
     def downloadData(self):
         pass
-    def realtimeData(self):
+    def realTime(self):
         print("\nComing Soon!\n")
 
 #Program Start
-menu = Menu()
+menu = common()
 menu.init()
