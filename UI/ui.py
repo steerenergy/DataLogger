@@ -1,6 +1,10 @@
-#import necesarry files
+#Import necesarry python files
 import sys
+#Import local python files for operation
 import logCtrl
+import about
+import processData
+import generalSettings
 
 class common:
     #Top 3 are used consistantly in menu system
@@ -60,13 +64,26 @@ class main:
             pass
 
     def processData(self):
-        print("\nOption 2\n")
+        processData.Download()
 
     def generalSettings(self):
-        print("\nOption 3\n")
+        try:
+            while True:
+                option = input("\nGeneral Settings: \nChoose a Option (based on the correspnding number): \n1. Change Language\n2. Back \n3. Quit \nOption Chosen: ")
+                #Set Menu Names
+                if option == "1":
+                    generalSettings.language(self)
+                elif option == "2":
+                    common.back(self)
+                elif option == "3":
+                    common.quit(self)
+                else:
+                    print("Invalid Option. Please Try Again\n")
+        except StopIteration:
+            pass
 
     def about(self):
-        print("\nOption 4\n")
+        about.info()
 
 #Program Start
 menu = common()
