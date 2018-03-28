@@ -9,7 +9,7 @@ import generalSettings
 class common:
     #Top 3 are used consistantly in menu system
     def init(self):
-        print("Data Logger Pre Release Version Whatver")
+        print("Data Logger Pre Release (Version Whatver)")
         print("-"*50,'')
         main.init(self)
 
@@ -25,7 +25,7 @@ class main:
     def init(self):
         try:
             while True:
-                option = input("\nMain Menu: \nChoose a Option (based on the correspnding number): \n1. Logger Control\n2. Process Data \n3. General Settings \n4. About \n5. Quit \nOption Chosen: ")
+                option = input("\nMain Menu: \nChoose a Option (based on the correspnding number): \n1. Logger Control\n2. Process Data \n3. General Settings \n4. About \n5. Quit \n\nOption Chosen: ")
                 #Set Menu Names
                 if option == "1":
                     main.loggerControl(self)
@@ -47,7 +47,7 @@ class main:
         try:
             while True:
                 #Set Menu Names
-                option = input("\nLogger Control Menu: \nChoose a Option (based on the correspnding number): \n1. Control (Start/Stop) Logging \n2. Change Logger Config\n3. Download Data \n4. Realtime Data Output \n5. Back \n6. Quit \nOption Chosen: ")
+                option = input("\nLogger Control Menu: \nChoose a Option (based on the correspnding number): \n1. Control (Start/Stop) Logging \n2. Change Logger Config\n3. Download Data \n4. Realtime Data Output \n5. Back \n6. Quit \n\nOption Chosen: ")
                 if option == "1":
                     logCtrl.control(self)
                 elif option == "2":
