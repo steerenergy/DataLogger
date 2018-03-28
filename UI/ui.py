@@ -1,4 +1,7 @@
+#import necesarry files
 import sys
+import logCtrl
+
 class common:
     #Top 3 are used consistantly in menu system
     def init(self):
@@ -35,7 +38,7 @@ class main:
         except StopIteration:
             pass
 
-            #Top Menu Comands
+    #Top Menu Commands
     def loggerControl(self):
         try:
             while True:
@@ -64,15 +67,6 @@ class main:
 
     def about(self):
         print("\nOption 4\n")
-
-#Logger Control Comands
-class logCtrl():
-    def config(self):
-        pass
-    def downloadData(self):
-        pass
-    def realTime(self):
-        print("\nComing Soon!\n")
 
 #Program Start
 menu = common()
