@@ -9,16 +9,21 @@ import generalSettings
 class common:
     #Top 3 are used consistantly in menu system
     def init(self):
-        print("Data Logger Pre Release (Version Whatver)")
-        print("-"*50,'')
+        version = "Whatever"
+        welcome = "Steer Energy Data Logger (Version {})".format(version)
+        print(welcome)
+        print("-"*len(welcome))
         main.init(self)
 
     def quit(self):
-        print("\nGoodbye\n")
+        print("\nGoodbye :)\n")
         sys.exit()
 
     def back(self):
         raise StopIteration()
+
+    def other(self):
+        print("Invalid Option. Please Try Again\n")
 
 #Main Menu
 class main:
@@ -38,7 +43,7 @@ class main:
                 elif option == "5":
                     common.quit(self)
                 else:
-                    print("Invalid Option. Please Try Again\n")
+                    common.other(self)
         except StopIteration:
             pass
 
@@ -61,7 +66,7 @@ class main:
                 elif option =="6":
                     common.quit(self)
                 else:
-                    print("Invalid Option. Please Try Again\n")
+                    common.other(self)
         except StopIteration:
             pass
 
@@ -80,7 +85,7 @@ class main:
                 elif option == "3":
                     common.quit(self)
                 else:
-                    print("Invalid Option. Please Try Again\n")
+                    print("\nInvalid Option. Please Try Again")
         except StopIteration:
             pass
 
