@@ -14,7 +14,7 @@ logConf = configparser.ConfigParser()
 
 logConf['General'] = {'language':'English','unique id': uuid.uuid4()}
 #Temp Test Data
-logConf['Pin-Config'] = {'0A0': '20', '0A1':'ETC'}
+logConf['Pin-Config'] = {'0a0': '20', '0a1':'ETC'}
 #Important Bit
 logConf['Time-Settings'] = {'Time-Interval':timeInterval}
 with open('logConf.ini', 'w') as configfile:
