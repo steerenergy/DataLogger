@@ -1,5 +1,6 @@
 #Import Common Comands
 import common
+from logCtrl import config
 
 def init():
     try:
@@ -9,7 +10,7 @@ def init():
             if option == "1":
                 control()
             elif option == "2":
-                config()
+                config.init()
             elif option == "3":
                 downloadData()
             elif option == "4":
@@ -28,8 +29,7 @@ def init():
 #Logger Control Comands
 def control():
     pass
-def config():
-    pass
+
 def downloadData():
     pass
 def realTime():

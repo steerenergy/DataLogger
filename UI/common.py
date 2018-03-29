@@ -1,4 +1,6 @@
-#Common comands for all modules
+#System Comands
+import sys
+
 def quit():
     print("\nGoodbye :)\n")
     sys.exit()

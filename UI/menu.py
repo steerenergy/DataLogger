@@ -32,8 +32,8 @@ def main():
             elif option == "4":
                 about.init()
             elif option == "5":
-                quit()
+                common.quit()
             else:
-                other()
+                common.other()
     except StopIteration:
         pass
