@@ -1,11 +1,11 @@
 #Import necesarry python files
 import sys
 #Import local python files for operation
+import common
 import logCtrl
 import about
 import processData
 import generalSettings
-import common
 
 #Initial
 def init():
