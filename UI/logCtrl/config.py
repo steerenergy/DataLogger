@@ -13,4 +13,4 @@ def init():
 if __name__ == "__main__":
         init()
 
-#DO 2D ARRAY NEXT
+#DO 2D ARRAY NEXT TIME
