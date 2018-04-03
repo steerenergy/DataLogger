@@ -7,7 +7,7 @@ import about
 import processData
 import generalSettings
 
-#Initial
+#Initial Menu
 def init():
     version = "Whatever"
     welcome = "Steer Energy Data Logger (Version {})".format(version)
