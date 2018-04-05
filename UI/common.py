@@ -9,4 +9,4 @@ def back():
     raise StopIteration()
 
 def other():
-    print("Invalid Option. Please Try Again\n")
+    print("Invalid Option. Please Try Again")
