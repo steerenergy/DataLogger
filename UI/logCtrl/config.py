@@ -3,12 +3,39 @@ import sys
 sys.path.append("..")
 import common
 
+class ADC:
+    def __init__(self):
+        self.enabled = False
+        self.inputType = ""
+        self.gain = 0
+        self.scale = 0
+        self.unit = ""
+
 #Initial Functions
 def init():
     #Setup dictionary with default settings for general settings
-    generalSettings = {"Time-Interval": 0,"Name": "Default"}
     global generalSettings
+    generalSettings = {"Time-Interval": 0,"Name": "Default"}
 
+    #Init all objects for 16 channels.
+    adcList = {
+        "0A0": ADC(),
+        "0A1": ADC(),
+        "0A2": ADC(),
+        "0A3": ADC(),
+        "1A0": ADC(),
+        "1A1": ADC(),
+        "1A2": ADC(),
+        "1A3": ADC(),
+        "2A0": ADC(),
+        "2A1": ADC(),
+        "2A2": ADC(),
+        "2A3": ADC(),
+        "3A0": ADC(),
+        "3A1": ADC(),
+        "3A2": ADC(),
+        "3A3": ADC()
+    }
     menu()
 
 def menu():
