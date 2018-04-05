@@ -7,20 +7,20 @@ import common
 class ADC:
     def __init__(self):
         self.enabled = False
-        self.inputType = "Placeholder"
+        self.inputType = "Placeholder1"
         self.gain = 0
         self.scale = 0
-        self.unit = "Placeholder"
+        self.unit = "Placeholder2"
 
-    def enabledEdit():
+    def enabledEdit(self):
         pass
-    def inputTypeEdit():
+    def inputTypeEdit(self):
         pass
-    def gainEdit():
+    def gainEdit(self):
         pass
-    def scaleEdit():
+    def scaleEdit(self):
         pass
-    def unitEdit():
+    def unitEdit(self):
         pass
 
 #Initial Functions - setting up dictionaries with default values (will read config in future)
@@ -109,21 +109,45 @@ def generalName():
 
 #Input Setup (References to above classes which have been created)
 def inputSetup():
-    inputSetupInit()
-    #Print All Values for all objects
-    #Choose which one to edit
+    inputCurrentSettings()
+    chosenPin = input("\nPlease type the Name of Pin (Not the Number) you wish to Edit: ")
+
+    #Main menu
+    try:
+        while True:
+            print("\nChoose a Option to edit a Setting (based on the correspnding number)\nCurent Pin Settings for {}\n1. Pin Enabled: {}\n2. Input Type: {}\n3. Gain: {}\n4. Scale:{}\n5. Unit: {}\n-------------\n6. Back \n7. Quit".format(chosenPin,adcList[chosenPin].enabled,adcList[chosenPin].inputType,adcList[chosenPin].gain,adcList[chosenPin].scale,adcList[chosenPin].unit))
+            option = input("Option Chosen: ")
+            if option == "1":
+                adcList[chosenPin].enabledEdit()
+            elif option == "2":
+                adcList[chosenPin].inputTypeEdit()
+            elif option == "3":
+                adcList[chosenPin].gainEdit()
+            elif option == "4":
+                adcList[chosenPin].scaleEdit()
+            elif option == "5":
+                adcList[chosenPin].uniteEdit()
+            elif option == "6":
+                common.back()
+            elif option =="7":
+                common.quit()
+            else:
+                common.other()
+    except StopIteration:
+        pass
+
     #Bring up Options for editing
     #Next object
 
-def inputSetupInit():
+def inputCurrentSettings():
     print("Current Settings:\n")
-    print("-"*79)
-    print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|".format("Number","Pin Enabled","Input Type","Gain","Scale","Unit"))
-    print("-"*79)
+    print("-"*92)
+    print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|".format("Number","Name","Pin Enabled","Input Type","Gain","Scale","Unit"))
+    print("-"*92)
     x = 0
     for ADC in adcList:
         x+=1
-        print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|".format(x,adcList[ADC].enabled,adcList[ADC].inputType,adcList[ADC].gain,adcList[ADC].scale,adcList[ADC].unit))
+        print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|".format(x,ADC,adcList[ADC].enabled,adcList[ADC].inputType,adcList[ADC].gain,adcList[ADC].scale,adcList[ADC].unit))
 
 
 #Temp Code
