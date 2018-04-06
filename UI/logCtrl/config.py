@@ -2,6 +2,8 @@
 import sys
 sys.path.append("..")
 import common
+import configparser
+import uuid
 
 #Setting up the Class for the input setup
 class ADC:
@@ -127,7 +129,7 @@ def menu():
             elif option == "2":
                 inputSetup()
             elif option == "3":
-                pass
+                saveUpload()
             elif option == "4":
                 common.quit()
             else:
@@ -213,6 +215,33 @@ def inputCurrentSettings():
         print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x,ADC,adcList[ADC].enabled,adcList[ADC].inputType,adcList[ADC].gain,adcList[ADC].scaleLow,adcList[ADC].scaleHigh,adcList[ADC].unit))
 
 
+#Save/Upload config
+def saveUpload():
+    save()
+def save():
+    #Config Setup
+    logConf = configparser.ConfigParser()
+
+    #Write Sections
+    logConf["General"] = {}
+    for key in generalSettings:
+        logConf["General"][key] = str(generalSettings[key])
+    logConf["General"]["Unique-ID"] = str(uuid.uuid4())
+
+    #Write data for each A/D
+    for key in adcList:
+        logConf[key] = {}
+        logConf[key]["Enabled"] = str(adcList[key].enabled)
+        logConf[key]["Input-Type"] = str(adcList[key].inputType)
+        logConf[key]["Gain"] = str(adcList[key].gain)
+        logConf[key]["Scale-Low"] = str(adcList[key].scaleLow)
+        logConf[key]["Scale-High"] = str(adcList[key].scaleHigh)
+        logConf[key]["Unit"] = str(adcList[key].unit)
+    #Write File
+    with open('logConf.ini', 'w') as configfile:
+        logConf.write(configfile)
+def upload():
+    pass
 #Temp Code
 if __name__ == "__main__":
     init()
