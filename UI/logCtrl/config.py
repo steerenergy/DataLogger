@@ -8,16 +8,59 @@ class ADC:
     def __init__(self):
         self.enabled = False
         self.inputType = "Placeholder1"
-        self.gain = 0
+        self.gain = 1
         self.scale = 0
         self.unit = "Placeholder2"
 
     def enabledEdit(self):
-        pass
+    #If enabled, give option to disable, if disabled give option to enable
+            if self.enabled == False:
+                option = input("Enable Pin? (Y/N) ")
+                if option == "Y" or "y":
+                    self.enabled = True
+                elif option == "N" or "n":
+                    self.enabled = False
+            elif self.enabled == True:
+                option = input("Disable Pin? (Y/N) ")
+                if option == "Y" or "y":
+                    self.enabled == False
+                elif option == "N" or "n":
+                    self.enabled = True
+            print("Success\n")
     def inputTypeEdit(self):
-        pass
+        #List of input Types (this can be updated and the code will continue to work)
+        inputTypes = ["4-20mA","0-10V"]
+        print("\nAvaiable Input Types:")
+        for key, value in enumerate(inputTypes,start=1):
+            print("{}. {}".format(key,value))
+        option = input("\nSelect an option by its corresponding number: ")
+        try:
+            #check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
+            if 0<int(option)<=len(inputTypes):
+                self.inputType = inputTypes[int(option)-1]
+                print("Success")
+            else:
+                common.other()
+        #If someone does not put in an integer
+        except ValueError:
+                common.other()
+
     def gainEdit(self):
-        pass
+                #Gain Settigns will not change so it has been written like this. Users are instructed to type a number which corresponds to the value of gain they want
+                gainSettings = ["1","2","4","8","16"]
+                print("\nAvaiable Gain Settings:")
+                print("1 = +/-4.096V \n2 = +/-2.048V \n4 = +/-1.024V \n8 = +/-0.512V \n16 = +/-0.256V")
+                option = input("\nPlease type in the gain setting you want: ")
+                try:
+                    #check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
+                    if option in gainSettings:
+                        self.gain = option
+                        print("Success")
+                    else:
+                        common.other()
+                #If someone does not put in an integer
+                except ValueError:
+                        common.other()
     def scaleEdit(self):
         pass
     def unitEdit(self):
@@ -79,7 +122,7 @@ def general():
             for key in generalSettings:
                 x+=1
                 print("{}. {}: {}".format(x, key, generalSettings[key]))
-            print("----------------\n{}. Back\n{}. Quit".format(x+1,x+2))
+            print("----------------\n{}. Back\n".format(x+1))
             option = input("\nOption Chosen: ")
             if option == "1":
                 generalTime()
@@ -87,8 +130,6 @@ def general():
                 generalName()
             elif option == "3":
                 common.back()
-            elif option =="4":
-                common.quit()
             else:
                 common.other()
     except StopIteration:
@@ -111,31 +152,30 @@ def generalName():
 def inputSetup():
     inputCurrentSettings()
     chosenPin = input("\nPlease type the Name of Pin (Not the Number) you wish to Edit: ")
-
-    #Main menu
-    try:
-        while True:
-            print("\nChoose a Option to edit a Setting (based on the correspnding number)\nCurent Pin Settings for {}\n1. Pin Enabled: {}\n2. Input Type: {}\n3. Gain: {}\n4. Scale:{}\n5. Unit: {}\n-------------\n6. Back \n7. Quit".format(chosenPin,adcList[chosenPin].enabled,adcList[chosenPin].inputType,adcList[chosenPin].gain,adcList[chosenPin].scale,adcList[chosenPin].unit))
-            option = input("Option Chosen: ")
-            if option == "1":
-                adcList[chosenPin].enabledEdit()
-            elif option == "2":
-                adcList[chosenPin].inputTypeEdit()
-            elif option == "3":
-                adcList[chosenPin].gainEdit()
-            elif option == "4":
-                adcList[chosenPin].scaleEdit()
-            elif option == "5":
-                adcList[chosenPin].uniteEdit()
-            elif option == "6":
-                common.back()
-            elif option =="7":
-                common.quit()
-            else:
-                common.other()
-    except StopIteration:
-        pass
-
+    if chosenPin in adcList:
+        #Main menu
+        try:
+            while True:
+                print("\nCurent Pin Settings for: {}\nChoose a Option to edit a Setting (based on the correspnding number)\n1. Pin Enabled: {}\n2. Input Type: {}\n3. Gain: {}\n4. Scale:{}\n5. Unit: {}\n----------------\n6. Back".format(chosenPin,adcList[chosenPin].enabled,adcList[chosenPin].inputType,adcList[chosenPin].gain,adcList[chosenPin].scale,adcList[chosenPin].unit))
+                option = input("\nOption Chosen: ")
+                if option == "1":
+                    adcList[chosenPin].enabledEdit()
+                elif option == "2":
+                    adcList[chosenPin].inputTypeEdit()
+                elif option == "3":
+                    adcList[chosenPin].gainEdit()
+                elif option == "4":
+                    adcList[chosenPin].scaleEdit()
+                elif option == "5":
+                    adcList[chosenPin].uniteEdit()
+                elif option == "6":
+                    common.back()
+                else:
+                    common.other()
+        except StopIteration:
+            pass
+    else:
+        common.other()
     #Bring up Options for editing
     #Next object
 

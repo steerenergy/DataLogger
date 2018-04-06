@@ -68,6 +68,8 @@ try:
             #Get time and send to Log
             currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S %f");
             timeElapsed = round(time.perf_counter() - startTime,4)
+
+            #REqrite using Enumerate (unpack the tuple)
             for currentPin in range(16):
                 #Get Raw data from A/D, convert to voltage and add to adcValues list corresponding to the current pin
                 adcValues[currentPin] = (adcPinRead[currentPin] * voltageConvert)
