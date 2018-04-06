@@ -7,10 +7,12 @@ import common
 class ADC:
     def __init__(self):
         self.enabled = False
-        self.inputType = "Placeholder1"
+        self.inputType = "Edit Me"
         self.gain = 1
-        self.scale = 0
-        self.unit = "Placeholder2"
+        #two value tuple - first value is for low and second for the high (see Tempit)
+        self.scaleLow = 0
+        self.scaleHigh = 0
+        self.unit = "Edit Me 2"
 
     def enabledEdit(self):
     #If enabled, give option to disable, if disabled give option to enable
@@ -27,6 +29,7 @@ class ADC:
                 elif option == "N" or "n":
                     self.enabled = True
             print("Success\n")
+
     def inputTypeEdit(self):
         #List of input Types (this can be updated and the code will continue to work)
         inputTypes = ["4-20mA","0-10V"]
@@ -62,9 +65,29 @@ class ADC:
                 except ValueError:
                         common.other()
     def scaleEdit(self):
-        pass
+        option = input("\nWhat is the Low end of the Scale? ")
+        self.scaleLow = option
+        option = input("What is the High end of the Scale? ")
+        self.scaleHigh = option
+
     def unitEdit(self):
-        pass
+        #List of Unit Types (this can be updated and the code will continue to work)
+        unitTypes = ["N","m","mBar","mm"]
+        print("\nAvaiable Unit Types:")
+        for key, value in enumerate(unitTypes,start=1):
+            print("{}. {}".format(key,value))
+        option = input("\nSelect an option by its corresponding number: ")
+        try:
+            #check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
+            if 0<int(option)<=len(unitTypes):
+                self.unit= unitTypes[int(option)-1]
+                print("Success")
+            else:
+                common.other()
+        #If someone does not put in an integer
+        except ValueError:
+                common.other()
+
 
 #Initial Functions - setting up dictionaries with default values (will read config in future)
 def init():
@@ -156,7 +179,7 @@ def inputSetup():
         #Main menu
         try:
             while True:
-                print("\nCurent Pin Settings for: {}\nChoose a Option to edit a Setting (based on the correspnding number)\n1. Pin Enabled: {}\n2. Input Type: {}\n3. Gain: {}\n4. Scale:{}\n5. Unit: {}\n----------------\n6. Back".format(chosenPin,adcList[chosenPin].enabled,adcList[chosenPin].inputType,adcList[chosenPin].gain,adcList[chosenPin].scale,adcList[chosenPin].unit))
+                print("\nCurent Pin Settings for: {}\nChoose a Option to edit a Setting (based on the correspnding number)\n1. Pin Enabled: {}\n2. Input Type: {}\n3. Gain: {}\n4. Scale: {} - {}\n5. Unit: {}\n----------------\n6. Back".format(chosenPin,adcList[chosenPin].enabled,adcList[chosenPin].inputType,adcList[chosenPin].gain,adcList[chosenPin].scaleLow,adcList[chosenPin].scaleHigh,adcList[chosenPin].unit))
                 option = input("\nOption Chosen: ")
                 if option == "1":
                     adcList[chosenPin].enabledEdit()
@@ -167,7 +190,7 @@ def inputSetup():
                 elif option == "4":
                     adcList[chosenPin].scaleEdit()
                 elif option == "5":
-                    adcList[chosenPin].uniteEdit()
+                    adcList[chosenPin].unitEdit()
                 elif option == "6":
                     common.back()
                 else:
@@ -187,7 +210,7 @@ def inputCurrentSettings():
     x = 0
     for ADC in adcList:
         x+=1
-        print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|".format(x,ADC,adcList[ADC].enabled,adcList[ADC].inputType,adcList[ADC].gain,adcList[ADC].scale,adcList[ADC].unit))
+        print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x,ADC,adcList[ADC].enabled,adcList[ADC].inputType,adcList[ADC].gain,adcList[ADC].scaleLow,adcList[ADC].scaleHigh,adcList[ADC].unit))
 
 
 #Temp Code
