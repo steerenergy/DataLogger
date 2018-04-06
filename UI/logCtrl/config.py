@@ -4,6 +4,7 @@ sys.path.append("..")
 import common
 import configparser
 import uuid
+import paramiko
 
 #Setting up the Class for the input setup
 class ADC:
@@ -241,7 +242,24 @@ def save():
     with open('logConf.ini', 'w') as configfile:
         logConf.write(configfile)
 def upload():
-    pass
+        try:
+            # Open a transport
+            host = "raspberrypi"
+            port = 22
+            transport = paramiko.Transport((host, port))
+            # Auth
+            password = "raspberry"
+            username = "pi"
+            transport.connect(username = username, password = password)
+            # Go!
+            sftp = paramiko.SFTPClient.from_transport(transport)
+            # Upload
+            remotePath = '/home/pi/Github/DataLogger/RPI/logConf.ini'
+            localPath = 'logConf.ini'
+            sftp.put(localPath, remotePath)
+        finally:
+            sftp.close()
+            transport.close()
 #Temp Code
 if __name__ == "__main__":
     init()
