@@ -123,7 +123,7 @@ def init():
 def menu():
     try:
         while True:
-            option = input("\nLogger Config: \nChoose a Option (based on the correspnding number): \n1. General Settings\n2. Input Setup \n3. Save/Upload Config \n4. Quit \n\nOption Chosen: ")
+            option = input("\nLogger Config  \nChoose a Option (based on the correspnding number): \n1. General Settings\n2. Input Setup \n3. Save/Upload Config \n4. Quit \n\nOption Chosen: ")
             #Set Menu Names
             if option == "1":
                 general()
@@ -206,7 +206,7 @@ def inputSetup():
     #Next object
 
 def inputCurrentSettings():
-    print("Current Settings:\n")
+    print("Current Input Settings:\n")
     print("-"*92)
     print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|".format("Number","Name","Pin Enabled","Input Type","Gain","Scale","Unit"))
     print("-"*92)
@@ -218,9 +218,26 @@ def inputCurrentSettings():
 
 #Save/Upload config
 def saveUpload():
-    save()
+    try:
+        while True:
+            print("\nSave/Upload:\nChoose a Option (based on the correspnding number)\n1. Save \n2. Upload \n3. Save and Upload\n4. Back")
+            option = input("\nOption Chosen: ")
+            if option == "1":
+                save()
+            elif option == "2":
+                upload()
+            elif option == "3":
+                save()
+                upload()
+            elif option == "4":
+                common.back()
+            else:
+                common.other()
+    except StopIteration:
+        pass
 def save():
     #Config Setup
+    print("\nSaving Config File...")
     logConf = configparser.ConfigParser()
 
     #Write Sections
@@ -241,8 +258,10 @@ def save():
     #Write File
     with open('logConf.ini', 'w') as configfile:
         logConf.write(configfile)
+    print("Success")
 def upload():
         try:
+            print("\nPreparing to Transfer...")
             # Open a transport
             host = "raspberrypi"
             port = 22
@@ -252,11 +271,13 @@ def upload():
             username = "pi"
             transport.connect(username = username, password = password)
             # Go!
+            print("Tranferring Config...")
             sftp = paramiko.SFTPClient.from_transport(transport)
             # Upload
             remotePath = '/home/pi/Github/DataLogger/RPI/logConf.ini'
             localPath = 'logConf.ini'
             sftp.put(localPath, remotePath)
+            print("Success")
         finally:
             sftp.close()
             transport.close()
