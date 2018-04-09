@@ -42,7 +42,7 @@ try:
         values = [0]*4
         for i in range(4):
             # Read the specified ADC channel using the previously set gain value.
-            values[i] = round(adc.read_adc(i, gain=GAIN, data_rate=8)*voltageConvert,4)
+            values[i] = round(adc.read_adc(i, gain=GAIN)*voltageConvert,3)
             # Note you can also pass in an optional data_rate parameter that controls
             # the ADC conversion time (in samples/second). Each chip has a different
             # set of allowed data rate values, see datasheet Table 9 config register
@@ -53,6 +53,6 @@ try:
         # Print the ADC values.
         print('| {0:>6}V | {1:>6}V | {2:>6}V | {3:>6}V |'.format(*values))
         # Pause for half a second.
-        #time.sleep(0.5)
+        time.sleep(0.5)
 except KeyboardInterrupt:
     print("Done")
