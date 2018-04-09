@@ -26,7 +26,7 @@ adc0.read_adc(3, gain=GAIN, data_rate=dataRate)]
 #First Line intro
 print("Python Data Logger")
 #Set Frequency of Logging
-timeInterval = 2
+timeInterval = 1
 
 #Try is for error handlng
 try:
@@ -55,7 +55,7 @@ try:
             for currentPin in range(4):
                 #Get Raw data from A/D, convert to voltage and add to adcValues list corresponding to the current pin
                 adcValues[currentPin] = (adcPinRead[currentPin] * voltageConvert)
-
+            print(adcValues)
             #Export Data to Spreadsheet inc current datetime and time elasped and Reset list values (so we can see if code fails)
             writer.writerow([currentDateTime] + [timeElapsed] + adcValues)
             adcValues = [0]*4
