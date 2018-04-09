@@ -29,11 +29,11 @@ adc = Adafruit_ADS1x15.ADS1115(address=0x48, busnum=1)
 # See table 3 in the ADS1015/ADS1115 datasheet for more info on gain.
 GAIN = 1
 
-voltageConvert = 4096.0/32767.0
+voltageConvert = (4096.0/32767.0)/1000
 
 print('Reading ADS1x15 values, press Ctrl-C to quit...')
 # Print nice channel column headers.
-print('| {0:>6} | {1:>6} | {2:>6} | {3:>6} |'.format(*range(4)))
+print('| {0:>7} | {1:>7} | {2:>7} | {3:>7} |'.format(*range(4)))
 print('-' * 37)
 # Main loop.
 while True:
@@ -41,7 +41,7 @@ while True:
     values = [0]*4
     for i in range(4):
         # Read the specified ADC channel using the previously set gain value.
-        values[i] = adc.read_adc(i, gain=GAIN, data_rate=860)*voltageConvert
+        values[i] = round(adc.read_adc(i, gain=GAIN, data_rate=8)*voltageConvert,4)
         # Note you can also pass in an optional data_rate parameter that controls
         # the ADC conversion time (in samples/second). Each chip has a different
         # set of allowed data rate values, see datasheet Table 9 config register
@@ -50,6 +50,6 @@ while True:
         # Each value will be a 12 or 16 bit signed integer value depending on the
         # ADC (ADS1015 = 12-bit, ADS1115 = 16-bit).
     # Print the ADC values.
-    print('| {0:>6} | {1:>6} | {2:>6} | {3:>6} |'.format(*values))
+    print('| {0:>6}V | {1:>6}V | {2:>6}V | {3:>6}V |'.format(*values))
     # Pause for half a second.
     #time.sleep(0.5)
