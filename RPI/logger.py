@@ -31,7 +31,7 @@ functools.partial(adc0.read_adc,3, gain=GAIN, data_rate=dataRate)]
 #First Line intro
 print("Python Data Logger")
 #Set Frequency of Logging
-timeInterval = 0.2
+timeInterval = 0.05
 
 #Try is for error handlng
 try:
