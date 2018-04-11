@@ -1,4 +1,6 @@
 #Import Common Comands
+import sys
+sys.path.append("..")
 import common
 from logCtrl import config
 

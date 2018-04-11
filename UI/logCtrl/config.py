@@ -1,10 +1,10 @@
 #Makes all directory references up a level to simplify importing common files
 import sys
-sys.path.append("..")
-import common
 import configparser
 import uuid
 import paramiko
+sys.path.append("..")
+import common
 
 #Setting up the Class for the input setup
 class ADC:
