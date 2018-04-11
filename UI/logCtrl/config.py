@@ -248,12 +248,12 @@ def save():
     #Write data for each A/D
     for key in adcList:
         logConf[key] = {}
-        logConf[key]["Enabled"] = str(adcList[key].enabled)
-        logConf[key]["Input-Type"] = str(adcList[key].inputType)
-        logConf[key]["Gain"] = str(adcList[key].gain)
-        logConf[key]["Scale-Low"] = str(adcList[key].scaleLow)
-        logConf[key]["Scale-High"] = str(adcList[key].scaleHigh)
-        logConf[key]["Unit"] = str(adcList[key].unit)
+        logConf[key]["enabled"] = str(adcList[key].enabled)
+        logConf[key]["inputtype"] = str(adcList[key].inputType)
+        logConf[key]["gain"] = str(adcList[key].gain)
+        logConf[key]["scalelow"] = str(adcList[key].scaleLow)
+        logConf[key]["scalehigh"] = str(adcList[key].scaleHigh)
+        logConf[key]["unit"] = str(adcList[key].unit)
     #Write File
     with open('logConf.ini', 'w') as configfile:
         logConf.write(configfile)
