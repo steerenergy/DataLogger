@@ -1,12 +1,15 @@
 import configparser
 
+
+class ADC:
+
 #Initial Import
 def init():
     global config
     config = configparser.ConfigParser()
     config.read('logConf.ini')
     generalImport()
-    inputImport():
+    inputImport()
 
 #Import General Settings - for now as Global variables
 def generalImport():
