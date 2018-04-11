@@ -244,7 +244,7 @@ def save():
     logConf["General"] = {}
     for key in generalSettings:
         logConf["General"][key] = str(generalSettings[key])
-    logConf["General"]["Unique-ID"] = str(uuid.uuid4())
+    logConf["General"]["uniqueid'] = str(uuid.uuid4())
 
     #Write data for each A/D
     for key in adcList:
