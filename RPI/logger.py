@@ -7,6 +7,7 @@ import Adafruit_ADS1x15
 import csv
 
 class ADC:
+   #Go Through list of individual input objects and add those which are enabled to the 'master list' for logging, and add their essential data to the header list to be written to the CSV
    def inputSetup(self):
         if self.enabled == True:
             adcToLog.append(adcPinMap[self.name])
