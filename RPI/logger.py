@@ -10,7 +10,7 @@ class ADC:
    def inputSetup(self):
         if self.enabled == True:
             adcToLog.append(adcPinMap[self.name])
-            adcHeader.append([self.name,self.inputType,self.gain,self.scaleLow,self.scaleHigh,self.unit])
+            adcHeader.append([self.inputType,self.gain,self.scaleLow,self.scaleHigh,self.unit,self.name])
         else:
             pass
 
@@ -23,6 +23,8 @@ def init():
     adcToLog = []
     global adcHeader
     adcHeader = []
+    adcHeader.append(['Input Type','Gain','Low Scale','Scale High','Unit','Name of Pin/Date and Time'])
+    adcHeader.append(['','','','','','Time Elapsed'])
     global adcList
     adcList = {}
     #A/D Setup - Create 4 instaces of  ADS1115 ADC (16-bit) according to Adafruit Libaries and then assign this to a big list

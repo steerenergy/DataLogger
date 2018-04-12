@@ -1,7 +1,10 @@
 Name:;Default;ID:;f6940638-f7eb-48cb-94f0-24c5d0d22f64;Time Interval;1
-0A1;0A0
-Edit Me;Edit Me
-1;1
-0;0
-0;0
-Edit Me 2;Edit Me 2
+Input Type;;Edit Me;Edit Me
+Gain;;1;1
+Low Scale;;0;0
+Scale High;;0;0
+Unit;;Edit Me 2;Edit Me 2
+Name of Pin/Date and Time;Time Elapsed;0A0;0A1
+2018-04-12 16:05:03:483472,0.0002,25879,51
+2018-04-12 16:05:04:484318,1.0012,51,51
+2018-04-12 16:05:05:484312,2.0012,51,51
