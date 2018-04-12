@@ -95,7 +95,7 @@ class ADC:
 def init():
     #Setup dictionary with default settings for general settings
     global generalSettings
-    generalSettings = {"Time-Interval": 0,"Name": "Default"}
+    generalSettings = {"timeinterval": 0,"name": "Default"}
     #Init all objects for 16 channels.
     global adcList
     adcList = {

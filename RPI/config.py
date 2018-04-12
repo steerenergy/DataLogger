@@ -6,13 +6,13 @@ import csv
 class ADC:
    def inputSetup(self):
         if self.enabled == True:
-            adcToLog.append([self.name,adcPinMap[self.name],'potato'])
+            adcToLog.append(adcPinMap[self.name])
+            adcHeader.append([self.name,self.inputType,self.gain,self.scaleLow,self.scaleHigh,self.unit])
         else:
             pass
 
 #Initial Import and setup
 def init():
-
     GAIN = 1
     dataRate = 8
     #A/D Setup - Create 4 instaces of  ADS1115 ADC (16-bit) according to Adafruit Libaries and then assign this to a big list
@@ -40,23 +40,25 @@ def init():
     "3A1": functools.partial(adc3.read_adc,1, gain=GAIN, data_rate=dataRate),
     "3A2": functools.partial(adc3.read_adc,2, gain=GAIN, data_rate=dataRate),
     "3A3": functools.partial(adc3.read_adc,3, gain=GAIN, data_rate=dataRate)
-    }
-
-    
+    } 
     global adcToLog
     adcToLog = []
+    global adcHeader
+    adcHeader = []                      
     global config
     config = configparser.ConfigParser()
     config.read('logConf.ini')
+
     generalImport()
     inputImport()
-
+    csvConf()
 #Import General Settings - for now as Global variables
 def generalImport():
     global generalSettings
     generalSettings = {}
     for key in config['General']:
         generalSettings[key] = config['General'][key]
+      
 
     
 #Import Input Settings
@@ -74,13 +76,7 @@ def inputImport():
                 adcList[input].scaleLow = config[input].getint('scalelow')
                 adcList[input].scaleHigh = config[input].getint('scalehigh')
                 adcList[input].unit = config[input]['unit']
-            adcList[input].inputSetup() 
-
-def inputProcess():
-    for ADC in adcList:
-        adcList[ADC].inputSetup
-
-
+            adcList[input].inputSetup()
 #Temp Code
 def debugOutput():
     x = 0
@@ -88,16 +84,14 @@ def debugOutput():
         x+=1
         print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x,adcList[ADC].name,adcList[ADC].enabled,adcList[ADC].inputType,adcList[ADC].gain,adcList[ADC].scaleLow,adcList[ADC].scaleHigh,adcList[ADC].unit))
 
-#Temp testing Code
+def csvConf():
+   with open('/home/pi/Github/DataLogger/RPI/voltage.csv', 'w', newline='') as csvfile:
+      writer = csv.writer(csvfile, dialect="excel", delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+      writer.writerow(["Name:",generalSettings['name'],"ID:",generalSettings['uniqueid'],"Time Interval",generalSettings['timeinterval']])
+      writer.writerows(zip(*adcHeader))
 
 if __name__ == "__main__":
-    init()
-
-with open('output.csv', 'w', newline='') as csvfile:
-    writer = csv.writer(csvfile)
-    writer.writerow(adcToLog[1][0])
-    
-
-    #effective logging code
-    for x in range(0,len(adcToLog)):
-        print(adcToLog[x][1]())
+   init()
+   #effective logging code
+   for x in range(0,len(adcToLog)):
+      print(adcToLog[x]())
