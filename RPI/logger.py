@@ -45,7 +45,7 @@ def init():
     inputImport()
 #Import General Settings - for now as Global variables
 def generalImport():
-   print("Configuring General Settings")
+    print("Configuring General Settings")
     global generalSettings
     generalSettings = {}
     for key in config['General']:
@@ -89,9 +89,13 @@ def inputImport():
     } 
     for adc in adcList:
        adcList[adc].inputSetup()
+    settingsOutput()
 #Temp Code
-def debugOutput():
+def settingsOutput():
+    print("Current Settings:")
     x = 0
+    print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|".format("Number","Name","Pin Enabled","Input Type","Gain","Scale","Unit"))
+    print("-"*92)
     for ADC in adcList:
         x+=1
         print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x,adcList[ADC].name,adcList[ADC].enabled,adcList[ADC].inputType,adcList[ADC].gain,adcList[ADC].scaleLow,adcList[ADC].scaleHigh,adcList[ADC].unit))
@@ -101,9 +105,47 @@ def csvConf():
       writer = csv.writer(csvfile, dialect="excel", delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
       writer.writerow(["Name:",generalSettings['name'],"ID:",generalSettings['uniqueid'],"Time Interval",generalSettings['timeinterval']])
       writer.writerows(zip(*adcHeader))
+def log():
+   try:
+       #Set Time Interval
+       timeInterval = float(generalSettings['timeinterval'])
+       #Find the length of what each row will be in the CSV (from which A/D are being logged)
+       csvRows = len(adcToLog)
+       #Set up list to be printed to CSV
+       adcValues = [0]*csvRows
+       #CSV setup
+       with open('/home/pi/Github/DataLogger/RPI/voltage.csv', 'a', newline='') as csvfile:
+           writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+
+           print("Logging Begin\n")
+
+           #Set startTime (method used ignores changes in system clock time)
+           startTime=time.perf_counter()
+
+           #Beginning of reading script
+           while(True):
+               #Get time and send to Log
+               currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f");
+               timeElapsed = round(time.perf_counter() - startTime,4)
+
+               for currentPin, value in enumerate(adcToLog):
+                   #Get Raw data from A/D, convert to voltage and add to adcValues list corresponding to the current pin
+                   adcValues[currentPin] = (value())
+               
+               #Export Data to Spreadsheet inc current datetime and time elasped and Reset list values (so we can see if code fails)
+               writer.writerow([currentDateTime] + [timeElapsed] + adcValues)
+               adcValues = [0]*csvRows
+               #Work out time delay needed until next set of values taken based on user given value (using some clever maths)
+               timeDiff=(time.perf_counter() - startTime)
+               time.sleep(timeInterval - (timeDiff % timeInterval))
+   except KeyboardInterrupt:
+          print("Logging Finished")
+
 
 if __name__ == "__main__":
    #Load Config Data
    init()
    #Write CSV Header
    csvConf()
+   #Run Logging
+   log()
