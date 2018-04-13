@@ -7,11 +7,10 @@ import Adafruit_ADS1x15
 import csv
 
 class ADC:
-   #Go Through list of individual input objects and add those which are enabled to the 'master list' for logging, and add their essential data to the header list to be written to the CSV
+   #Go Through list of individual input objects and add those which are enabled to the 'master list' for logging.
    def inputSetup(self):
         if self.enabled == True:
             adcToLog.append(adcPinMap[self.name])
-            adcHeader.append([self.inputType,self.gain,self.scaleLow,self.scaleHigh,self.unit,self.name])
         else:
             pass
 
@@ -20,14 +19,9 @@ def init():
     #Setting up key variables for logging
     global dataRate
     dataRate = 8
-    #Lists for Headers and list of pins to be logged
+    #list of pins to be logged
     global adcToLog
     adcToLog = []
-    global adcHeader
-    adcHeader = []
-    #First 2 columns of header
-    adcHeader.append(['Input Type','Gain','Low Scale','Scale High','Unit','Name of Pin/Date and Time'])
-    adcHeader.append(['/','/','/','/','/','Time Elapsed'])
     #Dictionary used for creating ADC() objects
     global adcDict
     adcDict = {}
@@ -109,13 +103,6 @@ def settingsOutput():
         x+=1
         print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x,adcDict[ADC].name,adcDict[ADC].enabled,adcDict[ADC].inputType,adcDict[ADC].gain,adcDict[ADC].scaleLow,adcDict[ADC].scaleHigh,adcDict[ADC].unit))
 
-#Config the csv file: open and write the initial headers
-def csvConf():
-   with open('/home/pi/Github/DataLogger/RPI/voltage.csv', 'w', newline='') as csvfile:
-      writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-      writer.writerow(["Name:",generalSettings['name'],"ID:",generalSettings['uniqueid'],"Time Interval",generalSettings['timeinterval']])
-      writer.writerows(zip(*adcHeader))
-
 #Logging Script
 def log():
    try:
@@ -126,7 +113,7 @@ def log():
        #Set up list to be printed to CSV
        adcValues = [0]*csvRows
        #CSV -repoen file and add data on bottom
-       with open('/home/pi/Github/DataLogger/RPI/voltage.csv', 'a', newline='') as csvfile:
+       with open('/home/pi/Github/DataLogger/RPI/voltage.csv', 'w', newline='') as csvfile:
            writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
            print("Logging Begin\n")
@@ -157,7 +144,5 @@ def log():
 if __name__ == "__main__":
    #Load Config Data
    init()
-   #Write CSV Header
-   csvConf()
    #Run Logging
    log()
