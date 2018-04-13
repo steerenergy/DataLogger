@@ -6,7 +6,22 @@ import common
 
 
 def init():
-    download()
+    try:
+        while True:
+            option = input("\nProcess Data Menu: \nChoose a Option (based on the correspnding number): \n1. Download\n2. Process\n3.Back\n4. Quit \n\nOption Chosen: ")
+            #Set Menu Names
+            if option == "1":
+                download()
+            elif option == "2":
+                process()
+            elif option == "3":
+                common.back()
+            elif option == "4":
+                common.quit()
+            else:
+                common.other()
+    except StopIteration:
+        pass
 
-def download():
-    print("\nTBD\n")
+if __name__ == "__main__":
+    init()
