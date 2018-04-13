@@ -7,10 +7,11 @@ import Adafruit_ADS1x15
 import csv
 
 class ADC:
-   #Go Through list of individual input objects and add those which are enabled to the 'master list' for logging.
+   #Go Through list of individual input objects and add those which are enabled to the 'master list' for logging, and add their names to the header.
    def inputSetup(self):
         if self.enabled == True:
             adcToLog.append(adcPinMap[self.name])
+            adcHeader.append(self.name)
         else:
             pass
 
@@ -19,9 +20,11 @@ def init():
     #Setting up key variables for logging
     global dataRate
     dataRate = 8
-    #list of pins to be logged
+    #list of pins to be logged and the list containing the logging functions
     global adcToLog
     adcToLog = []
+    global adcHeader
+    adcHeader = []
     #Dictionary used for creating ADC() objects
     global adcDict
     adcDict = {}
@@ -113,9 +116,9 @@ def log():
        #Set up list to be printed to CSV
        adcValues = [0]*csvRows
        #CSV -repoen file and add data on bottom
-       with open('/home/pi/Github/DataLogger/RPI/voltage.csv', 'w', newline='') as csvfile:
+       with open('/home/pi/Github/DataLogger/RPI/raw.csv', 'w', newline='') as csvfile:
            writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-
+           writer.writerow(['Date/Time','Time Interval (Seconds)'] + adcHeader)
            print("Logging Begin\n")
 
            #Set startTime (method used ignores changes in system clock time)
@@ -126,7 +129,7 @@ def log():
                #Get time and send to Log
                currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f");
                timeElapsed = round(time.perf_counter() - startTime,4)
-
+               
                for currentPin, value in enumerate(adcToLog):
                    #Get Raw data from A/D, and add to adcValues list corresponding to the current pin
                    adcValues[currentPin] = (value())
