@@ -112,7 +112,7 @@ def settingsOutput():
 #Config the csv file: open and write the initial headers
 def csvConf():
    with open('/home/pi/Github/DataLogger/RPI/voltage.csv', 'w', newline='') as csvfile:
-      writer = csv.writer(csvfile, dialect="excel", delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+      writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
       writer.writerow(["Name:",generalSettings['name'],"ID:",generalSettings['uniqueid'],"Time Interval",generalSettings['timeinterval']])
       writer.writerows(zip(*adcHeader))
 
@@ -127,7 +127,7 @@ def log():
        adcValues = [0]*csvRows
        #CSV -repoen file and add data on bottom
        with open('/home/pi/Github/DataLogger/RPI/voltage.csv', 'a', newline='') as csvfile:
-           writer = csv.writer(csvfile, dialect="excel", delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+           writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
            print("Logging Begin\n")
 
