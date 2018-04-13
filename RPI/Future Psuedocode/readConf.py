@@ -1,22 +1,21 @@
-class Device:
-    name = ""
-    address = ""
-    channels = [] # Array of instances of Channel
-    instance = NULL
+import json
 
-    def __init__(self, name, address):
+class Device:
+    def __init__(self, name, address, channels):
         self.name = name
         self.address = address
         self.instance = Adafruit_ADS1x15.ADS1115(address=address, busnum=1)
+        for channel in channels:
+          self.channels.append(Channel(channel['name'], channel['pin'], channel['gain']))
 
     def getValues(self):
         values = []
-        for channel in channels:
+        for channel in self.channels:
             values.append(channel.getValue())
         return values
 
-#    def serialize(self):
-#        print(f"{'address': {self.address}}")
+    def serialize(self):
+        print(f"{'address': {self.address}}")
 
 class Channel:
     def __init__(self, name, pin, gain):
@@ -26,13 +25,20 @@ class Channel:
         self.data_rate = -1
 
     def getValue(self, device):
-        self.stupid_variable = 34;
         return device.read_adc(self.pin, self.gain, self.data_rate)
 
 
-readInConfig = readConfig()
-
-deviceList = []
+# The below is a shortcut for thie experiment
+readInConfig = json.load(open('config.json'))
 
 for device in readInConfig['devices']:
-  deviceList.append(Device())
+  deviceArray.append(Device(device['name'], device['address']))
+
+# When you want to read values:
+values = []
+
+for device in deviceArray:
+  values += device.getValues()
+
+for value in values:
+  print(value + ",")
