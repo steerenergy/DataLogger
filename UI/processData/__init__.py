@@ -4,11 +4,11 @@ sys.path.append("..")
 #Import Common Comands
 import common
 
-
+#Initial Menu Setup
 def init():
     try:
         while True:
-            option = input("\nProcess Data Menu: \nChoose a Option (based on the correspnding number): \n1. Download\n2. Process\n3.Back\n4. Quit \n\nOption Chosen: ")
+            option = input("\nProcess Data Menu: \nChoose a Option (based on the correspnding number): \n1. Download\n2. Process\n3. Back\n4. Quit \n\nOption Chosen: ")
             #Set Menu Names
             if option == "1":
                 download()
@@ -22,6 +22,13 @@ def init():
                 common.other()
     except StopIteration:
         pass
+
+def download():
+    pass
+
+def process():
+    pass
+
 
 if __name__ == "__main__":
     init()
