@@ -27,7 +27,7 @@ def init():
     adcHeader = []
     #First 2 columns of header
     adcHeader.append(['Input Type','Gain','Low Scale','Scale High','Unit','Name of Pin/Date and Time'])
-    adcHeader.append(['','','','','','Time Elapsed'])
+    adcHeader.append(['/','/','/','/','/','Time Elapsed'])
     #Dictionary used for creating ADC() objects
     global adcDict
     adcDict = {}
@@ -127,7 +127,7 @@ def log():
        adcValues = [0]*csvRows
        #CSV -repoen file and add data on bottom
        with open('/home/pi/Github/DataLogger/RPI/voltage.csv', 'a', newline='') as csvfile:
-           writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+           writer = csv.writer(csvfile, dialect="excel", delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
            print("Logging Begin\n")
 
@@ -141,7 +141,7 @@ def log():
                timeElapsed = round(time.perf_counter() - startTime,4)
 
                for currentPin, value in enumerate(adcToLog):
-                   #Get Raw data from A/D, convert to voltage and add to adcValues list corresponding to the current pin
+                   #Get Raw data from A/D, and add to adcValues list corresponding to the current pin
                    adcValues[currentPin] = (value())
 
                #Export Data to Spreadsheet inc current datetime and time elasped and Reset list values (so we can see if code fails)
