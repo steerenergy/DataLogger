@@ -1,10 +1,10 @@
 #Makes all directory references up a level to simplify importing common files
 import sys
-sys.path.append("..")
-import common
 import configparser
 import uuid
 import paramiko
+sys.path.append("..")
+import common
 
 #Setting up the Class for the input setup
 class ADC:
@@ -12,7 +12,6 @@ class ADC:
         self.enabled = False
         self.inputType = "Edit Me"
         self.gain = 1
-        #two value tuple - first value is for low and second for the high (see Tempit)
         self.scaleLow = 0
         self.scaleHigh = 0
         self.unit = "Edit Me 2"
@@ -96,7 +95,7 @@ class ADC:
 def init():
     #Setup dictionary with default settings for general settings
     global generalSettings
-    generalSettings = {"Time-Interval": 0,"Name": "Default"}
+    generalSettings = {"timeinterval": 0,"name": "Default"}
     #Init all objects for 16 channels.
     global adcList
     adcList = {
@@ -244,17 +243,17 @@ def save():
     logConf["General"] = {}
     for key in generalSettings:
         logConf["General"][key] = str(generalSettings[key])
-    logConf["General"]["Unique-ID"] = str(uuid.uuid4())
+    logConf["General"]["uniqueid"] = str(uuid.uuid4())
 
     #Write data for each A/D
     for key in adcList:
         logConf[key] = {}
-        logConf[key]["Enabled"] = str(adcList[key].enabled)
-        logConf[key]["Input-Type"] = str(adcList[key].inputType)
-        logConf[key]["Gain"] = str(adcList[key].gain)
-        logConf[key]["Scale-Low"] = str(adcList[key].scaleLow)
-        logConf[key]["Scale-High"] = str(adcList[key].scaleHigh)
-        logConf[key]["Unit"] = str(adcList[key].unit)
+        logConf[key]["enabled"] = str(adcList[key].enabled)
+        logConf[key]["inputtype"] = str(adcList[key].inputType)
+        logConf[key]["gain"] = str(adcList[key].gain)
+        logConf[key]["scalelow"] = str(adcList[key].scaleLow)
+        logConf[key]["scalehigh"] = str(adcList[key].scaleHigh)
+        logConf[key]["unit"] = str(adcList[key].unit)
     #Write File
     with open('logConf.ini', 'w') as configfile:
         logConf.write(configfile)
