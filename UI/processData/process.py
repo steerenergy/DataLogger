@@ -52,23 +52,31 @@ def conversionSetup():
             #Get values of m and c in y = mx+c
             m,c = scale(config[key].getint('scalelow'),config[key].getint('scalehigh'),config[key]['inputtype'])
             #Use y = mx+c to find conversion value. This finds the conversion factor from raw data to the scale chosen
-            conversion[key] = m*gain(config[key].getint('gain')) + c
+            m = m*gain(config[key].getint('gain'))
+            conversion[key] = (m,c)
 
 def convert(value,item):
-    return value*conversion[item]
+    return value*conversion[item][0] + conversion[item][1]
 
 def csvProcess():
     #read CSV
     df = pd.read_csv('raw.csv')
     print("Raw Data:")
-    print(df)
+    print(df.head())
+    #Data Convrsion for looop gravving data from config file
+    print("\nConverting Data...")
+    #Skip first 2 columns and iterate each collumn thereafter
     for item in df.iloc[:,2:].columns:
+        #Below line runs function on each row in column
         df[item] = df[item].apply(convert, args=(item,))
+        #Rename Column heading to add Units
         df.rename(columns={item: item + " " + config[item]['unit']}, inplace=True)
     print("\nConverted Data:")
-    print(df)
+    print(df.head())
     #Write Converted CSV
+    print("\nWriting CSV...")
     df.to_csv('converted.csv', sep=',')
+    print("Success")
 
 
 
