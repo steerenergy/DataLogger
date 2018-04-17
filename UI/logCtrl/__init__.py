@@ -31,7 +31,6 @@ def init():
 #Logger Control Comands
 def control():
     pass
-
 def downloadData():
     pass
 def realTime():

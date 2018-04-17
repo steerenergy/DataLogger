@@ -2,8 +2,9 @@ import sys
 #Makes all directory references up a level to simplify importing common files
 sys.path.append("..")
 #Import Common Comands
+from processData import process
 import common
-import process
+
 
 #Initial Menu Setup
 def init():
