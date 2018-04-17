@@ -2,7 +2,7 @@ import sys
 #Makes all directory references up a level to simplify importing common files
 sys.path.append("..")
 #Import Common Comands
-from processData import process
+from processData import process, download
 import common
 
 
@@ -13,7 +13,7 @@ def init():
             option = input("\nProcess Data Menu: \nChoose a Option (based on the correspnding number): \n1. Download\n2. Process\n3. Back\n4. Quit \n\nOption Chosen: ")
             #Set Menu Names
             if option == "1":
-                download()
+                download.init()
             elif option == "2":
                 process.init()
             elif option == "3":
@@ -24,9 +24,6 @@ def init():
                 common.other()
     except StopIteration:
         pass
-
-def download():
-    pass
 
 
 if __name__ == "__main__":
