@@ -61,7 +61,7 @@ def convert(value,item):
 def csvProcess():
     #read CSV
     df = pd.read_csv('raw.csv')
-    print("Raw Data:")
+    print("Raw Data (Top Lines):")
     print(df.head())
     #Data Convrsion for looop gravving data from config file
     print("\nConverting Data...")
@@ -71,11 +71,11 @@ def csvProcess():
         df[item] = df[item].apply(convert, args=(item,))
         #Rename Column heading to add Units
         df.rename(columns={item: item + " " + config[item]['unit']}, inplace=True)
-    print("\nConverted Data:")
+    print("\nConverted Data (Top Lines):")
     print(df.head())
     #Write Converted CSV
     print("\nWriting CSV...")
-    df.to_csv('converted.csv', sep=',')
+    df.to_csv('converted.csv', sep=',', index = False)
     print("Success")
 
 
