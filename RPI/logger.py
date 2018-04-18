@@ -1,6 +1,7 @@
 #Import Libaries
 import time
 from datetime import datetime
+from collections import OrderedDict
 import configparser
 import functools
 import Adafruit_ADS1x15
@@ -27,7 +28,7 @@ def init():
     adcHeader = []
     #Dictionary used for creating ADC() objects
     global adcDict
-    adcDict = {}
+    adcDict = OrderedDict()
     #A/D Setup - Create 4 Global instaces of ADS1115 ADC (16-bit) according to Adafruit Libaries
     global adc0
     global adc1
