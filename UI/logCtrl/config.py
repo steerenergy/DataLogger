@@ -34,7 +34,7 @@ class ADC:
 
     def inputTypeEdit(self):
         #List of input Types (this can be updated and the code will continue to work)
-        inputTypes = ["4-20mA","0-10V"]
+        inputTypes = ["4-20mA","0-2V"]
         print("\nAvaiable Input Types:")
         for key, value in enumerate(inputTypes,start=1):
             print("{}. {}".format(key,value))
@@ -95,7 +95,7 @@ class ADC:
 def init():
     #Setup dictionary with default settings for general settings
     global generalSettings
-    generalSettings = {"timeinterval": 0,"name": "Default"}
+    generalSettings = {"timeinterval": 1,"name": "Default"}
     #Init all objects for 16 channels.
     global adcList
     adcList = {

@@ -30,8 +30,7 @@ def init():
 
 #Logger Control Comands
 def control():
-    pass
-
+    print("\n Remote Control Coming Soon! \n Once the config is uploaded to the RPI, please start the program manually on the pi itself.")
 def downloadData():
     pass
 def realTime():
