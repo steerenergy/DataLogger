@@ -36,7 +36,7 @@ def init():
     #Input type list: contains a tuple with the value (in volts) for the low end of the scale, and the value for the high end of the scale
     global inputTypeList
     inputTypeList = {
-    "4-20":(0.4,2),
+    "4-20mA":(0.4,2),
     "0-2V": (0,2),
     "0-10V": (0,10)
 }
@@ -77,7 +77,7 @@ def csvProcess():
     #Write Converted CSV
     print("\nWriting CSV...")
     df.to_csv('converted.csv', sep=',', index = False)
-    print("Success")
+    print("\nSuccess")
 
 
 

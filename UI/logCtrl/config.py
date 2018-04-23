@@ -215,14 +215,14 @@ def general():
 
 #General Time Setting
 def generalTime():
-    print("\nCurrent Time Interval is: {} Seconds\n".format(generalSettings["Time-Interval"]))
-    generalSettings["Time-Interval"] = input("Enter New Time Interval:")
+    print("\nCurrent Time Interval is: {} Seconds\n".format(generalSettings["timeinterval"]))
+    generalSettings["timeinterval"] = input("Enter New Time Interval: ")
     print("Success\n")
 
 #Name Setting
 def generalName():
-    print("\nCurrent Name is: {}\n".format(generalSettings["Name"]))
-    generalSettings["Name"] = input("Enter New Name:")
+    print("\nCurrent Name is: {}\n".format(generalSettings["name"]))
+    generalSettings["name"] = input("Enter New Name: ")
     print("Success\n")
 
 
