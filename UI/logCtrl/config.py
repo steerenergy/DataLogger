@@ -5,6 +5,7 @@ import uuid
 import paramiko
 sys.path.append("..")
 import common
+configSet = False
 
 #Setting up the Class for the input setup
 class ADC:
@@ -93,6 +94,10 @@ class ADC:
 
 #Initial Functions - setting up dictionaries with default values (will read config in future)
 def init():
+    global configSet
+    configSet = True
+    blankConfInit()
+def blankConfInit():
     #Setup dictionary with default settings for general settings
     global generalSettings
     generalSettings = {"timeinterval": 1,"name": "Default"}
@@ -122,7 +127,7 @@ def init():
 def menu():
     try:
         while True:
-            option = input("\nLogger Config  \nChoose a Option (based on the correspnding number): \n1. General Settings\n2. Input Setup \n3. Save/Upload Config \n4. Quit \n\nOption Chosen: ")
+            option = input("\nLogger Config  \nChoose a Option (based on the correspnding number): \n1. General Settings\n2. Input Setup \n3. Save/Upload Config \n4. Back \n\nOption Chosen: ")
             #Set Menu Names
             if option == "1":
                 general()
@@ -131,7 +136,7 @@ def menu():
             elif option == "3":
                 saveUpload()
             elif option == "4":
-                common.quit()
+                common.back()
             else:
                 common.other()
     except StopIteration:
