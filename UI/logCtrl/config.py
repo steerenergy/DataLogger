@@ -92,18 +92,30 @@ class ADC:
                 common.other()
 
 
-#Initial Functions - setting up dictionaries with default values (will read config in future)
+
 def init():
+    #Determine whether a config inside the program has already been created (i.e. the config section has been run) and to continue where left off, or whether a new config needs to be generated in the program
     global configSet
-    configSet = True
-    blankConfInit()
+    if configSet == False:
+        option = input("\nDo you wish to load in your previous config (logConf.ini)? (Y/N) ")
+        if option == "Y" or "y":
+            configSet = True
+            importConfInit()
+        elif option == "N" or "n":
+            configSet = True
+            blankConfInit()
+
+    else:
+        menu()
+
 def blankConfInit():
+    #Initial Functions - setting up dictionaries with default values (will read config in future)
     #Setup dictionary with default settings for general settings
     global generalSettings
     generalSettings = {"timeinterval": 1,"name": "Default"}
     #Init all objects for 16 channels.
-    global adcList
-    adcList = {
+    global adcDict
+    adcDict = {
         "0A0": ADC(),
         "0A1": ADC(),
         "0A2": ADC(),
@@ -122,6 +134,34 @@ def blankConfInit():
         "3A3": ADC()
     }
     #load menu for the frst time
+    menu()
+
+def importConfInit():
+    #Get data from local config file and import (code similar to the logger.py config code)
+    global adcDict
+    adcDict = {}
+    #Open the config file
+    config = configparser.ConfigParser()
+    config.read('logConf.ini')
+
+    #create dicionry for each item in the general section of the config
+    global generalSettings
+    generalSettings = {}
+    for key in config['General']:
+        generalSettings[key] = config['General'][key]
+
+    #For all sections but general, parse the data from config and create a new object for each one and set insance variables for each
+    for input in config.sections():
+        if input != 'General':
+            adcDict[input] = ADC()
+            for setting in config[input]:
+                adcDict[input].name = input
+                adcDict[input].enabled = config[input].getboolean('enabled')
+                adcDict[input].inputType = config[input]['inputtype']
+                adcDict[input].gain = config[input].getint('gain')
+                adcDict[input].scaleLow = config[input].getint('scalelow')
+                adcDict[input].scaleHigh = config[input].getint('scalehigh')
+                adcDict[input].unit = config[input]['unit']
     menu()
 
 def menu():
@@ -182,22 +222,22 @@ def generalName():
 def inputSetup():
     inputCurrentSettings()
     chosenPin = input("\nPlease type the Name of Pin (Not the Number) you wish to Edit: ")
-    if chosenPin in adcList:
+    if chosenPin in adcDict:
         #Main menu
         try:
             while True:
-                print("\nCurent Pin Settings for: {}\nChoose a Option to edit a Setting (based on the correspnding number)\n1. Pin Enabled: {}\n2. Input Type: {}\n3. Gain: {}\n4. Scale: {} - {}\n5. Unit: {}\n----------------\n6. Back".format(chosenPin,adcList[chosenPin].enabled,adcList[chosenPin].inputType,adcList[chosenPin].gain,adcList[chosenPin].scaleLow,adcList[chosenPin].scaleHigh,adcList[chosenPin].unit))
+                print("\nCurent Pin Settings for: {}\nChoose a Option to edit a Setting (based on the correspnding number)\n1. Pin Enabled: {}\n2. Input Type: {}\n3. Gain: {}\n4. Scale: {} - {}\n5. Unit: {}\n----------------\n6. Back".format(chosenPin,adcDict[chosenPin].enabled,adcDict[chosenPin].inputType,adcDict[chosenPin].gain,adcDict[chosenPin].scaleLow,adcDict[chosenPin].scaleHigh,adcDict[chosenPin].unit))
                 option = input("\nOption Chosen: ")
                 if option == "1":
-                    adcList[chosenPin].enabledEdit()
+                    adcDict[chosenPin].enabledEdit()
                 elif option == "2":
-                    adcList[chosenPin].inputTypeEdit()
+                    adcDict[chosenPin].inputTypeEdit()
                 elif option == "3":
-                    adcList[chosenPin].gainEdit()
+                    adcDict[chosenPin].gainEdit()
                 elif option == "4":
-                    adcList[chosenPin].scaleEdit()
+                    adcDict[chosenPin].scaleEdit()
                 elif option == "5":
-                    adcList[chosenPin].unitEdit()
+                    adcDict[chosenPin].unitEdit()
                 elif option == "6":
                     common.back()
                 else:
@@ -215,9 +255,9 @@ def inputCurrentSettings():
     print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|".format("Number","Name","Pin Enabled","Input Type","Gain","Scale","Unit"))
     print("-"*92)
     x = 0
-    for ADC in adcList:
+    for ADC in adcDict:
         x+=1
-        print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x,ADC,adcList[ADC].enabled,adcList[ADC].inputType,adcList[ADC].gain,adcList[ADC].scaleLow,adcList[ADC].scaleHigh,adcList[ADC].unit))
+        print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x,ADC,adcDict[ADC].enabled,adcDict[ADC].inputType,adcDict[ADC].gain,adcDict[ADC].scaleLow,adcDict[ADC].scaleHigh,adcDict[ADC].unit))
 
 
 #Save/Upload config
@@ -251,14 +291,14 @@ def save():
     logConf["General"]["uniqueid"] = str(uuid.uuid4())
 
     #Write data for each A/D
-    for key in adcList:
+    for key in adcDict:
         logConf[key] = {}
-        logConf[key]["enabled"] = str(adcList[key].enabled)
-        logConf[key]["inputtype"] = str(adcList[key].inputType)
-        logConf[key]["gain"] = str(adcList[key].gain)
-        logConf[key]["scalelow"] = str(adcList[key].scaleLow)
-        logConf[key]["scalehigh"] = str(adcList[key].scaleHigh)
-        logConf[key]["unit"] = str(adcList[key].unit)
+        logConf[key]["enabled"] = str(adcDict[key].enabled)
+        logConf[key]["inputtype"] = str(adcDict[key].inputType)
+        logConf[key]["gain"] = str(adcDict[key].gain)
+        logConf[key]["scalelow"] = str(adcDict[key].scaleLow)
+        logConf[key]["scalehigh"] = str(adcDict[key].scaleHigh)
+        logConf[key]["unit"] = str(adcDict[key].unit)
     #Write File
     with open('logConf.ini', 'w') as configfile:
         logConf.write(configfile)

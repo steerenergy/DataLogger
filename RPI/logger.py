@@ -39,7 +39,7 @@ def init():
     adc2 = Adafruit_ADS1x15.ADS1115(address=0x4a, busnum=1)
     adc3 = Adafruit_ADS1x15.ADS1115(address=0x4b, busnum=1)
 
-    #Open the comfig file
+    #Open the config file
     global config
     config = configparser.ConfigParser()
     config.read('logConf.ini')
@@ -51,7 +51,7 @@ def init():
 #Import General Settings - for now as Global variables
 def generalImport():
     print("Configuring General Settings")
-    #create diciomry for each item in the general section of the config
+    #create dicionary for each item in the general section of the config
     global generalSettings
     generalSettings = {}
     for key in config['General']:
@@ -130,7 +130,7 @@ def log():
                #Get time and send to Log
                currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f");
                timeElapsed = round(time.perf_counter() - startTime,4)
-               
+
                for currentPin, value in enumerate(adcToLog):
                    #Get Raw data from A/D, and add to adcValues list corresponding to the current pin
                    adcValues[currentPin] = (value())
