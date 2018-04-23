@@ -4,7 +4,7 @@ import common
 def init():
     try:
         while True:
-            option = input("\nGeneral Settings: \nChoose a Option (based on the correspnding number): \n1. Change Language\n2. Back \n3. Quit \nOption Chosen: ")
+            option = input("\nGeneral Settings: \nChoose a Option (based on the correspnding number): \n1. Change Language\n2. Back\n3. Quit\n\nOption Chosen: ")
             #Set Menu Names
             if option == "1":
                 language()

@@ -167,7 +167,7 @@ def importConfInit():
 def menu():
     try:
         while True:
-            option = input("\nLogger Config  \nChoose a Option (based on the correspnding number): \n1. General Settings\n2. Input Setup \n3. Save/Upload Config \n4. Back \n\nOption Chosen: ")
+            option = input("\nLogger Config Menu:  \nChoose a Option (based on the correspnding number): \n1. General Settings\n2. Input Setup\n3. Save/Upload Config\n4. Back\n\nOption Chosen: ")
             #Set Menu Names
             if option == "1":
                 general()
