@@ -37,7 +37,8 @@ def init():
     global inputTypeList
     inputTypeList = {
     "4-20":(0.4,2),
-    "0-2V": (0,2)
+    "0-2V": (0,2),
+    "0-10V": (0,10)
 }
     conversionSetup()
     csvProcess()

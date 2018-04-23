@@ -25,17 +25,21 @@ class ADC:
                     self.enabled = True
                 elif option == "N" or option == "n":
                     self.enabled = False
+                else:
+                    common.other()
             elif self.enabled == True:
                 option = input("\nDisable Pin? (Y/N) ")
                 if option == "Y" or option == "y":
                     self.enabled = False
                 elif option == "N" or option == "n":
                     self.enabled = True
+                else:
+                    common.other()
             print("Success\n")
 
     def inputTypeEdit(self):
         #List of input Types (this can be updated and the code will continue to work)
-        inputTypes = ["4-20mA","0-2V"]
+        inputTypes = ["4-20mA","0-2V","0-10V"]
         print("\nAvaiable Input Types:")
         for key, value in enumerate(inputTypes,start=1):
             print("{}. {}".format(key,value))
@@ -75,7 +79,7 @@ class ADC:
 
     def unitEdit(self):
         #List of Unit Types (this can be updated and the code will continue to work)
-        unitTypes = ["N","m","mBar","mm"]
+        unitTypes = ["N","m","mBar","mm","V","mV","A"]
         print("\nAvaiable Unit Types:")
         for key, value in enumerate(unitTypes,start=1):
             print("{}. {}".format(key,value))
@@ -102,6 +106,8 @@ def init():
         elif option == "N" or option == "n":
             configSet = True
             blankConfInit()
+        else:
+            common.other()
 
     else:
         menu()
@@ -135,32 +141,35 @@ def blankConfInit():
     menu()
 
 def importConfInit():
-    #Get data from local config file and import (code similar to the logger.py config code)
-    global adcDict
-    adcDict = {}
-    #Open the config file
-    config = configparser.ConfigParser()
-    config.read('logConf.ini')
+    try:
+        #Get data from local config file and import (code similar to the logger.py config code)
+        global adcDict
+        adcDict = {}
+        #Open the config file
+        config = configparser.ConfigParser()
+        config.read('logConf.ini')
 
-    #create dicionry for each item in the general section of the config
-    global generalSettings
-    generalSettings = {}
-    for key in config['General']:
-        generalSettings[key] = config['General'][key]
+        #create dicionry for each item in the general section of the config
+        global generalSettings
+        generalSettings = {}
+        for key in config['General']:
+            generalSettings[key] = config['General'][key]
 
-    #For all sections but general, parse the data from config and create a new object for each one and set insance variables for each
-    for input in config.sections():
-        if input != 'General':
-            adcDict[input] = ADC()
-            for setting in config[input]:
-                adcDict[input].name = input
-                adcDict[input].enabled = config[input].getboolean('enabled')
-                adcDict[input].inputType = config[input]['inputtype']
-                adcDict[input].gain = config[input].getint('gain')
-                adcDict[input].scaleLow = config[input].getint('scalelow')
-                adcDict[input].scaleHigh = config[input].getint('scalehigh')
-                adcDict[input].unit = config[input]['unit']
-    menu()
+        #For all sections but general, parse the data from config and create a new object for each one and set insance variables for each
+        for input in config.sections():
+            if input != 'General':
+                adcDict[input] = ADC()
+                for setting in config[input]:
+                    adcDict[input].name = input
+                    adcDict[input].enabled = config[input].getboolean('enabled')
+                    adcDict[input].inputType = config[input]['inputtype']
+                    adcDict[input].gain = config[input].getint('gain')
+                    adcDict[input].scaleLow = config[input].getint('scalelow')
+                    adcDict[input].scaleHigh = config[input].getint('scalehigh')
+                    adcDict[input].unit = config[input]['unit']
+        menu()
+    except KeyError:
+        print("Error Reading Config - Check logConf.ini exists in the same directory as this program")
 
 def menu():
     try:
