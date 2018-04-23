@@ -153,7 +153,8 @@ def importConfInit():
         global generalSettings
         generalSettings = {}
         for key in config['General']:
-            generalSettings[key] = config['General'][key]
+            if key != "uniqueid":
+                generalSettings[key] = config['General'][key]
 
         #For all sections but general, parse the data from config and create a new object for each one and set insance variables for each
         for input in config.sections():
@@ -198,8 +199,8 @@ def general():
             x = 0
             for key in generalSettings:
                 x+=1
-                print("{}. {}: {}".format(x, key, generalSettings[key]))
-            print("----------------\n{}. Back\n".format(x+1))
+                print("{}. {}: {}".format(x, key.title(), generalSettings[key]))
+            print("----------------\n{}. Back".format(x+1))
             option = input("\nOption Chosen: ")
             if option == "1":
                 generalTime()
