@@ -20,16 +20,16 @@ class ADC:
     def enabledEdit(self):
     #If enabled, give option to disable, if disabled give option to enable
             if self.enabled == False:
-                option = input("Enable Pin? (Y/N) ")
-                if option == "Y" or "y":
+                option = input("\nEnable Pin? (Y/N) ")
+                if option == "Y" or option == "y":
                     self.enabled = True
-                elif option == "N" or "n":
+                elif option == "N" or option == "n":
                     self.enabled = False
             elif self.enabled == True:
-                option = input("Disable Pin? (Y/N) ")
-                if option == "Y" or "y":
-                    self.enabled == False
-                elif option == "N" or "n":
+                option = input("\nDisable Pin? (Y/N) ")
+                if option == "Y" or option == "y":
+                    self.enabled = False
+                elif option == "N" or option == "n":
                     self.enabled = True
             print("Success\n")
 
@@ -91,17 +91,15 @@ class ADC:
         except ValueError:
                 common.other()
 
-
-
 def init():
     #Determine whether a config inside the program has already been created (i.e. the config section has been run) and to continue where left off, or whether a new config needs to be generated in the program
     global configSet
     if configSet == False:
         option = input("\nDo you wish to load in your previous config (logConf.ini)? (Y/N) ")
-        if option == "Y" or "y":
+        if option == "Y" or option == "y":
             configSet = True
             importConfInit()
-        elif option == "N" or "n":
+        elif option == "N" or option == "n":
             configSet = True
             blankConfInit()
 
