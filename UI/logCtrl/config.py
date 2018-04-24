@@ -145,11 +145,11 @@ def importConfInit():
         #Get data from local logConf.ini file and import (code similar to the logger.py config code)
         global adcDict
         adcDict = {}
-        #Open the logConf file
+        #Open the config file
         logConf = configparser.ConfigParser()
         logConf.read('logConf.ini')
 
-        #create dictionary for each item in the general section of the logConf.ini
+        #Create dictionary for each item in the general section of the logConf.ini
         global generalSettings
         generalSettings = {}
         for key in logConf['General']:
