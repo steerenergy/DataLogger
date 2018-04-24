@@ -142,32 +142,32 @@ def blankConfInit():
 
 def importConfInit():
     try:
-        #Get data from local config file and import (code similar to the logger.py config code)
+        #Get data from local logConf.ini file and import (code similar to the logger.py config code)
         global adcDict
         adcDict = {}
-        #Open the config file
-        config = configparser.ConfigParser()
-        config.read('logConf.ini')
+        #Open the logConf file
+        logConf = configparser.ConfigParser()
+        logConf.read('logConf.ini')
 
-        #create dicionry for each item in the general section of the config
+        #create dictionary for each item in the general section of the logConf.ini
         global generalSettings
         generalSettings = {}
-        for key in config['General']:
+        for key in logConf['General']:
             if key != "uniqueid":
-                generalSettings[key] = config['General'][key]
+                generalSettings[key] = logConf['General'][key]
 
-        #For all sections but general, parse the data from config and create a new object for each one and set insance variables for each
-        for input in config.sections():
+        #For all sections but general, parse the data from logConf and create a new object for each one and set instance variables for each
+        for input in logConf.sections():
             if input != 'General':
                 adcDict[input] = ADC()
-                for setting in config[input]:
+                for setting in logConf[input]:
                     adcDict[input].name = input
-                    adcDict[input].enabled = config[input].getboolean('enabled')
-                    adcDict[input].inputType = config[input]['inputtype']
-                    adcDict[input].gain = config[input].getint('gain')
-                    adcDict[input].scaleLow = config[input].getint('scalelow')
-                    adcDict[input].scaleHigh = config[input].getint('scalehigh')
-                    adcDict[input].unit = config[input]['unit']
+                    adcDict[input].enabled = logConf[input].getboolean('enabled')
+                    adcDict[input].inputType = logConf[input]['inputtype']
+                    adcDict[input].gain = logConf[input].getint('gain')
+                    adcDict[input].scaleLow = logConf[input].getint('scalelow')
+                    adcDict[input].scaleHigh = logConf[input].getint('scalehigh')
+                    adcDict[input].unit = logConf[input]['unit']
         menu()
     except KeyError:
         print("Error Reading Config - Check logConf.ini exists in the same directory as this program")
