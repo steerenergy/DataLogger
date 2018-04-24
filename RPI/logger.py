@@ -53,7 +53,7 @@ def generalImport():
     print("Configuring General Settings")
     #create diciomry for each item in the general section of the config
     global generalSettings
-    generalSettings = {}
+    generalSettings = OrderedDict()
     for key in config['General']:
         generalSettings[key] = config['General'][key]
 
@@ -99,7 +99,10 @@ def inputImport():
 
 #Output Current Settings
 def settingsOutput():
-    print("Current Settings:")
+    print("\nCurrent General Settings:")
+    for key in generalSettings:
+       print("{}: {}".format(key.title(),generalSettings[key]))
+    print("\nCurrent Input Settings:")
     x = 0
     print("|{:>6}|{:>6}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|".format("Number","Name","Pin Enabled","Input Type","Gain","Scale","Unit"))
     print("-"*80)
@@ -120,7 +123,7 @@ def log():
        with open('/home/pi/Github/DataLogger/RPI/raw.csv', 'w', newline='') as csvfile:
            writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
            writer.writerow(['Date/Time','Time Interval (Seconds)'] + adcHeader)
-           print("Logging Begin\n")
+           print("\nStart Logging...\n")
 
            #Set startTime (method used ignores changes in system clock time)
            startTime=time.perf_counter()
