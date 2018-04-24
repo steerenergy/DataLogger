@@ -66,7 +66,7 @@ def csvProcess():
     print(df.head())
     #Data Convrsion for looop gravving data from config file
     print("\nConverting Data...")
-    #Skip first 2 columns and iterate each collumn thereafter
+    #Skip first 2 columns and iterate each column thereafter
     for item in df.iloc[:,2:].columns:
         #Below line runs function on each row in column
         df[item] = df[item].apply(convert, args=(item,))

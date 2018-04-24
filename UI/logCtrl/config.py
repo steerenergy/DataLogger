@@ -39,7 +39,6 @@ class ADC:
 
     def inputTypeEdit(self):
         #List of input Types (this can be updated and the code will continue to work)
-        inputTypes = ["4-20mA","0-2V","0-10V"]
         print("\nAvaiable Input Types:")
         for key, value in enumerate(inputTypes,start=1):
             print("{}. {}".format(key,value))
@@ -79,7 +78,6 @@ class ADC:
 
     def unitEdit(self):
         #List of Unit Types (this can be updated and the code will continue to work)
-        unitTypes = ["N","m","mBar","mm","V","mV","A"]
         print("\nAvaiable Unit Types:")
         for key, value in enumerate(unitTypes,start=1):
             print("{}. {}".format(key,value))
@@ -99,6 +97,7 @@ def init():
     #Determine whether a config inside the program has already been created (i.e. the config section has been run) and to continue where left off, or whether a new config needs to be generated in the program
     global configSet
     if configSet == False:
+        progConfImport()
         option = input("\nDo you wish to load in your previous config (logConf.ini)? (Y/N) ")
         if option == "Y" or option == "y":
             configSet = True
@@ -111,6 +110,23 @@ def init():
 
     else:
         menu()
+
+def progConfImport():
+    #Create config object, make it preserve case on import and read config file
+    progConf = configparser.ConfigParser()
+    progConf.optionxform = str
+    progConf.read('progConf.ini')
+
+    #Create list of unitTypes from unitType section
+    global unitTypes
+    unitTypes = []
+    for key in progConf['unitTypes']:
+        unitTypes.append(progConf['unitTypes'][key])
+    #Create list of inputTypes from the inputTypes section
+    global inputTypes
+    inputTypes = []
+    for key in progConf['inputTypes']:
+        inputTypes.append(key)
 
 def blankConfInit():
     #Initial Functions - setting up dictionaries with default values (will read config in future)
@@ -155,6 +171,8 @@ def importConfInit():
         for key in logConf['General']:
             if key != "uniqueid":
                 generalSettings[key] = logConf['General'][key]
+
+
 
         #For all sections but general, parse the data from logConf and create a new object for each one and set instance variables for each
         for input in logConf.sections():
