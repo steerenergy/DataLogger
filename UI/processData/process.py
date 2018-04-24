@@ -13,8 +13,8 @@ def gain(gain):
 def scale(scaleLow,scaleHigh,inputType):
     #Effectively usign y = mx+c
     #Scale on Y, inputType on x)
-    inputLow = inputTypeList[inputType][0]
-    inputHigh = inputTypeList[inputType][1]
+    inputLow = inputTypeDict[inputType][0]
+    inputHigh = inputTypeDict[inputType][1]
     m = (scaleHigh-scaleLow)/(inputHigh-inputLow)
     c = scaleHigh-m*inputHigh
     return(m,c)
@@ -34,12 +34,15 @@ def init():
     16:0.256
     }
     #Input type list: contains a tuple with the value (in volts) for the low end of the scale, and the value for the high end of the scale
-    global inputTypeList
-    inputTypeList = {
-    "4-20mA": (0.4,2),
-    "0-2V": (0,2),
-    "0-10V": (0,10)
-}
+    #Create config object, make it preserve case on import and read config file
+    progConf = configparser.ConfigParser()
+    progConf.optionxform = str
+    progConf.read('progConf.ini')
+    global inputTypeDict
+    inputTypeDict = {}
+    for key in progConf['inputTypes']:
+        inputTypeDict[key] = eval(progConf['inputTypes'][key])
+
     conversionSetup()
     csvProcess()
 
@@ -78,8 +81,6 @@ def csvProcess():
     print("\nWriting CSV...")
     df.to_csv('converted.csv', sep=',', index = False)
     print("\nSuccess")
-
-
 
 
 if __name__ == "__main__":
