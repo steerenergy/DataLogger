@@ -101,11 +101,11 @@ def inputImport():
 def settingsOutput():
     print("Current Settings:")
     x = 0
-    print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|".format("Number","Name","Pin Enabled","Input Type","Gain","Scale","Unit"))
-    print("-"*92)
+    print("|{:>6}|{:>6}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|".format("Number","Name","Pin Enabled","Input Type","Gain","Scale","Unit"))
+    print("-"*80)
     for ADC in adcDict:
         x+=1
-        print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x,adcDict[ADC].name,adcDict[ADC].enabled,adcDict[ADC].inputType,adcDict[ADC].gain,adcDict[ADC].scaleLow,adcDict[ADC].scaleHigh,adcDict[ADC].unit))
+        print("|{:>6}|{:>6}|{:>12}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x,adcDict[ADC].name,adcDict[ADC].enabled,adcDict[ADC].inputType,adcDict[ADC].gain,adcDict[ADC].scaleLow,adcDict[ADC].scaleHigh,adcDict[ADC].unit))
 
 #Logging Script
 def log():
