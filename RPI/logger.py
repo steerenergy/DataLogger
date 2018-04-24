@@ -62,7 +62,7 @@ def inputImport():
     print("Configuring Input Settings")
     #For all sections but general, parse the data from config and create a new object for each one and set insance variables for each
     for input in config.sections():
-        if input != 'General':
+        if input in adcPinMap:
             adcDict[input] = ADC()
             for setting in config[input]:
                 adcDict[input].name = input
@@ -133,7 +133,7 @@ def log():
                #Get time and send to Log
                currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f");
                timeElapsed = round(time.perf_counter() - startTime,4)
-               
+
                for currentPin, value in enumerate(adcToLog):
                    #Get Raw data from A/D, and add to adcValues list corresponding to the current pin
                    adcValues[currentPin] = (value())
