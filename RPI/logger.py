@@ -50,7 +50,7 @@ def init():
     config = configparser.ConfigParser()
     config.read('logConf.ini')
 
-    # Run Code to import general infromation
+    # Run Code to import general information
     generalImport()
     # Run code to import input settings
     inputImport()
@@ -74,14 +74,13 @@ def inputImport():
     for section in config.sections():
         if section != 'General':
             adcDict[section] = ADC()
-            for setting in config[section]:
-                adcDict[section].name = section
-                adcDict[section].enabled = config[section].getboolean('enabled')
-                adcDict[section].sectionType = config[section]['sectiontype']
-                adcDict[section].gain = config[section].getint('gain')
-                adcDict[section].scaleLow = config[section].getint('scalelow')
-                adcDict[section].scaleHigh = config[section].getint('scalehigh')
-                adcDict[section].unit = config[section]['unit']
+            adcDict[section].name = section
+            adcDict[section].enabled = config[section].getboolean('enabled')
+            adcDict[section].inputType = config[section]['inputtype']
+            adcDict[section].gain = config[section].getint('gain')
+            adcDict[section].scaleLow = config[section].getint('scalelow')
+            adcDict[section].scaleHigh = config[section].getint('scalehigh')
+            adcDict[section].unit = config[section]['unit']
     # ADC Pin Map List - created now the gain information has been grabbed.
     # This gives the list of possible functions that can be run to grab data from a pin.
     global adcPinMap
