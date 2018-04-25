@@ -144,7 +144,7 @@ def log():
         # CSV - open file and add data on bottom
         with open('raw.csv', 'w', newline='') as csvfile:
             writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(['Date/Time', 'Time Interval (Seconds)'] + adcHeader)
+            writer.writerow(['(ID = generalSettings['uniqueid']'+'Date/Time', 'Time Interval (Seconds)'] + adcHeader)
             print("\nStart Logging...\n")
 
             # Set startTime (method used ignores changes in system clock time)
