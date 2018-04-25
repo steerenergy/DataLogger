@@ -1,4 +1,5 @@
 # This is the main Raspberry Pi Logging Script
+# It begins by calling the init() function which loads the config file
 
 # Import Packages/Modules
 import time
@@ -11,7 +12,6 @@ import csv
 
 
 class ADC:
-
     # Go Through list of individual input objects and add those which are enabled to the 'master list'.
     # Then add their names to the header.
     def inputSetup(self):
@@ -70,20 +70,20 @@ def generalImport():
 def inputImport():
     print("Configuring Input Settings")
     # For all sections but general, parse the data from config.C
-    # Create a new object for each one and set insance variables for each
-    for input in config.sections():
-        if input != 'General':
-            adcDict[input] = ADC()
-            for setting in config[input]:
-                adcDict[input].name = input
-                adcDict[input].enabled = config[input].getboolean('enabled')
-                adcDict[input].inputType = config[input]['inputtype']
-                adcDict[input].gain = config[input].getint('gain')
-                adcDict[input].scaleLow = config[input].getint('scalelow')
-                adcDict[input].scaleHigh = config[input].getint('scalehigh')
-                adcDict[input].unit = config[input]['unit']
+    # Create a new object for each one and set instance variables for each
+    for section in config.sections():
+        if section != 'General':
+            adcDict[section] = ADC()
+            for setting in config[section]:
+                adcDict[section].name = section
+                adcDict[section].enabled = config[section].getboolean('enabled')
+                adcDict[section].sectionType = config[section]['sectiontype']
+                adcDict[section].gain = config[section].getint('gain')
+                adcDict[section].scaleLow = config[section].getint('scalelow')
+                adcDict[section].scaleHigh = config[section].getint('scalehigh')
+                adcDict[section].unit = config[section]['unit']
     # ADC Pin Map List - created now the gain information has been grabbed.
-    # This gives the list of possible functiosn taht can be run to grab data from a pin.
+    # This gives the list of possible functions that can be run to grab data from a pin.
     global adcPinMap
     adcPinMap = {
         "0A0": functools.partial(adc0.read_adc, 0, gain=adcDict["0A0"].gain, data_rate=dataRate),
@@ -166,6 +166,10 @@ def log():
     except KeyboardInterrupt:
         print("Logging Finished")
 
+
+# This is the code that is run when the program is loaded.
+# If the module were to be imported, the code inside the if statement would not run.
+# Calls the init() function and then the log() function
 if __name__ == "__main__":
     # Load Config Data
     init()
