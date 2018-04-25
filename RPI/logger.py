@@ -144,10 +144,6 @@ def log():
         # CSV - Create/Open CSV file and print headers
         with open('raw.csv', 'w', newline='') as csvfile:
             writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-<<<<<<< HEAD
-            writer.writerow(["#ID",generalSettings['uniqueid']])
-=======
->>>>>>> parent of 30d6878... Adding unique ID to csv
             writer.writerow(['Date/Time', 'Time Interval (Seconds)'] + adcHeader)
             print("\nStart Logging...\n")
 
