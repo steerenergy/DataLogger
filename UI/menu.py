@@ -1,28 +1,29 @@
-#Import necesarry python files
+# Import necesarry python files
 import sys
-#Import local python files for operation
+# Import local python files for operation
 import common
 import logCtrl
 import about
 import processData
 import generalSettings
 
-#Initial Menu
+
+# Initial Menu
 def init():
     version = "Whatever"
     welcome = "Steer Energy Data Logger (Version {})".format(version)
     print(welcome)
-    print("-"*len(welcome))
+    print("-" * len(welcome))
     main()
 
 
-
-#Main Menu
+# Main Menu
 def main():
     try:
         while True:
-            option = input("\nMain Menu: \nChoose a Option (based on the correspnding number): \n1. Logger Control\n2. Process Data \n3. General Settings \n4. About \n5. Quit \n\nOption Chosen: ")
-            #Set Menu Names
+            option = input(
+                "\nMain Menu: \nChoose a Option (based on the correspnding number): \n1. Logger Control\n2. Process Data \n3. General Settings \n4. About \n5. Quit \n\nOption Chosen: ")
+            # Set Menu Names
             if option == "1":
                 logCtrl.init()
             elif option == "2":

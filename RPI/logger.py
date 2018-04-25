@@ -6,6 +6,7 @@
 # 3. Setup logging (time interval etc.) then iterate through devices, grab data and save to CSV until stopped.
 
 # Import Packages/Modules
+
 import time
 from datetime import datetime
 from collections import OrderedDict
