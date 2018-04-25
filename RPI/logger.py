@@ -13,13 +13,13 @@ import csv
 
 class ADC:
     def __init__(self, section):
-        adcDict[section].name = section
-        adcDict[section].enabled = config[section].getboolean('enabled')
-        adcDict[section].inputType = config[section]['inputtype']
-        adcDict[section].gain = config[section].getint('gain')
-        adcDict[section].scaleLow = config[section].getint('scalelow')
-        adcDict[section].scaleHigh = config[section].getint('scalehigh')
-        adcDict[section].unit = config[section]['unit']
+        self.name = section
+        self.enabled = config[section].getboolean('enabled')
+        self.inputType = config[section]['inputtype']
+        self.gain = config[section].getint('gain')
+        self.scaleLow = config[section].getint('scalelow')
+        self.scaleHigh = config[section].getint('scalehigh')
+        self.unit = config[section]['unit']
 
     # Go Through list of individual input objects and add those which are enabled to the 'master list'.
     # Then add their names to the header.
