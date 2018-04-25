@@ -11,10 +11,11 @@ import csv
 
 
 class ADC:
+
     # Go Through list of individual input objects and add those which are enabled to the 'master list'.
     # Then add their names to the header.
     def inputSetup(self):
-        if self.enabled == True:
+        if self.enabled is True:
             adcToLog.append(adcPinMap[self.name])
             adcHeader.append(self.name)
         else:
