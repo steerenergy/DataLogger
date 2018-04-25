@@ -141,10 +141,11 @@ def log():
         csvRows = len(adcToLog)
         # Set up list to be printed to CSV
         adcValues = [0] * csvRows
-        # CSV - open file and add data on bottom
+        # CSV - Create/Open CSV file and print headers
         with open('raw.csv', 'w', newline='') as csvfile:
             writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(['(ID = generalSettings['uniqueid']'+'Date/Time', 'Time Interval (Seconds)'] + adcHeader)
+            writer.writerow(["#ID",generalSettings['uniqueid']])
+            writer.writerow(['Date/Time', 'Time Interval (Seconds)'] + adcHeader)
             print("\nStart Logging...\n")
 
             # Set startTime (method used ignores changes in system clock time)
