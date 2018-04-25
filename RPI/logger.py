@@ -12,6 +12,15 @@ import csv
 
 
 class ADC:
+    def __init__(self, section):
+        adcDict[section].name = section
+        adcDict[section].enabled = config[section].getboolean('enabled')
+        adcDict[section].inputType = config[section]['inputtype']
+        adcDict[section].gain = config[section].getint('gain')
+        adcDict[section].scaleLow = config[section].getint('scalelow')
+        adcDict[section].scaleHigh = config[section].getint('scalehigh')
+        adcDict[section].unit = config[section]['unit']
+
     # Go Through list of individual input objects and add those which are enabled to the 'master list'.
     # Then add their names to the header.
     def inputSetup(self):
@@ -70,17 +79,10 @@ def generalImport():
 def inputImport():
     print("Configuring Input Settings")
     # For all sections but general, parse the data from config.C
-    # Create a new object for each one and set instance variables for each
+    # Create a new object for each one. The init method of the class then imports all the data as instance variables
     for section in config.sections():
         if section != 'General':
-            adcDict[section] = ADC()
-            adcDict[section].name = section
-            adcDict[section].enabled = config[section].getboolean('enabled')
-            adcDict[section].inputType = config[section]['inputtype']
-            adcDict[section].gain = config[section].getint('gain')
-            adcDict[section].scaleLow = config[section].getint('scalelow')
-            adcDict[section].scaleHigh = config[section].getint('scalehigh')
-            adcDict[section].unit = config[section]['unit']
+            adcDict[section] = ADC(section)
     # ADC Pin Map List - created now the gain information has been grabbed.
     # This gives the list of possible functions that can be run to grab data from a pin.
     global adcPinMap
