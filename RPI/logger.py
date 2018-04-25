@@ -1,4 +1,6 @@
-# Import Libraries
+# This is the main Raspberry Pi Logging Script
+
+# Import Packages/Modules
 import time
 from datetime import datetime
 from collections import OrderedDict
@@ -160,8 +162,8 @@ def log():
                 timeDiff = (time.perf_counter() - startTime)
                 time.sleep(timeInterval - (timeDiff % timeInterval))
 
-except KeyboardInterrupt:
-print("Logging Finished")
+    except KeyboardInterrupt:
+        print("Logging Finished")
 
 if __name__ == "__main__":
     # Load Config Data
