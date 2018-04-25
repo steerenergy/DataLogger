@@ -1,9 +1,5 @@
 # This is the main Raspberry Pi Logging Script
-# It has 3 sections: 1. Import, 2. Print Settings, 3. Log These are called at the bottom of the program
-# 1. Calls the init() function which loads config by calling generalImport() and are lettingsImport().
-# General settings (dictionary) and input specific settings (as objects) creating a list of pins to log
-# 2. Iterates through lists and nicely formats and prints data
-# 3. Setup logging (time interval etc.) then iterate through devices, grab data and save to CSV until stopped.
+# It begins by calling the init() function which loads the config file
 
 # Import Packages/Modules
 import time
@@ -35,7 +31,7 @@ class ADC:
             pass
 
 
-# Initial Import and Setup
+# Initial Import and setup
 def init():
     # Setting up key variables for logging
     global dataRate
@@ -69,10 +65,10 @@ def init():
     inputImport()
 
 
-# Import General Settings
+# Import General Settings - for now as Global variables
 def generalImport():
     print("Configuring General Settings")
-    # Create dictionary for each item in the general section of the config
+    # create diciomry for each item in the general section of the config
     global generalSettings
     generalSettings = OrderedDict()
     for key in config['General']:
@@ -111,6 +107,7 @@ def inputImport():
     # Run code to choose which pins to be logged.
     for adc in adcDict:
         adcDict[adc].inputSetup()
+    settingsOutput()
 
 
 # Output Current Settings
@@ -141,8 +138,13 @@ def log():
         csvRows = len(adcToLog)
         # Set up list to be printed to CSV
         adcValues = [0] * csvRows
+<<<<<<< HEAD
         # CSV - Create/Open CSV file and print headers
         with open('raw.csv', 'w', newline='') as csvfile:
+=======
+        # CSV -repoen file and add data on bottom
+        with open('/home/pi/Github/DataLogger/RPI/raw.csv', 'w', newline='') as csvfile:
+>>>>>>> parent of 052003a... Coment and clean up logic
             writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(["#ID",generalSettings['uniqueid']])
             writer.writerow(['Date/Time', 'Time Interval (Seconds)'] + adcHeader)
@@ -176,9 +178,7 @@ def log():
 # If the module were to be imported, the code inside the if statement would not run.
 # Calls the init() function and then the log() function
 if __name__ == "__main__":
-    # Load Config Data and Setup
+    # Load Config Data
     init()
-    # Print Settings
-    settingsOutput()
     # Run Logging
     log()
