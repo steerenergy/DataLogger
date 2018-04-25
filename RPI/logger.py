@@ -1,5 +1,9 @@
 # This is the main Raspberry Pi Logging Script
-# It begins by calling the init() function which loads the config file
+# It has 3 sections: 1. Import, 2. Print Settings, 3. Log These are called at the bottom of the program
+# 1. Calls the init() function which loads config by calling generalImport() and are lettingsImport().
+# General settings (dictionary) and input specific settings (as objects) creating a list of pins to log
+# 2. Iterates through lists and nicely formats and prints data
+# 3. Setup logging (time interval etc.) then iterate through devices, grab data and save to CSV until stopped.
 
 # Import Packages/Modules
 import time
@@ -31,7 +35,7 @@ class ADC:
             pass
 
 
-# Initial Import and setup
+# Initial Import and Setup
 def init():
     # Setting up key variables for logging
     global dataRate
@@ -65,10 +69,10 @@ def init():
     inputImport()
 
 
-# Import General Settings - for now as Global variables
+# Import General Settings
 def generalImport():
     print("Configuring General Settings")
-    # create diciomry for each item in the general section of the config
+    # Create dictionary for each item in the general section of the config
     global generalSettings
     generalSettings = OrderedDict()
     for key in config['General']:
@@ -107,7 +111,6 @@ def inputImport():
     # Run code to choose which pins to be logged.
     for adc in adcDict:
         adcDict[adc].inputSetup()
-    settingsOutput()
 
 
 # Output Current Settings
@@ -138,8 +141,8 @@ def log():
         csvRows = len(adcToLog)
         # Set up list to be printed to CSV
         adcValues = [0] * csvRows
-        # CSV -repoen file and add data on bottom
-        with open('/home/pi/Github/DataLogger/RPI/raw.csv', 'w', newline='') as csvfile:
+        # CSV - open file and add data on bottom
+        with open('raw.csv', 'w', newline='') as csvfile:
             writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(['Date/Time', 'Time Interval (Seconds)'] + adcHeader)
             print("\nStart Logging...\n")
@@ -172,7 +175,9 @@ def log():
 # If the module were to be imported, the code inside the if statement would not run.
 # Calls the init() function and then the log() function
 if __name__ == "__main__":
-    # Load Config Data
+    # Load Config Data and Setup
     init()
+    # Print Settings
+    settingsOutput()
     # Run Logging
     log()
