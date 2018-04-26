@@ -1,7 +1,9 @@
+# Uses Paramiko to connect to the Pi via ftp and download the csv and config file.
+
 import sys
 sys.path.append("..")
-import common
 import paramiko
+
 
 def init():
     try:
@@ -13,7 +15,7 @@ def init():
         # Auth
         password = "raspberry"
         username = "pi"
-        transport.connect(username = username, password = password)
+        transport.connect(username=username, password=password)
         # Go!
         print("Getting Config and CSV...")
         sftp = paramiko.SFTPClient.from_transport(transport)
@@ -28,6 +30,7 @@ def init():
     finally:
         sftp.close()
         transport.close()
+
 
 if __name__ == "__main__":
     init()
