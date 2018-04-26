@@ -32,10 +32,10 @@ def init():
 
 # Logger Control Commands
 def control():
-    print("\n Remote Control Coming Soon! "
-          "\n Once the config is uploaded to the RPI, please start the program manually on the Pi itself.")
+    print("\nRemote Control Coming Soon! "
+          "\nOnce the config is uploaded to the RPI, please start the program manually on the Pi itself.")
 
 
 # Future Real Time Data Code
 def realTime():
-    print("\nComing Soon!\n")
+    print("\nComing Soon!")
