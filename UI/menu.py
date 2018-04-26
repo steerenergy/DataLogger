@@ -1,5 +1,5 @@
-# Import necesarry python files
-import sys
+# Main Menu - Initialised by UI.py and creates main menu linking to other imported modules
+
 # Import local python files for operation
 import common
 import logCtrl
@@ -8,7 +8,7 @@ import processData
 import generalSettings
 
 
-# Initial Menu
+# Printed Title
 def init():
     version = "Whatever"
     welcome = "Steer Energy Data Logger (Version {})".format(version)
@@ -17,12 +17,14 @@ def init():
     main()
 
 
-# Main Menu
+# Main Menu - Structure very similar to other menus.
 def main():
     try:
         while True:
             option = input(
-                "\nMain Menu: \nChoose a Option (based on the correspnding number): \n1. Logger Control\n2. Process Data \n3. General Settings \n4. About \n5. Quit \n\nOption Chosen: ")
+                "\nMain Menu: \nChoose a Option (based on the corresponding number):"
+                "\n1. Logger Control\n2. Process Data \n3. General Settings \n4. About \n5. Quit" 
+                "\n\nOption Chosen: ")
             # Set Menu Names
             if option == "1":
                 logCtrl.init()
@@ -36,5 +38,7 @@ def main():
                 common.quit()
             else:
                 common.other()
+    # Used to break the loop if someone selects a back option.
+    # No back option as this is root menu: this is left here for sake of consistency with other menus.
     except StopIteration:
         pass
