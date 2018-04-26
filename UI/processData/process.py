@@ -18,7 +18,7 @@ def gain(gain):
     return gainList[gain]/32767.0
 
 
-def scale(scaleLow,scaleHigh,inputType):
+def scale(scaleLow, scaleHigh, inputType):
     # Effectively using y = mx+c
     # Scale on y, inputType on x)
     inputLow = inputTypeDict[inputType][0]
@@ -33,7 +33,7 @@ def convert(value,item):
 
 
 def init():
-    #Create Dicts/Vars
+    # Create Dicts/Vars
     global conversion
     conversion = {}
     # Setup of gain/type.scale for conversion
@@ -57,6 +57,7 @@ def init():
 
     conversionSetup()
     csvProcess()
+
 
 def conversionSetup():
     # Load Config from File

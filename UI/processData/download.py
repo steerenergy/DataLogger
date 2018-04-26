@@ -1,7 +1,4 @@
 # Uses Paramiko to connect to the Pi via ftp and download the csv and config file.
-
-import sys
-sys.path.append("..")
 import paramiko
 
 
