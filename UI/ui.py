@@ -4,4 +4,4 @@
 import menu
 
 # Initiate Main Menu
-menu.init()1
+menu.init()
