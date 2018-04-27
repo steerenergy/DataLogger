@@ -1,8 +1,8 @@
 # DataLogger
-Data Logging
-More to come
+More to come - watch this space... maybe
 
 See technical documentation/project log for more for more.
 
-Requires install of Adafruit libraries. These are included here for reference.
-Paramiko is also used and will need install
+Will require install of several libraries to run
+
+If developing ensure you read the technical documentation before trying anything.

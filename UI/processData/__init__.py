@@ -10,7 +10,7 @@ import common
 def init():
     try:
         while True:
-            option = input("\nProcess Data Menu: \nChoose a Option (based on the correspnding number): \n1. Download\n2. Process\n3. Back\n4. Quit \n\nOption Chosen: ")
+            option = input("\nProcess Data Menu: \nChoose a Option (based on the correspnding number): \n1. Download Data\n2. Process Data\n3. Back\n4. Quit \n\nOption Chosen: ")
             #Set Menu Names
             if option == "1":
                 download.init()

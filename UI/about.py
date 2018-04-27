@@ -1,5 +1,5 @@
-#Import Common Comands
-import common
+# Feature Information about Program
+
 
 def init():
     info()

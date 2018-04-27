@@ -1,11 +1,15 @@
-#Import Common Comands
+# Will Contain future general program settings
+
+# Import Common Commands
 import common
+
 
 def init():
     try:
         while True:
-            option = input("\nGeneral Settings: \nChoose a Option (based on the correspnding number): \n1. Change Language\n2. Back \n3. Quit \nOption Chosen: ")
-            #Set Menu Names
+            option = input("\nGeneral Settings: \nChoose a Option (based on the corresponding number):" 
+                           "\n1. Change Language\n2. Back\n3. Quit"
+                           "\n\nOption Chosen: ")
             if option == "1":
                 language()
             elif option == "2":
@@ -17,5 +21,6 @@ def init():
     except StopIteration:
         pass
 
+# Language Settings
 def language():
     print("\nEnglish Only\n")
