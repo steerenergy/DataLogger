@@ -15,6 +15,8 @@ import functools
 import Adafruit_ADS1x15
 import csv
 
+# Flag for multithreaded use to be trigerred to stop logging loop
+logEnbl = True
 
 class ADC:
     def __init__(self, section):
@@ -152,7 +154,7 @@ def log():
             startTime = time.perf_counter()
 
             # Beginning of reading script
-            while (True):
+            while logEnbl == True:
                 # Get time and send to Log
                 currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f");
                 timeElapsed = round(time.perf_counter() - startTime, 4)
