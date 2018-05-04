@@ -32,7 +32,6 @@ class Window(Frame):
 
     def test(self):
         if self.logButton['text'] == "Start Logging":
-            print("Logging Start")
             # Change Button Text
             self.logButton.config(text="Finish Logging")
             # Load Config Data and Setup
