@@ -5,6 +5,7 @@ from tkinter import *
 from tkinter import font
 import logger
 
+
 class Window(Frame):
     # Main Window
     def __init__(self, master=None):
@@ -22,12 +23,12 @@ class Window(Frame):
         self.title.pack()
 
         # Start/Stop Logging Button 
-        self.logButton = Button(text="Start Logging", height=4, width=20, command=self.test, font=chosenFont)
-        self.logButton.pack(side=TOP)
+        self.logButton = Button(self, text="Start Logging", height=4, width=20, command=self.test, font=chosenFont)
+        self.logButton.pack()
 
         # Start/Stop Logging Button 
-        self.quitButton = Button(text="Quit", height=4, width=20, command=self.client_exit, font=chosenFont)
-        self.quitButton.pack(side=BOTTOM)
+        self.quitButton = Button(self, text="Quit", height=4, width=20, command=self.client_exit, font=chosenFont)
+        self.quitButton.pack()
 
         # Live Data Title
         self.liveTitle = Label(self, text="Data Logger", font=chosenFont)
