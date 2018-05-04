@@ -5,7 +5,6 @@ from tkinter import *
 from tkinter import font
 import logger
 
-
 class Window(Frame):
     # Main Window
     def __init__(self, master=None):
@@ -19,8 +18,8 @@ class Window(Frame):
         self.pack()
 
         # Title
-        self.label = Label(self, text="Data Logger", font=chosenFont)
-        self.label.pack()
+        self.title = Label(self, text="Data Logger", font=chosenFont)
+        self.title.pack()
 
         # Start/Stop Logging Button 
         self.logButton = Button(text="Start Logging", height=4, width=20, command=self.test, font=chosenFont)
@@ -29,6 +28,10 @@ class Window(Frame):
         # Start/Stop Logging Button 
         self.quitButton = Button(text="Quit", height=4, width=20, command=self.client_exit, font=chosenFont)
         self.quitButton.pack(side=BOTTOM)
+
+        # Live Data Title
+        self.liveTitle = Label(self, text="Data Logger", font=chosenFont)
+        self.liveTitle.pack()
 
     def test(self):
         if self.logButton['text'] == "Start Logging":
@@ -57,6 +60,7 @@ root = Tk()
 
 # Size of the window
 # root.wm_attributes('-zoomed', 1)
+
 chosenFont = font.Font(family="Helvetica", size=20, weight=font.BOLD)
 
 app = Window(root)
