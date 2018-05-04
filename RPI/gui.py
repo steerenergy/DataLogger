@@ -13,17 +13,13 @@ class Window(Frame):
         Frame.__init__(self, master)
         # Setting self.master = master window
         self.master = master
-        # Run init_window() function
-        self.init_window()
 
-    # Creation of init_window
-    def init_window(self):
         # Changing the title of our master widget
         self.master.title("Data Logger")
         self.pack()
 
         # Title
-        self.label = Label(self, text="Data Logger",font=chosenFont)
+        self.label = Label(self, text="Data Logger", font=chosenFont)
         self.label.pack()
 
         # Start/Stop Logging Button 
@@ -33,6 +29,7 @@ class Window(Frame):
         # Start/Stop Logging Button 
         self.quitButton = Button(text="Quit", height=4, width=20, command=self.client_exit, font=chosenFont)
         self.quitButton.pack(side=BOTTOM)
+
     def test(self):
         if self.logButton['text'] == "Start Logging":
             print("Logging Start")
@@ -51,7 +48,8 @@ class Window(Frame):
             # Change Button Text
             self.logButton.config(text="Start Logging")
 
-    def client_exit(self):
+    @staticmethod
+    def client_exit():
         quit()
 
 
