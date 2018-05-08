@@ -16,30 +16,35 @@ class WindowTop(Frame):
         self.master = master
         
         # Changing the title of our master widget
-        self.master.title("Data Logger")
+        self.master.title("Control:")
         self.pack()
 
         # Create Layout Frames
         self.topFrame = Frame(master)
-        self.topFrame.pack(expand=1, fill=BOTH)
-        self.liveData = Frame(master, bg="red")
-        self.liveData.pack(expand=1,fill=BOTH)
+        self.topFrame.pack(expand=1, fill=BOTH, side = LEFT)
+        self.liveData = Frame(master)
+        self.liveData.pack(expand=1,fill=BOTH, side = RIGHT)
         
         # Title
-        self.title = Label(self.topFrame, text="Data Logger", font=bigFont)
+        self.title = Label(self.topFrame, text="Log Ctrl:", font=bigFont)
         self.title.pack()
 
         # Start/Stop Logging Button 
-        self.logButton = Button(self.topFrame, text="Start Logging", height=4, width=20, command=self.logButtons, font=bigFont)
+        self.logButton = Button(self.topFrame, text="Start Logging", height=3, width=20, command=self.logButtons, font=bigFont)
         self.logButton.pack()
 
         # Start/Stop Logging Button 
-        self.quitButton = Button(self.topFrame, text="Quit", height=4, width=20, command=self.client_exit, font=bigFont)
-        self.quitButton.pack()
+        self.quitButton = Button(self.topFrame, text="Quit", height=3, width=20, command=self.client_exit, font=bigFont)
+        self.quitButton.pack(padx=10)
 
         # Live Data Title
-        self.liveTitle = Label(self.liveData, text="Live Data:", font=smallFont)
-        self.liveTitle.pack()
+        self.liveTitle = Label(self.liveData, text="Live Data:", font=bigFont)
+        self.liveTitle.pack(side=TOP)
+
+        self.list = range(1,17)
+        for i in self.list:
+            self.i = Label(self.liveData, text="{:>6} -- ".format(i) ,font=smallFont)
+            self.i.pack()
 
         #Live Data Table
         #TBD
