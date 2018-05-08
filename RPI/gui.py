@@ -70,7 +70,6 @@ class WindowTop(Frame):
             self.liveDataText.insert(END, "HELLO\n")
             self.liveDataText.pack()
             time.sleep(0.5)
-            pass
     
     @staticmethod
     def client_exit():
