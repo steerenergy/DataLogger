@@ -15,8 +15,7 @@ import functools
 import Adafruit_ADS1x15
 import csv
 
-# Flag for multithreaded use to be trigerred to stop logging loop
-logEnbl = True
+
 
 class ADC:
     def __init__(self, section):
@@ -40,6 +39,9 @@ class ADC:
 
 # Initial Import and Setup
 def init():
+    # Flag for multithreaded use to be trigerred to stop logging loop
+    global logEnbl
+    logEnbl = True
     # Setting up key variables for logging
     global dataRate
     dataRate = 860
