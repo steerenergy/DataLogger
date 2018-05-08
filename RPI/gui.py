@@ -7,7 +7,7 @@ import logger
 
 
 
-class Window(Frame):
+class WindowTop(Frame):
     # Main Window
     def __init__(self, master=None):
         # This is class inheritance
@@ -19,26 +19,32 @@ class Window(Frame):
         self.master.title("Data Logger")
         self.pack()
 
+        # Create Layout Frames
+        self.topFrame = Frame(master)
+        self.topFrame.pack(expand=1, fill=BOTH)
+        self.liveData = Frame(master, bg="red")
+        self.liveData.pack(expand=1,fill=BOTH)
+        
         # Title
-        self.title = Label(self, text="Data Logger", font=bigFont)
+        self.title = Label(self.topFrame, text="Data Logger", font=bigFont)
         self.title.pack()
 
         # Start/Stop Logging Button 
-        self.logButton = Button(self, text="Start Logging", height=4, width=20, command=self.test, font=bigFont)
+        self.logButton = Button(self.topFrame, text="Start Logging", height=4, width=20, command=self.logButtons, font=bigFont)
         self.logButton.pack()
 
         # Start/Stop Logging Button 
-        self.quitButton = Button(self, text="Quit", height=4, width=20, command=self.client_exit, font=bigFont)
+        self.quitButton = Button(self.topFrame, text="Quit", height=4, width=20, command=self.client_exit, font=bigFont)
         self.quitButton.pack()
 
         # Live Data Title
-        self.liveTitle = Label(self, text="Live Data:", font=smallFont)
+        self.liveTitle = Label(self.liveData, text="Live Data:", font=smallFont)
         self.liveTitle.pack()
 
         #Live Data Table
         #TBD
 
-    def test(self):
+    def logButtons(self):
         if self.logButton['text'] == "Start Logging":
             # Change Button Text
             self.logButton.config(text="Finish Logging")
@@ -70,5 +76,5 @@ root = Tk()
 bigFont = font.Font(family="Helvetica", size=20, weight=font.BOLD)
 smallFont = font.Font(family="Helvetica", size=14)
 
-app = Window(root)
+app = WindowTop(root)
 root.mainloop()
