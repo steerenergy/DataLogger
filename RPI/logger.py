@@ -53,6 +53,8 @@ def init():
     # Dictionary used for creating ADC() objects
     global adcDict
     adcDict = OrderedDict()
+    # Where Complete list of ADC values is stored after all pins logged
+    # global adcValuesCompl
     # A/D Setup - Create 4 Global instances of ADS1115 ADC (16-bit) according to Adafruit Libraries
     global adc0
     global adc1
@@ -165,8 +167,11 @@ def log():
                     # Get Raw data from A/D, and add to adcValues list corresponding to the current pin
                     adcValues[currentPin] = (value())
 
-                # Export Data to Spreadsheet inc current datetime and time elapsed and Reset list values (so we can see if code fails)
+                # Export Data to Spreadsheet inc current datetime and time elapsed
                 writer.writerow([currentDateTime] + [timeElapsed] + adcValues)
+                # Copy list for data output and reset list values (so we can see if code fails)
+                global adcValuesCompl
+                adcValuesCompl = 3
                 adcValues = [0] * csvRows
                 # Work out time delay needed until next set of values taken based on user given value (using some clever maths)
                 timeDiff = (time.perf_counter() - startTime)

@@ -67,9 +67,10 @@ class WindowTop(Frame):
 
     def liveData(self):
         while logger.logEnbl is True:
-            self.liveDataText.insert(END, "HELLO\n")
+            self.liveDataText.insert(END, logger.adcValuesCompl)
+            print(logger.adcValuesCompl)
             self.liveDataText.pack()
-            time.sleep(0.5)
+            time.sleep(0.1)
     
     @staticmethod
     def client_exit():
