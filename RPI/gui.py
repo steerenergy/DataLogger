@@ -97,6 +97,7 @@ class WindowTop(Frame):
         self.liveDataText['state'] = 'normal'
         self.liveDataText.insert(INSERT, inputStr)
         self.liveDataText['state'] = 'disabled'
+        self.liveDataText.see("end")
 
     @staticmethod
     def client_exit():
