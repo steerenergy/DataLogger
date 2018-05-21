@@ -5,6 +5,7 @@ import threading
 from tkinter import *
 from tkinter import font
 import logger
+import sys
 
 
 class WindowTop(Frame):
@@ -40,10 +41,19 @@ class WindowTop(Frame):
         self.liveTitle = Label(self.liveDataFrame, text="Live Data:", font=bigFont)
         self.liveTitle.pack(side=TOP)
 
+        # Live Data Scroll Bar
+        liveDataScrollBar = Scrollbar(self.liveDataFrame)
+        liveDataScrollBar.pack(side=RIGHT, fill=Y)
+
+
         # Live Data Text Box
-        self.liveDataText = Text(self.liveDataFrame,font=smallFont)
+        self.liveDataText = Text(self.liveDataFrame, yscrollcommand = liveDataScrollBar.set, font=smallFont,state='disabled')
         self.liveDataText.pack()
 
+        # Config ScrollBar
+        liveDataScrollBar.config(command=self.liveDataText.yview)
+
+    # The Button for Starting and Stopping Logging
     def logButtons(self):
         if self.logButton['text'] == "Start Logging":
             # Change Button Text
@@ -56,11 +66,15 @@ class WindowTop(Frame):
             logThread = threading.Thread(target=logger.log)
             logThread.start()
             # Start Live Data
-            dataThread = threading.Thread(target=self.liveData)
-            dataThread.start()
+            # dataThread = threading.Thread(target=self.liveData)
+            # dataThread.start()
         else:
             print("Logging Finish")
             logger.logEnbl = False
+            # Clear Text Output
+            self.liveDataText['state'] = 'normal'
+            self.liveDataText.delete(1.0, END)
+            self.liveDataText['state'] = 'disabled'
             # Change Button Text
             self.logButton.config(text="Start Logging")
 
@@ -76,7 +90,14 @@ class WindowTop(Frame):
                 self.liveDataText.pack()
             # Sleep - Don't want to go too fast
             time.sleep(0.05)
-    
+    # This redirects all print statements from console to the textbox.
+    # It essentially replaces the print statement
+
+    def redirector(self, inputStr):
+        self.liveDataText['state'] = 'normal'
+        self.liveDataText.insert(INSERT, inputStr)
+        self.liveDataText['state'] = 'disabled'
+
     @staticmethod
     def client_exit():
         quit()
@@ -85,7 +106,7 @@ class WindowTop(Frame):
 # Create Tkinter Instance
 root = Tk()
 
-# Size of the window
+# Size of the window (Uncomment for Full Scree)
 # root.wm_attributes('-zoomed', 1)
 
 # Fonts
@@ -93,4 +114,8 @@ bigFont = font.Font(family="Helvetica", size=20, weight=font.BOLD)
 smallFont = font.Font(family="Helvetica", size=14)
 
 app = WindowTop(root)
+
+# Redirect all print statements to the textbox
+sys.stdout.write = app.redirector
+
 root.mainloop()
