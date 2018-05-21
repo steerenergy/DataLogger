@@ -6,7 +6,6 @@
 # 3. Setup logging (time interval etc.) then iterate through devices, grab data and save to CSV until stopped.
 
 # Import Packages/Modules
-
 import time
 from datetime import datetime
 from collections import OrderedDict
@@ -14,7 +13,6 @@ import configparser
 import functools
 import Adafruit_ADS1x15
 import csv
-
 
 
 class ADC:
@@ -54,7 +52,8 @@ def init():
     global adcDict
     adcDict = OrderedDict()
     # Where Complete list of ADC values is stored after all pins logged
-    # global adcValuesCompl
+    global adcValuesCompl
+    adcValuesCompl = "Waiting For Data..."
     # A/D Setup - Create 4 Global instances of ADS1115 ADC (16-bit) according to Adafruit Libraries
     global adc0
     global adc1
@@ -158,7 +157,7 @@ def log():
             startTime = time.perf_counter()
 
             # Beginning of reading script
-            while logEnbl == True:
+            while logEnbl is True:
                 # Get time and send to Log
                 currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f");
                 timeElapsed = round(time.perf_counter() - startTime, 4)
@@ -171,7 +170,7 @@ def log():
                 writer.writerow([currentDateTime] + [timeElapsed] + adcValues)
                 # Copy list for data output and reset list values (so we can see if code fails)
                 global adcValuesCompl
-                adcValuesCompl = 3
+                adcValuesCompl = adcValues
                 adcValues = [0] * csvRows
                 # Work out time delay needed until next set of values taken based on user given value (using some clever maths)
                 timeDiff = (time.perf_counter() - startTime)

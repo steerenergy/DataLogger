@@ -7,7 +7,6 @@ from tkinter import font
 import logger
 
 
-
 class WindowTop(Frame):
     # Main Window
     def __init__(self, master=None):
@@ -66,11 +65,17 @@ class WindowTop(Frame):
             self.logButton.config(text="Start Logging")
 
     def liveData(self):
+        # Setup data buffer to hold most recent data
+        buffer = 0
         while logger.logEnbl is True:
-            self.liveDataText.insert(END, logger.adcValuesCompl)
-            print(logger.adcValuesCompl)
-            self.liveDataText.pack()
-            time.sleep(0.1)
+            # Get Complete Set of Logged Data
+            # If Data is different to that in the buffer
+            if logger.adcValuesCompl != buffer:
+                buffer = logger.adcValuesCompl
+                self.liveDataText.insert(END,"{}\n".format(buffer))
+                self.liveDataText.pack()
+            # Sleep - Don't want to go too fast
+            time.sleep(0.05)
     
     @staticmethod
     def client_exit():
