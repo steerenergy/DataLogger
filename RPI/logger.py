@@ -53,7 +53,7 @@ def init():
     adcDict = OrderedDict()
     # Where Complete list of ADC values is stored after all pins logged
     global adcValuesCompl
-    adcValuesCompl = "Waiting For Data..."
+    adcValuesCompl = "Waiting For Data... "
     # A/D Setup - Create 4 Global instances of ADS1115 ADC (16-bit) according to Adafruit Libraries
     global adc0
     global adc1
@@ -77,17 +77,17 @@ def init():
 
 # Import General Settings
 def generalImport():
-    print("Configuring General Settings")
+    print("Configuring General Settings... ", end ="", flush=True)
     # Create dictionary for each item in the general section of the config
     global generalSettings
     generalSettings = OrderedDict()
     for key in config['General']:
         generalSettings[key] = config['General'][key]
-
+    print("Success!")
 
 # Import Input Settings
 def inputImport():
-    print("Configuring Input Settings")
+    print("Configuring Input Settings... ", end ="", flush=True)
     # For all sections but general, parse the data from config.C
     # Create a new object for each one. The init method of the class then imports all the data as instance variables
     for section in config.sections():
@@ -117,7 +117,7 @@ def inputImport():
     # Run code to choose which pins to be logged.
     for adc in adcDict:
         adcDict[adc].inputSetup()
-
+    print("Success!")
 
 # Output Current Settings
 def settingsOutput():
@@ -172,7 +172,8 @@ def log():
                 global adcValuesCompl
                 adcValuesCompl = adcValues
                 adcValues = [0] * csvRows
-                # Work out time delay needed until next set of values taken based on user given value (using some clever maths)
+                # Work out time delay needed until next set of values taken based on user given value
+                # (Using some clever maths)
                 timeDiff = (time.perf_counter() - startTime)
                 time.sleep(timeInterval - (timeDiff % timeInterval))
 

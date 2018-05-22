@@ -45,9 +45,8 @@ class WindowTop(Frame):
         liveDataScrollBar = Scrollbar(self.liveDataFrame)
         liveDataScrollBar.pack(side=RIGHT, fill=Y)
 
-
         # Live Data Text Box
-        self.liveDataText = Text(self.liveDataFrame, yscrollcommand = liveDataScrollBar.set, font=smallFont,state='disabled')
+        self.liveDataText = Text(self.liveDataFrame, yscrollcommand=liveDataScrollBar.set, font=smallFont ,state='disabled')
         self.liveDataText.pack()
 
         # Config ScrollBar
@@ -65,9 +64,6 @@ class WindowTop(Frame):
             # Run Logging
             logThread = threading.Thread(target=logger.log)
             logThread.start()
-            # Start Live Data
-            # dataThread = threading.Thread(target=self.liveData)
-            # dataThread.start()
         else:
             print("Logging Finish")
             logger.logEnbl = False
@@ -78,18 +74,6 @@ class WindowTop(Frame):
             # Change Button Text
             self.logButton.config(text="Start Logging")
 
-    def liveData(self):
-        # Setup data buffer to hold most recent data
-        buffer = 0
-        while logger.logEnbl is True:
-            # Get Complete Set of Logged Data
-            # If Data is different to that in the buffer
-            if logger.adcValuesCompl != buffer:
-                buffer = logger.adcValuesCompl
-                self.liveDataText.insert(END,"{}\n".format(buffer))
-                self.liveDataText.pack()
-            # Sleep - Don't want to go too fast
-            time.sleep(0.05)
     # This redirects all print statements from console to the textbox.
     # It essentially replaces the print statement
 
@@ -111,8 +95,8 @@ root = Tk()
 # root.wm_attributes('-zoomed', 1)
 
 # Fonts
-bigFont = font.Font(family="Helvetica", size=20, weight=font.BOLD)
-smallFont = font.Font(family="Helvetica", size=14)
+bigFont = font.Font(family="Trebuchet MS", size=20, weight=font.BOLD)
+smallFont = font.Font(family="Consolas", size=14)
 
 app = WindowTop(root)
 
