@@ -5,6 +5,7 @@ import time
 
 x = 0
 
+
 class ADS1115:
 
     def __init__(self, address, busnum):
@@ -16,4 +17,4 @@ class ADS1115:
         if pin == 0:
             x = x + 1
         time.sleep(0.05)
-        return "Pin:{} No.{}".format(pin,x)
+        return "P:{} N{}".format(pin, x)

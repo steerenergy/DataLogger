@@ -13,6 +13,7 @@ import configparser
 import functools
 import Adafruit_ADS1x15
 import csv
+import threading
 
 
 class ADC:
@@ -53,7 +54,7 @@ def init():
     adcDict = OrderedDict()
     # Where Complete list of ADC values is stored after all pins logged
     global adcValuesCompl
-    adcValuesCompl = "Waiting For Data... "
+    adcValuesCompl = []
     # A/D Setup - Create 4 Global instances of ADS1115 ADC (16-bit) according to Adafruit Libraries
     global adc0
     global adc1
@@ -84,6 +85,7 @@ def generalImport():
     for key in config['General']:
         generalSettings[key] = config['General'][key]
     print("Success!")
+
 
 # Import Input Settings
 def inputImport():
@@ -119,6 +121,7 @@ def inputImport():
         adcDict[adc].inputSetup()
     print("Success!")
 
+
 # Output Current Settings
 def settingsOutput():
     print("\nCurrent General Settings:")
@@ -153,6 +156,10 @@ def log():
             writer.writerow(['Date/Time', 'Time Interval (Seconds)'] + adcHeader)
             print("\nStart Logging...\n")
 
+            # Start live data thread
+            dataThread = threading.Thread(target=liveData)
+            dataThread.start()
+
             # Set startTime (method used ignores changes in system clock time)
             startTime = time.perf_counter()
 
@@ -176,9 +183,41 @@ def log():
                 # (Using some clever maths)
                 timeDiff = (time.perf_counter() - startTime)
                 time.sleep(timeInterval - (timeDiff % timeInterval))
-
+            # Wait until livedata thread is finished
+            dataThread.join()
+    # Used only if running logger.py directly from idle
     except KeyboardInterrupt:
         print("Logging Finished")
+
+
+# Live Data Output
+# Function is run in separate thread to ensure it doesn't interfere with logging
+def liveData():
+    # Setup data buffer to hold most recent data
+    print("Live Data:\n")
+    # Print header for all items
+    adcHeaderPrint = ""
+    for item in adcHeader:
+        adcHeaderPrint += ("|{:>8}".format(item))
+    print("{}|".format(adcHeaderPrint))
+    # Print a nice vertical line so it all looks pretty
+    print("-"*(9*len(adcHeader)+1))
+    buffer = 0
+    while adcValuesCompl == []:
+        pass
+    while logEnbl is True:
+        # Get Complete Set of Logged Data
+        # If Data is different to that in the buffer
+        if adcValuesCompl != buffer:
+            buffer = adcValuesCompl
+            adcValuesComplPrint = ""
+            # Create a nice string to print with the values in
+            # Only prints data that is being logged
+            for item in adcValuesCompl:
+               adcValuesComplPrint += ("|{:>8}".format(item))
+            print("{}|".format(adcValuesComplPrint))
+        # Sleep - Don't want to go too fast
+        time.sleep(0.05)
 
 
 # This is the code that is run when the program is loaded.

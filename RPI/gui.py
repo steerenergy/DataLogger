@@ -1,15 +1,16 @@
 # This uses tkinter which is a really common multi-platform GUI
+# Script connects to logger.py and acts a front end to it
 
-import time
 import threading
 from tkinter import *
 from tkinter import font
 import logger
 import sys
+import time
 
 
 class WindowTop(Frame):
-    # Main Window
+    # Main Window - Init function contains all elements of layout
     def __init__(self, master=None):
         # This is class inheritance
         Frame.__init__(self, master)
@@ -17,14 +18,14 @@ class WindowTop(Frame):
         self.master = master
         
         # Changing the title of our master widget
-        self.master.title("Control:")
+        self.master.title("Steer Energy Data Logger")
         self.pack()
 
         # Create Layout Frames
         self.topFrame = Frame(master)
         self.topFrame.pack(expand=1, fill=BOTH, side = LEFT)
         self.liveDataFrame = Frame(master)
-        self.liveDataFrame.pack(expand=1,fill=BOTH, side = RIGHT)
+        self.liveDataFrame.pack(expand=1,fill=BOTH, side=RIGHT)
         
         # Title
         self.title = Label(self.topFrame, text="Log Ctrl:", font=bigFont)
@@ -42,46 +43,65 @@ class WindowTop(Frame):
         self.liveTitle.pack(side=TOP)
 
         # Live Data Scroll Bar
-        liveDataScrollBar = Scrollbar(self.liveDataFrame)
-        liveDataScrollBar.pack(side=RIGHT, fill=Y)
+        self.liveDataScrollBar = Scrollbar(self.liveDataFrame)
+        self.liveDataScrollBar.pack(side=RIGHT, fill=Y)
 
         # Live Data Text Box
-        self.liveDataText = Text(self.liveDataFrame, yscrollcommand=liveDataScrollBar.set, font=smallFont ,state='disabled')
+        self.liveDataText = Text(self.liveDataFrame, yscrollcommand=self.liveDataScrollBar.set, font=smallFont, state='disabled')
         self.liveDataText.pack()
 
         # Config ScrollBar
-        liveDataScrollBar.config(command=self.liveDataText.yview)
+        self.liveDataScrollBar.config(command=self.liveDataText.yview)
 
-    # The Button for Starting and Stopping Logging
+        # Checkbox for AutoScroll
+        self.autoScrollEnable = IntVar()
+        self.autoScroll = Checkbutton(self.topFrame, text="AutoScroll", variable=self.autoScrollEnable, font=bigFont)
+        self.autoScroll.select()
+        self.autoScroll.pack()
+
+        # Redirect normal print commands to textbox on GUI
+        sys.stdout.write = self.redirector
+
+    # The scripts for starting and stopping logging
     def logButtons(self):
         if self.logButton['text'] == "Start Logging":
-            # Change Button Text
-            self.logButton.config(text="Finish Logging")
+            # Clear Text Output
+            self.liveDataText['state'] = 'normal'
+            self.liveDataText.delete(1.0, END)
+            self.liveDataText['state'] = 'disabled'
+            # Scroll to Bottom of Blank Box
+            self.liveDataText.see(END)
             # Load Config Data and Setup
             logger.init()
             # Print Settings on Console
             logger.settingsOutput()
             # Run Logging
-            logThread = threading.Thread(target=logger.log)
-            logThread.start()
+            self.logThread = threading.Thread(target=logger.log)
+            self.logThread.start()
+            # Change Button Text
+            self.logButton.config(text="Finish Logging")
         else:
-            print("Logging Finish")
+            print("\nStopping Logger... ", end="", flush=True)
             logger.logEnbl = False
-            # Clear Text Output
-            self.liveDataText['state'] = 'normal'
-            self.liveDataText.delete(1.0, END)
-            self.liveDataText['state'] = 'disabled'
+            # Wait until logger thread is finished - delay put in to stop crash of program when start/stop is too quick
+            time.sleep(0.1)
+            self.logThread.join()
+            print("Success!")
             # Change Button Text
             self.logButton.config(text="Start Logging")
 
-    # This redirects all print statements from console to the textbox.
-    # It essentially replaces the print statement
-
+    # This redirects all print statements from console to the textbox in the GUI.
+    # Note - errors will be displayed in terminal still
+    # It essentially redefines what the print statement does
     def redirector(self, inputStr):
+        # Enable, write data, disable
         self.liveDataText['state'] = 'normal'
-        self.liveDataText.insert(INSERT, inputStr)
+        self.liveDataText.insert(END, inputStr)
+        self.liveDataText.update()
         self.liveDataText['state'] = 'disabled'
-        self.liveDataText.see("end")
+        # If autoscroll is enabled, then scroll
+        if self.autoScrollEnable.get() == 1:
+            self.liveDataText.see(END)
 
     @staticmethod
     def client_exit():
@@ -91,7 +111,7 @@ class WindowTop(Frame):
 # Create Tkinter Instance
 root = Tk()
 
-# Size of the window (Uncomment for Full Scree)
+# Size of the window (Uncomment for Full Screen)
 # root.wm_attributes('-zoomed', 1)
 
 # Fonts
@@ -99,8 +119,5 @@ bigFont = font.Font(family="Trebuchet MS", size=20, weight=font.BOLD)
 smallFont = font.Font(family="Consolas", size=14)
 
 app = WindowTop(root)
-
-# Redirect all print statements to the textbox
-sys.stdout.write = app.redirector
 
 root.mainloop()
