@@ -9,13 +9,14 @@
 import pandas as pd
 import sys
 import configparser
+
 sys.path.append("..")
 
 
 # Functions for calculating conversions in csv
 def gain(gain):
     # Table of Gain to voltage convert adcValues. Voltage is in volts
-    return gainList[gain]/32767.0
+    return gainList[gain] / 32767.0
 
 
 def scale(scaleLow, scaleHigh, inputType):
@@ -23,13 +24,13 @@ def scale(scaleLow, scaleHigh, inputType):
     # Scale on y, inputType on x)
     inputLow = inputTypeDict[inputType][0]
     inputHigh = inputTypeDict[inputType][1]
-    m = (scaleHigh-scaleLow)/(inputHigh-inputLow)
-    c = scaleHigh-m*inputHigh
+    m = (scaleHigh - scaleLow) / (inputHigh - inputLow)
+    c = scaleHigh - m * inputHigh
     return m, c
 
 
 def convert(value, item):
-    return value*conversion[item][0] + conversion[item][1]
+    return value * conversion[item][0] + conversion[item][1]
 
 
 def init():
@@ -39,11 +40,11 @@ def init():
     # Setup of gain/type.scale for conversion
     global gainList
     gainList = {
-    1: 4.096,
-    2: 2.04,
-    4: 1.024,
-    8: 0.512,
-    16: 0.256
+        1: 4.096,
+        2: 2.04,
+        4: 1.024,
+        8: 0.512,
+        16: 0.256
     }
     # Input type list: contains a tuple with the value (in volts) for the low and high end of the scale
     # Create config object, make it preserve case on import and read config file
@@ -67,10 +68,10 @@ def conversionSetup():
     for key in config.sections():
         if key != 'General' and config[key].getboolean('enabled') is True:
             # Get values of m and c in y = mx+c by passing config data to scale() function
-            m,c = scale(config[key].getint('scalelow'), config[key].getint('scalehigh'),config[key]['inputtype'])
+            m, c = scale(config[key].getint('scalelow'), config[key].getint('scalehigh'), config[key]['inputtype'])
             # Use y = mx+c to find conversion value. This finds the conversion factor from raw data to the scale chosen
-            m = m*gain(config[key].getint('gain'))
-            conversion[key] = (m,c)
+            m = m * gain(config[key].getint('gain'))
+            conversion[key] = (m, c)
 
 
 def csvProcess():
@@ -81,7 +82,7 @@ def csvProcess():
     # Data Conversion Loop
     print("\nConverting Data...")
     # Skip first 2 columns (Data/Time and Time Interval) and iterate each column thereafter
-    for item in df.iloc[:,2:].columns:
+    for item in df.iloc[:, 2:].columns:
         # Below line runs convert function on each row in column
         df[item] = df[item].apply(convert, args=(item,))
         # Rename Column heading to add Units onto the end of them
