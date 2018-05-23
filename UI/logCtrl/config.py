@@ -1,8 +1,10 @@
 # This program is a beast...
 # It is in charge of creating and writing a config
-# It begins at init(), on first time rub offering to create a new config or import a previous.
+# It begins at init(), on first time run offering to create a new config or import a previous.
 # Menu is then initialised, user can change general settings (generalMenu()) or input (inputSetup())
 # Once a user is happy, they enter saveUploadMenu() to write the config file and send via FTP over to the pi
+# The save function also triggers preProcess().
+# This generates m and c values (in y = mx + c) and saves to the config allowing for future processing
 
 
 # Makes all directory references up a level to simplify importing common files

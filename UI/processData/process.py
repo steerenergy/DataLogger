@@ -1,8 +1,8 @@
 # One of the main files in the UI script. Handles the reading of the CSV and config file and processing the data.
 # Program begins at init() which creates variables and imports the datatype lists.
-# This calls conversionSetup() which loads the logConf.ini file and generates scale factors from this.
-# The scale factor is stored as a m and c term (in y = mx + c) waiting to be used
-# Then csvProcess is called which loads the csv and performs the conversion operation on each column and row.
+# This calls conversionSetup() which loads in the pre calculated m and c values (in y = mx + c).
+# These are stored in the 'conversion' list as a tuple
+# Then csvProcess is called which loads the csv and performs the convert() on each cell efficiently via pandas
 # A converted CSV is then written
 
 # Import Stuff
@@ -13,20 +13,7 @@ import configparser
 sys.path.append("..")
 
 
-# Generate 'm' and 'c' to be used in processing data
-def scale(scaleLow, scaleHigh, inputType, gainVal):
-    # Effectively using y = mx+c
-    # Scale chosen on y axis, inputType on x axis (in Volts))
-    inputLow = inputTypeDict[inputType][0]
-    inputHigh = inputTypeDict[inputType][1]
-    m = (scaleHigh - scaleLow) / (inputHigh - inputLow)
-    c = scaleHigh - m * inputHigh
-    # As data recorded is raw, and 'x' must be in volts, m is multiplied by the gain scale factor
-    m = m * gainList[gainVal] / 32767.0
-    return m, c
-
-
-# Function called by csvProcess which does the data conversion on each data item
+# Function called by csvProcess which does the actual data conversion on each data item
 def convert(value, item):
     return value * conversion[item][0] + conversion[item][1]
 
@@ -34,29 +21,11 @@ def convert(value, item):
 # General init functions - including gain list setup and loading in program config
 def init():
     # Create Dicts/Vars
+    # Conversion contains m and c values used for converting raw data to real values
     global conversion
     conversion = {}
-    # Setup of gain/type.scale for conversion
-    global gainList
-    gainList = {
-        1: 4.096,
-        2: 2.04,
-        4: 1.024,
-        8: 0.512,
-        16: 0.256
-    }
-    # Loading input types into dict from program config file
-    # Input type dict: contains a tuple with the value (in volts) for the low and high end of the scale
-    # Create config object, make it preserve case on import and read config file
-    progConf = configparser.ConfigParser()
-    progConf.optionxform = str
-    progConf.read('progConf.ini')
-    # Creating a dictionary of input types
-    global inputTypeDict
-    inputTypeDict = {}
-    for key in progConf['inputTypes']:
-        inputTypeDict[key] = eval(progConf['inputTypes'][key])
 
+    # Start conversion process
     conversionSetup()
     csvProcess()
 
@@ -70,9 +39,8 @@ def conversionSetup():
     # Process config for all enabled channels in config file
     for key in config.sections():
         if key != 'General' and config[key].getboolean('enabled') is True:
-            # Get values of m and c (in y = mx + c) by passing config data to scale() function
-            m, c = scale(config[key].getint('scalelow'), config[key].getint('scalehigh'), config[key]['inputtype'], config[key].getint('gain'))
-            conversion[key] = (m, c)
+            # Get values of m and c (in y = mx + c) from config
+            conversion[key] = (config[key].getfloat('m'), config[key].getfloat('c'))
 
 
 # Loading CSV into pandas, processing the data and exporting converted CSV
