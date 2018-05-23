@@ -25,8 +25,9 @@ class ADC:
         self.scaleLow = config[section].getint('scalelow')
         self.scaleHigh = config[section].getint('scalehigh')
         self.unit = config[section]['unit']
-        if m in config[section] and c in config[section] is True:
-            print("I'm true")
+        if "m" in config[section] and "c" in config[section]:
+            self.m = config[section].getfloat('m')
+            self.c = config[section].getfloat('c')
 
     # Go Through list of individual input objects and add those which are enabled to the 'master list'.
     # Then add their names to the header.
@@ -40,7 +41,7 @@ class ADC:
 
 # Initial Import and Setup
 def init():
-    # Flag for multithreaded use to be trigerred to stop logging loop
+    # Flag for multithreaded use to be triggered to stop logging loop
     global logEnbl
     logEnbl = True
     # Setting up key variables for logging
@@ -80,7 +81,7 @@ def init():
 
 # Import General Settings
 def generalImport():
-    print("Configuring General Settings... ", end ="", flush=True)
+    print("Configuring General Settings... ", end="", flush=True)
     # Create dictionary for each item in the general section of the config
     global generalSettings
     generalSettings = OrderedDict()
@@ -91,7 +92,7 @@ def generalImport():
 
 # Import Input Settings
 def inputImport():
-    print("Configuring Input Settings... ", end ="", flush=True)
+    print("Configuring Input Settings... ", end="", flush=True)
     # For all sections but general, parse the data from config.C
     # Create a new object for each one. The init method of the class then imports all the data as instance variables
     for section in config.sections():
@@ -168,7 +169,7 @@ def log():
             # Beginning of reading script
             while logEnbl is True:
                 # Get time and send to Log
-                currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f");
+                currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f")
                 timeElapsed = round(time.perf_counter() - startTime, 4)
 
                 for currentPin, value in enumerate(adcToLog):
@@ -185,7 +186,7 @@ def log():
                 # (Using some clever maths)
                 timeDiff = (time.perf_counter() - startTime)
                 time.sleep(timeInterval - (timeDiff % timeInterval))
-            # Wait until livedata thread is finished
+            # Wait until live data thread is finished
             dataThread.join()
     # Used only if running logger.py directly from idle
     except KeyboardInterrupt:
@@ -197,15 +198,15 @@ def log():
 def liveData():
     # Setup data buffer to hold most recent data
     print("Live Data:\n")
-    # Print header for all items
+    # Print header for all pins being logged
     adcHeaderPrint = ""
-    for pin in adcHeader:
-        adcHeaderPrint += ("|{:>8}".format(pin*))
+    for pinName in adcHeader:
+        adcHeaderPrint += ("|{:>3}{:>5}".format(pinName, adcDict[pinName].unit))
     print("{}|".format(adcHeaderPrint))
     # Print a nice vertical line so it all looks pretty
-    print("-"*(9*len(adcHeader)+1))
+    print("-" * (9 * len(adcHeader) + 1))
     buffer = 0
-    while adcValuesCompl == []:
+    while not adcValuesCompl:
         pass
     while logEnbl is True:
         # Get Complete Set of Logged Data
@@ -215,8 +216,13 @@ def liveData():
             adcValuesComplPrint = ""
             # Create a nice string to print with the values in
             # Only prints data that is being logged
-            for item in adcValuesCompl:
-               adcValuesComplPrint += ("|{:>8}".format(item))
+            for no, val in enumerate(adcValuesCompl):
+                # Get the name of the pin so it can be used to find the adc object
+                pinName = adcHeader[no]
+                # Calculate converted value
+                convertedVal = val * adcDict[pinName].m + adcDict[pinName].c
+                # Add converted value to the string being printed
+                adcValuesComplPrint += ("|{:>8}".format(round(convertedVal, 2)))
             print("{}|".format(adcValuesComplPrint))
         # Sleep - Don't want to go too fast
         time.sleep(0.05)

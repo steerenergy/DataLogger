@@ -65,6 +65,7 @@ class WindowTop(Frame):
 
     # The scripts for starting and stopping logging
     def logButtons(self):
+        # Starting Logging
         if self.logButton['text'] == "Start Logging":
             # Disable Log Button
             self.logButton['state'] = 'disabled'
@@ -84,7 +85,11 @@ class WindowTop(Frame):
             # Change Button Text and re-enable
             self.logButton.config(text="Finish Logging")
             self.logButton['state'] = 'normal'
+        # Stopping Logging
         else:
+            # Disable button
+            self.logButton['state'] = 'disabled'
+            # Print button status
             print("\nStopping Logger... ", end="", flush=True)
             logger.logEnbl = False
             # Wait until logger thread is finished - delay put in to stop crash of program when start/stop is too quick
@@ -93,6 +98,8 @@ class WindowTop(Frame):
             print("Success!")
             # Change Button Text
             self.logButton.config(text="Start Logging")
+            # Re-enable Button
+            self.logButton['state'] = 'normal'
 
     # This redirects all print statements from console to the textbox in the GUI.
     # Note - errors will be displayed in terminal still
