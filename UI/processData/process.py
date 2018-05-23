@@ -13,26 +13,31 @@ import configparser
 sys.path.append("..")
 
 
-# Functions for calculating conversions in csv
+# Calculates conversion from raw data to volts based on gain value selected
 def gain(gain):
     # Table of Gain to voltage convert adcValues. Voltage is in volts
     return gainList[gain] / 32767.0
 
 
-def scale(scaleLow, scaleHigh, inputType):
+# Generate 'm' and 'c' to be used in processing data
+def scale(scaleLow, scaleHigh, inputType, gainVal):
     # Effectively using y = mx+c
-    # Scale on y, inputType on x)
+    # Scale chosen on y axis, inputType on x axis (in Volts))
     inputLow = inputTypeDict[inputType][0]
     inputHigh = inputTypeDict[inputType][1]
     m = (scaleHigh - scaleLow) / (inputHigh - inputLow)
     c = scaleHigh - m * inputHigh
+    # As data recorded is raw, and 'x' must be in volts, m is multiplied by the gain scale factor
+    m = m * gain(gainVal)
     return m, c
 
 
+# Function called by csvProcess which does the data conversion on each data item
 def convert(value, item):
     return value * conversion[item][0] + conversion[item][1]
 
 
+# General init functions
 def init():
     # Create Dicts/Vars
     global conversion
@@ -60,20 +65,21 @@ def init():
     csvProcess()
 
 
+# Importing the information from the config file and creating a dictionary for m and c values needed for data conversion
 def conversionSetup():
     # Load Config from File
     global config
     config = configparser.ConfigParser()
     config.read('logConf.ini')
+    # Process config for all enabled channels in config file
     for key in config.sections():
         if key != 'General' and config[key].getboolean('enabled') is True:
-            # Get values of m and c in y = mx+c by passing config data to scale() function
-            m, c = scale(config[key].getint('scalelow'), config[key].getint('scalehigh'), config[key]['inputtype'])
-            # Use y = mx+c to find conversion value. This finds the conversion factor from raw data to the scale chosen
-            m = m * gain(config[key].getint('gain'))
+            # Get values of m and c (in y = mx + c) by passing config data to scale() function
+            m, c = scale(config[key].getint('scalelow'), config[key].getint('scalehigh'), config[key]['inputtype'], config[key].getint('gain'))
             conversion[key] = (m, c)
 
 
+# Loading CSV into pandas, processing the data and exporting converted CSV
 def csvProcess():
     # Read CSV file
     df = pd.read_csv('raw.csv')
