@@ -51,12 +51,12 @@ class ADC:
 
     def inputTypeEdit(self):
         # List of input Types (this can be updated and the code will continue to work)
-        print("\nAvaiable Input Types:")
-        for key, value in enumerate(inputTypes, start=1):
-            print("{}. {}".format(key, value))
+        print("\nAvailable Input Types:")
+        for pos, value in enumerate(inputTypes, start=1):
+            print("{}. {}".format(pos, value))
         option = input("\nSelect an option by its corresponding number: ")
         try:
-            # check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
+            # Check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
             if 0 < int(option) <= len(inputTypes):
                 self.inputType = inputTypes[int(option) - 1]
                 print("Success")
@@ -92,9 +92,9 @@ class ADC:
 
     def unitEdit(self):
         # List of Unit Types (this can be updated and the code will continue to work)
-        print("\nAvaiable Unit Types:")
-        for key, value in enumerate(unitTypes, start=1):
-            print("{}. {}".format(key, value))
+        print("\nAvailable Unit Types:")
+        for pos, value in enumerate(unitTypes, start=1):
+            print("{}. {}".format(pos, value))
         option = input("\nSelect an option by its corresponding number: ")
         try:
             # Check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
@@ -129,7 +129,7 @@ def init():
     menu()
 
 
-# CONFIG IMPORTS - Program Config Import - For input types and units
+# CONFIG IMPORTS - Program Config Import for input types and units + global vars for data pre processing
 def progConfImport():
     # Create config object, make it preserve case on import and read config file
     progConf = configparser.ConfigParser()
@@ -146,6 +146,25 @@ def progConfImport():
     inputTypes = []
     for key in progConf['inputTypes']:
         inputTypes.append(key)
+
+    # Lists and dicts or pre processing load in
+    # Gain list used for conversion from raw to voltage
+    global gainList
+    gainList = {
+        1: 4.096,
+        2: 2.04,
+        4: 1.024,
+        8: 0.512,
+        16: 0.256
+    }
+    # Creating a dictionary of input types from progConf file
+    # It contains a tuple with the value (in volts) for the low and high end of the scale
+    # Note: We got a list of input type names earlier but here we actually get the min and max values (the scale)
+    # Changing the above code would involve lots of time restructuring which I don't have
+    global inputTypeDict
+    inputTypeDict = {}
+    for key in progConf['inputTypes']:
+        inputTypeDict[key] = eval(progConf['inputTypes'][key])
 
 
 # Init of input settings if user chooses a blank config
@@ -274,7 +293,7 @@ def inputSetup():
     inputCurrentSettings()
     chosenPin = input("\nPlease type the Name of Pin (Not the Number) you wish to Edit: ")
     if chosenPin in adcDict:
-        # Main menu
+        # Main Menu
         try:
             while True:
                 print(
@@ -324,6 +343,20 @@ def inputCurrentSettings():
                                                                               adcDict[ADC].unit))
 
 
+# PRE PROCESS - Called by Save Function to determine
+# Generate 'm' and 'c' to be used in processing data
+def preProcess(scaleLow, scaleHigh, inputType, gainVal):
+    # Effectively using y = mx+c
+    # Scale chosen on y axis, inputType on x axis (in Volts))
+    inputLow = inputTypeDict[inputType][0]
+    inputHigh = inputTypeDict[inputType][1]
+    m = (scaleHigh - scaleLow) / (inputHigh - inputLow)
+    c = scaleHigh - m * inputHigh
+    # As data recorded is raw, and 'x' must be in volts, m is multiplied by the gain scale factor
+    m = m * gainList[gainVal] / 32767.0
+    return m, c
+
+
 # SAVE/UPLOAD
 def saveUploadMenu():
     try:
@@ -368,6 +401,13 @@ def save():
         logConf[key]["scalelow"] = str(adcDict[key].scaleLow)
         logConf[key]["scalehigh"] = str(adcDict[key].scaleHigh)
         logConf[key]["unit"] = str(adcDict[key].unit)
+        # Only calculate scales if pin enabled
+        if adcDict[key].enabled is True:
+            # This is where m and c are calculated
+            # Note that the lowScale, highScale, input type and gain are all still written to the config
+            m, c = preProcess(adcDict[key].scaleLow, adcDict[key].scaleHigh, adcDict[key].inputType, adcDict[key].gain)
+            logConf[key]["m"] = str(m)
+            logConf[key]["c"] = str(c)
     # Write File
     with open('logConf.ini', 'w') as configfile:
         logConf.write(configfile)

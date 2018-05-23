@@ -51,7 +51,7 @@ def init():
     progConf = configparser.ConfigParser()
     progConf.optionxform = str
     progConf.read('progConf.ini')
-    # Creating a dictionary of input typs
+    # Creating a dictionary of input types
     global inputTypeDict
     inputTypeDict = {}
     for key in progConf['inputTypes']:

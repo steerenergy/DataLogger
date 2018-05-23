@@ -25,6 +25,8 @@ class ADC:
         self.scaleLow = config[section].getint('scalelow')
         self.scaleHigh = config[section].getint('scalehigh')
         self.unit = config[section]['unit']
+        if m in config[section] and c in config[section] is True:
+            print("I'm true")
 
     # Go Through list of individual input objects and add those which are enabled to the 'master list'.
     # Then add their names to the header.
@@ -197,8 +199,8 @@ def liveData():
     print("Live Data:\n")
     # Print header for all items
     adcHeaderPrint = ""
-    for item in adcHeader:
-        adcHeaderPrint += ("|{:>8}".format(item))
+    for pin in adcHeader:
+        adcHeaderPrint += ("|{:>8}".format(pin*))
     print("{}|".format(adcHeaderPrint))
     # Print a nice vertical line so it all looks pretty
     print("-"*(9*len(adcHeader)+1))
