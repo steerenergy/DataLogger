@@ -13,12 +13,6 @@ import configparser
 sys.path.append("..")
 
 
-# Calculates conversion from raw data to volts based on gain value selected
-def gain(gain):
-    # Table of Gain to voltage convert adcValues. Voltage is in volts
-    return gainList[gain] / 32767.0
-
-
 # Generate 'm' and 'c' to be used in processing data
 def scale(scaleLow, scaleHigh, inputType, gainVal):
     # Effectively using y = mx+c
@@ -28,7 +22,7 @@ def scale(scaleLow, scaleHigh, inputType, gainVal):
     m = (scaleHigh - scaleLow) / (inputHigh - inputLow)
     c = scaleHigh - m * inputHigh
     # As data recorded is raw, and 'x' must be in volts, m is multiplied by the gain scale factor
-    m = m * gain(gainVal)
+    m = m * gainList[gainVal] / 32767.0
     return m, c
 
 
@@ -37,7 +31,7 @@ def convert(value, item):
     return value * conversion[item][0] + conversion[item][1]
 
 
-# General init functions
+# General init functions - including gain list setup and loading in program config
 def init():
     # Create Dicts/Vars
     global conversion
@@ -51,11 +45,13 @@ def init():
         8: 0.512,
         16: 0.256
     }
-    # Input type list: contains a tuple with the value (in volts) for the low and high end of the scale
+    # Loading input types into dict from program config file
+    # Input type dict: contains a tuple with the value (in volts) for the low and high end of the scale
     # Create config object, make it preserve case on import and read config file
     progConf = configparser.ConfigParser()
     progConf.optionxform = str
     progConf.read('progConf.ini')
+    # Creating a dictionary of input typs
     global inputTypeDict
     inputTypeDict = {}
     for key in progConf['inputTypes']:
