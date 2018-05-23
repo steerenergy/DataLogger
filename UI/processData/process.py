@@ -28,7 +28,7 @@ def scale(scaleLow, scaleHigh, inputType):
     return m, c
 
 
-def convert(value,item):
+def convert(value, item):
     return value*conversion[item][0] + conversion[item][1]
 
 
@@ -39,11 +39,11 @@ def init():
     # Setup of gain/type.scale for conversion
     global gainList
     gainList = {
-    1:4.096,
-    2:2.04,
-    4:1.024,
-    8:0.512,
-    16:0.256
+    1: 4.096,
+    2: 2.04,
+    4: 1.024,
+    8: 0.512,
+    16: 0.256
     }
     # Input type list: contains a tuple with the value (in volts) for the low and high end of the scale
     # Create config object, make it preserve case on import and read config file
@@ -67,7 +67,7 @@ def conversionSetup():
     for key in config.sections():
         if key != 'General' and config[key].getboolean('enabled') is True:
             # Get values of m and c in y = mx+c by passing config data to scale() function
-            m,c = scale(config[key].getint('scalelow'),config[key].getint('scalehigh'),config[key]['inputtype'])
+            m,c = scale(config[key].getint('scalelow'), config[key].getint('scalehigh'),config[key]['inputtype'])
             # Use y = mx+c to find conversion value. This finds the conversion factor from raw data to the scale chosen
             m = m*gain(config[key].getint('gain'))
             conversion[key] = (m,c)
@@ -91,7 +91,7 @@ def csvProcess():
     print(df.head())
     # Write Converted CSV Data
     print("\nWriting CSV...")
-    df.to_csv('converted.csv', sep=',', index = False)
+    df.to_csv('converted.csv', sep=',', index=False)
     print("\nSuccess")
 
 

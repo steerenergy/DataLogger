@@ -25,16 +25,17 @@ class WindowTop(Frame):
         self.topFrame = Frame(master)
         self.topFrame.pack(expand=1, fill=BOTH, side = LEFT)
         self.liveDataFrame = Frame(master)
-        self.liveDataFrame.pack(expand=1,fill=BOTH, side=RIGHT)
+        self.liveDataFrame.pack(expand=1, fill=BOTH, side=RIGHT)
         
-        # Title
+        # Title text
         self.title = Label(self.topFrame, text="Log Ctrl:", font=bigFont)
         self.title.pack()
 
         # Start/Stop Logging Button 
         self.logButton = Button(self.topFrame, text="Start Logging", height=3, width=20, command=self.logButtons, font=bigFont)
         self.logButton.pack()
-        # Start/Stop Logging Button 
+
+        # Start/Stop Logging Button
         self.quitButton = Button(self.topFrame, text="Quit", height=3, width=20, command=self.client_exit, font=bigFont)
         self.quitButton.pack(padx=10)
 
@@ -65,6 +66,8 @@ class WindowTop(Frame):
     # The scripts for starting and stopping logging
     def logButtons(self):
         if self.logButton['text'] == "Start Logging":
+            # Disable Log Button
+            self.logButton['state'] = 'disabled'
             # Clear Text Output
             self.liveDataText['state'] = 'normal'
             self.liveDataText.delete(1.0, END)
@@ -78,8 +81,9 @@ class WindowTop(Frame):
             # Run Logging
             self.logThread = threading.Thread(target=logger.log)
             self.logThread.start()
-            # Change Button Text
+            # Change Button Text and re-enable
             self.logButton.config(text="Finish Logging")
+            self.logButton['state'] = 'normal'
         else:
             print("\nStopping Logger... ", end="", flush=True)
             logger.logEnbl = False
@@ -99,7 +103,7 @@ class WindowTop(Frame):
         self.liveDataText.insert(END, inputStr)
         self.liveDataText.update()
         self.liveDataText['state'] = 'disabled'
-        # If autoscroll is enabled, then scroll
+        # If autoscroll is enabled, then scroll to bottom
         if self.autoScrollEnable.get() == 1:
             self.liveDataText.see(END)
 
