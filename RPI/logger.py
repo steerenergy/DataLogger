@@ -12,6 +12,8 @@ from collections import OrderedDict
 import configparser
 import functools
 import Adafruit_ADS1x15
+# Uncomment for fake adc simulation if using a PC
+# import Adafruit_ADS1x15Fake as Adafruit_ADS1x15
 import csv
 import threading
 

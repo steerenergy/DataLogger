@@ -1,4 +1,4 @@
-# NOTE - DELETE WHEN RUNNING ON PI!
+# NOTE - DELETE/Rename WHEN RUNNING ON PI!
 # This script is for testing code when the pis isn't available
 # It will simply return a number regardless of the pin
 import time
