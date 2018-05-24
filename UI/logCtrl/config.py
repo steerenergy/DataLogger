@@ -12,7 +12,6 @@ import sys
 import configparser
 import uuid
 import paramiko
-
 sys.path.append("..")
 import common
 
@@ -49,7 +48,7 @@ class ADC:
                 self.enabled = True
             else:
                 common.other()
-        print("Success\n")
+        print("Success!\n")
 
     def inputTypeEdit(self):
         # List of input Types (this can be updated and the code will continue to work)
@@ -61,7 +60,7 @@ class ADC:
             # Check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
             if 0 < int(option) <= len(inputTypes):
                 self.inputType = inputTypes[int(option) - 1]
-                print("Success")
+                print("Success!")
             else:
                 common.other()
         # If someone does not put in an integer
@@ -69,17 +68,17 @@ class ADC:
             common.other()
 
     def gainEdit(self):
-        # Gain Settigns will not change so it has been written like this.
+        # Gain Settings will not change so it has been written like this.
         #  Users are instructed to type a number which corresponds to the value of gain they want
         gainSettings = ["1", "2", "4", "8", "16"]
-        print("\nAvaiable Gain Settings:")
+        print("\nAvailable Gain Settings:")
         print("1 = +/-4.096V \n2 = +/-2.048V \n4 = +/-1.024V \n8 = +/-0.512V \n16 = +/-0.256V")
         option = input("\nPlease type in the gain setting you want: ")
         try:
             # check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
             if option in gainSettings:
                 self.gain = option
-                print("Success")
+                print("Success!")
             else:
                 common.other()
         # If someone does not put in an integer
@@ -102,7 +101,7 @@ class ADC:
             # Check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
             if 0 < int(option) <= len(unitTypes):
                 self.unit = unitTypes[int(option) - 1]
-                print("Success")
+                print("Success!")
             else:
                 common.other()
         # If someone does not put in an integer
@@ -219,7 +218,6 @@ def importConfInit():
         for input in logConf.sections():
             if input != 'General':
                 adcDict[input] = ADC()
-                adcDict[input].name = input
                 adcDict[input].enabled = logConf[input].getboolean('enabled')
                 adcDict[input].inputType = logConf[input]['inputtype']
                 adcDict[input].gain = logConf[input].getint('gain')
@@ -280,14 +278,14 @@ def generalMenu():
 def generalTime():
     print("\nCurrent Time Interval is: {} Seconds\n".format(generalSettings["timeinterval"]))
     generalSettings["timeinterval"] = input("Enter New Time Interval: ")
-    print("Success\n")
+    print("Success!\n")
 
 
 # Name Setting
 def generalName():
     print("\nCurrent Name is: {}\n".format(generalSettings["name"]))
     generalSettings["name"] = input("Enter New Name: ")
-    print("Success\n")
+    print("Success!\n")
 
 
 # INPUT SETUP
@@ -411,7 +409,9 @@ def save():
     # Write File
     with open('logConf.ini', 'w') as configfile:
         logConf.write(configfile)
-    print("Success")
+    print("Success!")
+    print("NOTE - If you manually change the logConf.ini file contents, you must rerun this program,"
+          "load in the config file and save it. Otherwise, the data will be processed incorrectly. ")
 
 
 # FTP Upload of Config File
@@ -427,13 +427,13 @@ def upload():
         username = "pi"
         transport.connect(username=username, password=password)
         # Go!
-        print("Tranferring Config...")
+        print("Transferring Config...")
         sftp = paramiko.SFTPClient.from_transport(transport)
         # Upload
         remotePath = '/home/pi/Github/DataLogger/RPI/logConf.ini'
         localPath = 'logConf.ini'
         sftp.put(localPath, remotePath)
-        print("Success")
+        print("Success!")
     finally:
         sftp.close()
         transport.close()
