@@ -365,16 +365,14 @@ def saveUploadMenu():
         while True:
             print(
                 "\nSave/Upload:\nChoose a Option (based on the corresponding number)"
-                "\n1. Save \n2. Upload \n3. Save and Upload\n4. Back")
+                "\n1. Save \n2. Save and Upload\n3. Back")
             option = input("\nOption Chosen: ")
             if option == "1":
                 save()
             elif option == "2":
-                upload()
-            elif option == "3":
                 save()
                 upload()
-            elif option == "4":
+            elif option == "3":
                 common.back()
             else:
                 common.other()
