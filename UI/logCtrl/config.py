@@ -204,7 +204,7 @@ def importConfInit():
         adcDict = {}
         # Open the config file
         logConf = configparser.ConfigParser()
-        logConf.read('logConf.ini')
+        logConf.read('files/outbox/logConf.ini')
 
         # Create dictionary for each item in the general section of the logConf.ini
         global generalSettings
@@ -407,7 +407,7 @@ def save():
             logConf[key]["m"] = str(m)
             logConf[key]["c"] = str(c)
     # Write File
-    with open('logConf.ini', 'w') as configfile:
+    with open('files/outbox/logConf.ini', 'w') as configfile:
         logConf.write(configfile)
     print("Success!")
     print("NOTE - If you manually change the logConf.ini file contents, you must rerun this program,"
@@ -431,7 +431,7 @@ def upload():
         sftp = paramiko.SFTPClient.from_transport(transport)
         # Upload
         remotePath = '/home/pi/Github/DataLogger/RPI/logConf.ini'
-        localPath = 'logConf.ini'
+        localPath = 'files/outbox/logConf.ini'
         sftp.put(localPath, remotePath)
         print("Success!")
     finally:
