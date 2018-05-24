@@ -126,8 +126,8 @@ root = Tk()
 # root.wm_attributes('-zoomed', 1)
 
 # Fonts
-bigFont = font.Font(family="Trebuchet MS", size=20, weight=font.BOLD)
-smallFont = font.Font(family="Consolas", size=14)
+bigFont = font.Font(family="Helvetica", size=20, weight=font.BOLD)
+smallFont = font.Font(family="Courier", size=14)
 
 app = WindowTop(root)
 
