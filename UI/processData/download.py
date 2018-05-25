@@ -16,10 +16,12 @@ def init():
         # Go!
         print("Getting Config and CSV...")
         sftp = paramiko.SFTPClient.from_transport(transport)
-        # Upload
+        # Download
+        # CSV File
         remotePath = '/home/pi/Github/DataLogger/RPI/raw.csv'
         localPath = 'raw.csv'
         sftp.get(remotePath, localPath)
+        # Config File
         remotePath = '/home/pi/Github/DataLogger/RPI/logConf.ini'
         localPath = 'logConf.ini'
         sftp.get(remotePath, localPath)

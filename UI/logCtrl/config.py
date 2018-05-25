@@ -430,7 +430,7 @@ def upload():
         print("Transferring Config...")
         sftp = paramiko.SFTPClient.from_transport(transport)
         # Upload
-        remotePath = '/home/pi/Github/DataLogger/RPI/logConf.ini'
+        remotePath = '/home/pi/Github/DataLogger/RPI/files/inbox/logConf.ini'
         localPath = 'files/outbox/logConf.ini'
         sftp.put(localPath, remotePath)
         print("Success!")
