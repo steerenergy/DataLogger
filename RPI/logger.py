@@ -11,11 +11,13 @@ from datetime import datetime
 from collections import OrderedDict
 import configparser
 import functools
-import Adafruit_ADS1x15
-# Uncomment for fake adc simulation if using a PC
-# import Adafruit_ADS1x15Fake as Adafruit_ADS1x15
+# Uncomment below for real adc (if running on Pi)
+# import Adafruit_ADS1x15
+# Uncomment below for fake adc simulation if using a PC
+import Adafruit_ADS1x15Fake as Adafruit_ADS1x15
 import csv
 import threading
+from shutil import copyfile
 
 
 class ADC:
@@ -73,7 +75,7 @@ def init():
     # Open the config file
     global config
     config = configparser.ConfigParser()
-    config.read('logConf.ini')
+    config.read('files/inbox/logConf.ini')
 
     # Run Code to import general information
     generalImport()
@@ -155,8 +157,12 @@ def log():
         csvRows = len(adcToLog)
         # Set up list to be printed to CSV
         adcValues = [0] * csvRows
+        # Get timestamp for filename
+        timeStamp = datetime.now().strftime("%Y%m%d%H%M%S%f")
+        # Copy Config File
+        copyfile('files/inbox/logConf.ini', 'files/outbox/logConf{}.ini'.format(timeStamp))
         # CSV - Create/Open CSV file and print headers
-        with open('raw.csv', 'w', newline='') as csvfile:
+        with open('files/outbox/raw.csv'.format(timeStamp), 'w', newline='') as csvfile:
             writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(['Date/Time', 'Time Interval (Seconds)'] + adcHeader)
             print("\nStart Logging...\n")
