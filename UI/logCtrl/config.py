@@ -8,12 +8,10 @@
 
 
 # Makes all directory references up a level to simplify importing common files
-import sys
 import configparser
 import uuid
 import paramiko
-sys.path.append("..")
-import common
+from . import common
 
 # Flag for whether config has been set already
 configSet = False

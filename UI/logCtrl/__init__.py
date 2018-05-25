@@ -1,7 +1,5 @@
 # Creates Menu, which in turn
 # Import Common Commands
-import sys
-sys.path.append("..")
 import common
 from logCtrl import config
 

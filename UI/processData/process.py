@@ -7,10 +7,82 @@
 
 # Import Stuff
 import pandas as pd
-import sys
 import configparser
+import os
+import common
 
-sys.path.append("..")
+
+class fileSelect:
+    def __init__(self):
+        # Declaring all variables needed
+        self.inboxDirectory = 'files/inbox'
+        self.dataDirectory = 'files/data'
+        self.inboxContents = os.listdir(self.inboxDirectory)
+        self.rawCsvFiles = []
+        self.configFiles = []
+        self.fileSelection = []
+        self.chosenID = None
+        self.rawCsvFile = None
+        self.configFile = None
+        self.convertedCsvFile = None
+        # Run filelink and file select
+        self.fileLink()
+        self.fileSelect()
+
+    # Links the CSV and Config Files Together
+    def fileLink(self):
+        # Using List Comprehension - create a list of csvFiles and configFiles
+        self.rawCsvFiles = [fileName for fileName in self.inboxContents if fileName.endswith('.csv')]
+        self.configFiles = [fileName for fileName in self.inboxContents if fileName.endswith('.ini')]
+
+        # Link a CSV file to a Config File
+        for rawCsvFile in self.rawCsvFiles:
+            # Strip the filename to just the timestamp
+            timeStamp = rawCsvFile[len('raw'):-len('.ini')]
+            # Match with a configFile
+            # matchFound used to print error message if no match is found
+            matchFound = False
+            for configFile in self.configFiles:
+                if timeStamp in configFile:
+                    self.fileSelection.append((timeStamp, rawCsvFile, configFile))
+                    # Remove config file from list as it doesn't need to be searched again on next iteration
+                    self.configFiles.remove(configFile)
+                    # Change matchfound flag to rue
+                    matchFound = True
+                    break
+            # Error which shows if there was not a match
+            if matchFound is False:
+                print("\nERROR - Unable to find matching config for '{}'. \n Please check the '/files/inbox' folder\n"
+                      .format(self.rawCsvFile))
+
+    # Allows user to choose which files they want
+    def fileSelect(self):
+        # Print the data found in the folder
+        print("Multiple Data Found \n The file's datestamps are shown below")
+        for pos, value in enumerate(self.fileSelection, start=1):
+            print("{}. {}".format(pos, value[0]))
+        # Option Selection
+        try:
+            option = int(input("\nSelect a file by its corresponding number: "))
+            # Check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
+            if 0 < option <= len(self.fileSelection):
+                # Setting the filenames - note these are not the complete file paths
+                self.chosenID = self.fileSelection[option][0]
+                self.rawCsvFile = self.fileSelection[option][1]
+                self.configFile = self.fileSelection[option][2]
+                # Works out filename for converted CSV file
+                self.convertedCsvFile = "converted" + self.chosenID + ".csv"
+                print("Success!")
+            else:
+                common.other()
+        # If someone does not put in an integer
+        except ValueError:
+            common.other()
+
+    # Moves raw and config files that have just been processed into the data directory (where the converted csv is)
+    def fileCleanup(self):
+        print("Moving Files...")
+        # MOVE CONFIG FILES
 
 
 # Function called by csvProcess which does the actual data conversion on each data item
@@ -25,6 +97,9 @@ def init():
     global conversion
     conversion = {}
 
+    # Allow user to Select Files - this creates an instance of the fileSelect class and runs the __init__ method
+    global file
+    file = fileSelect()
     # Start conversion process
     conversionSetup()
     csvProcess()
@@ -35,7 +110,7 @@ def conversionSetup():
     # Load Config from File
     global config
     config = configparser.ConfigParser()
-    config.read('logConf.ini')
+    config.read(file.inboxDirectory + "/" + file.configFile)
     # Process config for all enabled channels in config file
     for key in config.sections():
         if key != 'General' and config[key].getboolean('enabled') is True:
@@ -46,7 +121,7 @@ def conversionSetup():
 # Loading CSV into pandas, processing the data and exporting converted CSV
 def csvProcess():
     # Read CSV file
-    df = pd.read_csv('raw.csv')
+    df = pd.read_csv(file.inboxDirectory + "/" + file.rawCsvFile)
     print("Raw Data (Top Lines):")
     print(df.head())
     # Data Conversion Loop
@@ -62,9 +137,10 @@ def csvProcess():
     print(df.head())
     # Write Converted CSV Data
     print("\nWriting CSV...")
-    df.to_csv('converted.csv', sep=',', index=False)
+    df.to_csv(file.dataDirectory + "/" + file.convertedCsvFile, sep=',', index=False)
+    # Moving raw data and config into data folder with the converted csv
+    file.fileCleanup()
     print("\nSuccess")
-
 
 if __name__ == "__main__":
     init()

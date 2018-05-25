@@ -158,7 +158,7 @@ def log():
     # Set up list to be printed to CSV
     adcValues = [0] * csvRows
     # Get timestamp for filename
-    timeStamp = datetime.now().strftime("%Y%m%d%H%M%S%f")
+    timeStamp = datetime.now().strftime("%Y%m%d%-H%M%S%f")
     # Delete outbox, recreate folder and copy config file with new name
     shutil.rmtree('files/outbox')
     os.makedirs('files/outbox')
