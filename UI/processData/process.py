@@ -53,7 +53,7 @@ class fileSelect:
             # matchFound used to print error message if no match is found
             matchFound = False
             for configFile in self.configFiles:
-                if timeStamp in configFile:
+                if timeStamp == configFile[len('logConf'):-len('.ini')]:
                     self.fileSelection.append((timeStamp, rawCsv, configFile))
                     # Remove config file from list as it doesn't need to be searched again on next iteration
                     self.configFiles.remove(configFile)
@@ -71,7 +71,7 @@ class fileSelect:
         if len(self.fileSelection) <= 0:
             print("\nNo Data Found - Please ensure there is at least 1 matching raw.csv and logConf.ini file "
                   "inside the inbox directory.")
-            # Setting the var false makes the self.fileselect function not run and stops the program
+            # Setting the var false makes the self.fileSelect function not run and stops the program
             self.valid = False
         else:
             # Print the data found in the folder
