@@ -1,7 +1,7 @@
 # Creates Menu, which in turn
 # Import Common Commands
 import common
-from . import config
+from logCtrl import config
 
 
 def init():

@@ -1,5 +1,5 @@
 # Import Common Commands
-from . import process, download, postProcess
+from processData import process, download, postProcess
 import common
 
 
