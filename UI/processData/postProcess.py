@@ -20,10 +20,12 @@ class Process:
         # Trigger Pandas Init
         self.pandasInit()
 
+    # Initiate pandas and load CSV
     def pandasInit(self):
         # Load in CSV and print CSV contents
         self.df = pd.read_csv(self.convertedCsvFilePath)
         print("\nCurrent Data Preview:")
+        # Printing top of the data
         print(self.df.head())
         # Converting the First Column to DateTime (Used for Compression)
         self.df.iloc[:, 0] = pd.to_datetime(self.df.iloc[:, 0])
