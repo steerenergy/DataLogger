@@ -2,7 +2,7 @@
 import common
 
 
-# Create main menu
+# Main Menu
 def init():
     try:
         while True:
