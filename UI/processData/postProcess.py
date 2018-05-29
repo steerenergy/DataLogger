@@ -11,7 +11,7 @@ class Process:
     def __init__(self):
         # This is a temporary file path. A file selection system will need to be implemented (See X01 doc)
         self.csvDirectory = "files/converted"
-        self.convertedCsvFile = "converted20180525120257197320.csv"
+        self.convertedCsvFile = "converted20180529170314.311127.csv"
         self.convertedCsvFilePath = self.csvDirectory + "/" + self.convertedCsvFile
         self.processedCsvFile = self.convertedCsvFile.replace("converted", "processed")
         self.processedCsvFilePath = self.csvDirectory + "/" + self.processedCsvFile
@@ -33,6 +33,8 @@ class Process:
         self.df.iloc[:, 1] = pd.to_datetime(self.df.iloc[:, 1])
         print(self.df)
         print("\n" + str(self.df.dtypes))
+        # Set Index
+        self.df.index = self.df.iloc[:, 0]
 
     # Filter Functions
     def filter(self):
@@ -40,7 +42,8 @@ class Process:
 
     # Compress Functions
     def compress(self):
-        print(self.df[1].resample('5Min'))
+        print(self.df.iloc[:, 0])
+        print(self.df.iloc[:, 0].resample('S'))
 
     # Plot Functions
     def plot(self):
