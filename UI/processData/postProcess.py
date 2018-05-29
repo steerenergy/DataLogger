@@ -10,11 +10,11 @@ def init():
                            "\n1. Filter\n2. Compress\n3. Plot"
                            "\n4. Back\n5. Quit \n\nOption Chosen: ")
             if option == "1":
-                filter()
+                dataFilter()
             elif option == "2":
-                compress()
+                dataCompress()
             elif option == "3":
-                plot()
+                dataPlot()
             elif option == "4":
                 common.back()
             elif option == "5":
@@ -26,15 +26,15 @@ def init():
 
 
 # Filter Functions
-def filter():
+def dataFilter():
     pass
 
 
 # Compress Functions
-def compress():
+def dataCompress():
     pass
 
 
 # Plot Functions
-def plot():
+def dataPlot():
     pass
