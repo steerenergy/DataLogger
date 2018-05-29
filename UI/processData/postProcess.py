@@ -5,8 +5,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-csvFilePath = "/files/converted/"
-
+# This is a temporary file path. A file selection system will need to be implemented (See X01 doc)
+csvFilePath = "/files/converted/raw20180525120257197352.csv"
 
 # Main Menu
 def init():
