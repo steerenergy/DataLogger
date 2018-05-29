@@ -19,7 +19,7 @@ class fileSelect:
     def __init__(self):
         # Declaring all variables needed
         self.inboxDirectory = 'files/inbox'
-        self.dataDirectory = 'files/data'
+        self.convertedDirectory = 'files/converted'
         self.inboxContents = os.listdir(self.inboxDirectory)
         self.rawCsvFiles = []
         self.configFiles = []
@@ -103,8 +103,8 @@ class fileSelect:
     def fileCleanup(self):
         print("Moving Files...")
         # Converted CSV data is already in the correct place so just need to move raw data and config
-        os.rename(self.configFilePath,self.dataDirectory + '/' + self.configFile)
-        os.rename(self.rawCsvFilePath, self.dataDirectory + '/' + self.rawCsvFile)
+        os.rename(self.configFilePath,self.convertedDirectory + '/' + self.configFile)
+        os.rename(self.rawCsvFilePath, self.convertedDirectory + '/' + self.rawCsvFile)
 
 
 # Function called by csvProcess which does the actual data conversion on each data item
