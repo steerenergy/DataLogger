@@ -11,11 +11,14 @@ from datetime import datetime
 from collections import OrderedDict
 import configparser
 import functools
-import Adafruit_ADS1x15
-# Uncomment for fake adc simulation if using a PC
-# import Adafruit_ADS1x15Fake as Adafruit_ADS1x15
+# Uncomment below for real adc (if running on Pi)
+# import Adafruit_ADS1x15
+# Uncomment below for fake adc simulation if using a PC
+import Adafruit_ADS1x15Fake as Adafruit_ADS1x15
 import csv
 import threading
+import shutil
+import os
 
 
 class ADC:
@@ -73,7 +76,7 @@ def init():
     # Open the config file
     global config
     config = configparser.ConfigParser()
-    config.read('logConf.ini')
+    config.read('files/inbox/logConf.ini')
 
     # Run Code to import general information
     generalImport()
@@ -148,51 +151,53 @@ def settingsOutput():
 
 # Logging Script
 def log():
-    try:
-        # Set Time Interval
-        timeInterval = float(generalSettings['timeinterval'])
-        # Find the length of what each row will be in the CSV (from which A/D are being logged)
-        csvRows = len(adcToLog)
-        # Set up list to be printed to CSV
-        adcValues = [0] * csvRows
-        # CSV - Create/Open CSV file and print headers
-        with open('raw.csv', 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(['Date/Time', 'Time Interval (Seconds)'] + adcHeader)
-            print("\nStart Logging...\n")
+    # Set Time Interval
+    timeInterval = float(generalSettings['timeinterval'])
+    # Find the length of what each row will be in the CSV (from which A/D are being logged)
+    csvRows = len(adcToLog)
+    # Set up list to be printed to CSV
+    adcValues = [0] * csvRows
+    # Get timestamp for filename
+    timeStamp = datetime.now().strftime("%Y%m%d%-H%M%S%f")
+    # Delete outbox, recreate folder and copy config file with new name
+    shutil.rmtree('files/outbox')
+    os.makedirs('files/outbox')
+    shutil.copyfile('files/inbox/logConf.ini', 'files/outbox/logConf{}.ini'.format(timeStamp))
+    # CSV - Create/Open CSV file and print headers
+    with open('files/outbox/raw{}.csv'.format(timeStamp), 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        writer.writerow(['Date/Time', 'Time Interval (Seconds)'] + adcHeader)
+        print("\nStart Logging...\n")
 
-            # Start live data thread
-            dataThread = threading.Thread(target=liveData)
-            dataThread.start()
+        # Start live data thread
+        dataThread = threading.Thread(target=liveData)
+        dataThread.start()
 
-            # Set startTime (method used ignores changes in system clock time)
-            startTime = time.perf_counter()
+        # Set startTime (method used ignores changes in system clock time)
+        startTime = time.perf_counter()
 
-            # Beginning of reading script
-            while logEnbl is True:
-                # Get time and send to Log
-                currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f")
-                timeElapsed = round(time.perf_counter() - startTime, 4)
+        # Beginning of reading script
+        while logEnbl is True:
+            # Get time and send to Log
+            currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f")
+            timeElapsed = round(time.perf_counter() - startTime, 4)
 
-                for currentPin, value in enumerate(adcToLog):
-                    # Get Raw data from A/D, and add to adcValues list corresponding to the current pin
-                    adcValues[currentPin] = (value())
+            for currentPin, value in enumerate(adcToLog):
+                # Get Raw data from A/D, and add to adcValues list corresponding to the current pin
+                adcValues[currentPin] = (value())
 
-                # Export Data to Spreadsheet inc current datetime and time elapsed
-                writer.writerow([currentDateTime] + [timeElapsed] + adcValues)
-                # Copy list for data output and reset list values (so we can see if code fails)
-                global adcValuesCompl
-                adcValuesCompl = adcValues
-                adcValues = [0] * csvRows
-                # Work out time delay needed until next set of values taken based on user given value
-                # (Using some clever maths)
-                timeDiff = (time.perf_counter() - startTime)
-                time.sleep(timeInterval - (timeDiff % timeInterval))
-            # Wait until live data thread is finished
-            dataThread.join()
-    # Used only if running logger.py directly from idle
-    except KeyboardInterrupt:
-        print("Logging Finished")
+            # Export Data to Spreadsheet inc current datetime and time elapsed
+            writer.writerow([currentDateTime] + [timeElapsed] + adcValues)
+            # Copy list for data output and reset list values (so we can see if code fails)
+            global adcValuesCompl
+            adcValuesCompl = adcValues
+            adcValues = [0] * csvRows
+            # Work out time delay needed until next set of values taken based on user given value
+            # (Using some clever maths)
+            timeDiff = (time.perf_counter() - startTime)
+            time.sleep(timeInterval - (timeDiff % timeInterval))
+        # Wait until live data thread is finished
+        dataThread.join()
 
 
 # Live Data Output
@@ -234,6 +239,9 @@ def liveData():
 # If the module were to be imported, the code inside the if statement would not run.
 # Calls the init() function and then the log() function
 if __name__ == "__main__":
+    # Warning about lack of CSV
+    print("\nWARNING - running this script directly will cause no data in the CSV multithreading. "
+          "\nIf you need data, use 'gui.py'\n")
     # Load Config Data and Setup
     init()
     # Print Settings

@@ -16,14 +16,14 @@ def init():
         # Go!
         print("Getting Config and CSV...")
         sftp = paramiko.SFTPClient.from_transport(transport)
-        # Upload
-        remotePath = '/home/pi/Github/DataLogger/RPI/raw.csv'
-        localPath = 'raw.csv'
-        sftp.get(remotePath, localPath)
-        remotePath = '/home/pi/Github/DataLogger/RPI/logConf.ini'
-        localPath = 'logConf.ini'
-        sftp.get(remotePath, localPath)
-        print("Success")
+        # Download all files in remote outbox folder
+        for fileName in sftp.listdir(path='/home/pi/Github/DataLogger/RPI/files/outbox'):
+            remotePath = '/home/pi/Github/DataLogger/RPI/files/outbox/' + fileName
+            localPath = 'files/inbox/'+fileName
+            sftp.get(remotePath, localPath)
+        if len(sftp.listdir(path='/home/pi/Github/DataLogger/RPI/files/outbox')) >= 3:
+            print("WARNING - Multiple CSV/Config Files have been found. "
+                  "\nPlease navigate /files/inbox and ensure there is only one CSV and Config File")
     finally:
         sftp.close()
         transport.close()
