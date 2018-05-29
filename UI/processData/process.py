@@ -31,10 +31,13 @@ class fileSelect:
         self.rawCsvFilePath = None
         self.configFilePath = None
         self.convertedCsvFilePath = None
+        # self.valid used to stop functions executing if a file match can' be found
+        self.valid = True
         # Run file selection and linking methods
         self.fileLink()
         self.fileSelect()
-        self.filePathLinker()
+        if self.valid is True:
+            self.filePathLinker()
 
     # Links the CSV and Config Files Together
     def fileLink(self):
@@ -43,15 +46,15 @@ class fileSelect:
         self.configFiles = [fileName for fileName in self.inboxContents if fileName.endswith('.ini')]
 
         # Link a CSV file to a Config File
-        for rawCsvFile in self.rawCsvFiles:
+        for rawCsv in self.rawCsvFiles:
             # Strip the filename to just the timestamp
-            timeStamp = rawCsvFile[len('raw'):-len('.ini')]
+            timeStamp = rawCsv[len('raw'):-len('.ini')]
             # Match with a configFile
             # matchFound used to print error message if no match is found
             matchFound = False
             for configFile in self.configFiles:
                 if timeStamp in configFile:
-                    self.fileSelection.append((timeStamp, rawCsvFile, configFile))
+                    self.fileSelection.append((timeStamp, rawCsv, configFile))
                     # Remove config file from list as it doesn't need to be searched again on next iteration
                     self.configFiles.remove(configFile)
                     # Change matchFound flag to rue
@@ -59,8 +62,8 @@ class fileSelect:
                     break
             # Error which shows if there was not a match
             if matchFound is False:
-                print("\nERROR - Unable to find matching config for '{}'. \n Please check the '/files/inbox' folder\n"
-                      .format(self.rawCsvFile))
+                print("\nERROR - Unable to find matching config for '{}'.\nPlease check the '/files/inbox' folder\n"
+                      .format(rawCsv))
 
     # Allows user to choose which files they want
     def fileSelect(self):
@@ -68,7 +71,8 @@ class fileSelect:
         if len(self.fileSelection) <= 0:
             print("\nNo Data Found - Please ensure there is at least 1 matching raw.csv and logConf.ini file "
                   "inside the inbox directory.")
-            common.back()
+            # Setting the var false makes the self.fileselect function not run and stops the program
+            self.valid = False
         else:
             # Print the data found in the folder
             print("Multiple Data Found \nThe file's datestamps are shown below")
@@ -88,11 +92,11 @@ class fileSelect:
                     print("Success!")
                 else:
                     common.other()
-                    common.back()
+                    self.valid = False
             # If someone does not put in an integer
             except ValueError:
                 common.other()
-                common.back()
+                self.valid = False
 
     # Sets file path var for each file in question
     def filePathLinker(self):
@@ -122,9 +126,11 @@ def init():
     # Allow user to Select Files - this creates an instance of the fileSelect class and runs the __init__ method
     global file
     file = fileSelect()
-    # Start conversion process
-    conversionSetup()
-    csvProcess()
+
+    if file.valid is True:
+        # Start conversion process
+        conversionSetup()
+        csvProcess()
 
 
 # Importing the information from the config file and creating a dictionary for m and c values needed for data conversion
