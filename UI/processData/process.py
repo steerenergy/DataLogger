@@ -102,6 +102,7 @@ class fileSelect:
     def filePathLinker(self):
         self.rawCsvFilePath = self.inboxDirectory + "/" + self.rawCsvFile
         self.configFilePath = self.inboxDirectory + "/" + self.configFile
+        self.convertedCsvFilePath = self.convertedDirectory + "/" + self.convertedCsvFile
 
     # Moves raw and config files that have just been processed into the data directory (where the converted csv is)
     def fileCleanup(self):
