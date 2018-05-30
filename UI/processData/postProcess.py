@@ -15,7 +15,7 @@ class Process:
         self.convertedCsvFilePath = self.csvDirectory + "/" + self.convertedCsvFile
         self.processedCsvFile = self.convertedCsvFile.replace("converted", "processed")
         self.processedCsvFilePath = self.csvDirectory + "/" + self.processedCsvFile
-        # Pandas Dataframe
+        # Pandas DataFrame
         self.df = None
         # Trigger Pandas Init
         self.pandasInit()
@@ -24,17 +24,20 @@ class Process:
     def pandasInit(self):
         # Load in CSV and print CSV contents
         self.df = pd.read_csv(self.convertedCsvFilePath)
-        print("\nCurrent Data Preview:")
-        # Printing top of the data
-        print(self.df.head())
-        # Converting the First Column to DateTime (Used for Compression)
-        self.df.iloc[:, 0] = pd.to_datetime(self.df.iloc[:, 0])
-        # Converting the Second Column to DateTime (Used for Compression)
-        self.df.iloc[:, 1] = pd.to_datetime(self.df.iloc[:, 1])
-        print(self.df)
-        print("\n" + str(self.df.dtypes))
         # Set Index
-        self.df.index = self.df.iloc[:, 0]
+        self.df.set_index('Date/Time', inplace=True)
+        # Converting the First Column to DateTime (Used for Compression)
+        self.df.index = pd.to_datetime(self.df.index)
+        # Converting the Second Column to DateTime (Used for Compression)
+        self.df.iloc[:, 0] = pd.to_timedelta(self.df.iloc[:, 0], unit='s')
+        # Printing Data Types
+        print("\n" + str(self.df.dtypes))
+
+    # Current Data Output
+    def currentData(self):
+        # Printing top of the data
+        print("\nCurrent Data Preview:")
+        print(self.df.head())
 
     # Filter Functions
     def filter(self):
@@ -42,8 +45,10 @@ class Process:
 
     # Compress Functions
     def compress(self):
-        print(self.df.iloc[:, 0])
-        print(self.df.iloc[:, 0].resample('S'))
+        # print(self.df.iloc[:, 0])
+        print("\nCOMPRESSION\n")
+        self.df = self.df.iloc[:, 1:].resample('T').mean()
+        # self.df = self.df.resample('T').mean()
 
     # Plot Functions
     def plot(self):
@@ -53,7 +58,7 @@ class Process:
     def pandasExit(self):
         print("\nWriting CSV...")
         # Write CSV
-        self.df.to_csv(self.processedCsvFilePath, sep=',', index=False)
+        self.df.to_csv(self.processedCsvFilePath, sep=',', index=True)
         print("\nSuccess")
 
 
@@ -63,6 +68,8 @@ def init():
     data = Process()
     try:
         while True:
+            # Print Current Data
+            data.currentData()
             option = input("\nPost Process Menu: \nChoose a Option (based on the corresponding number): "
                            "\n1. Filter\n2. Compress\n3. Plot\n4. Save File"
                            "\n----------------\n5. Back\n6. Quit \n\nOption Chosen: ")
