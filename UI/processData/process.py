@@ -108,8 +108,8 @@ class fileSelect:
     def fileCleanup(self):
         print("Moving Files...")
         # Converted CSV data is already in the correct place so just need to move raw data and config
-        os.rename(self.configFilePath,self.convertedDirectory + '/' + self.configFile)
-        os.rename(self.rawCsvFilePath, self.convertedDirectory + '/' + self.rawCsvFile)
+        os.rename(self.configFilePath, self.convertedDirectory + "/" + self.configFile)
+        os.rename(self.rawCsvFilePath, self.convertedDirectory + "/" + self.rawCsvFile)
 
 
 # Function called by csvProcess which does the actual data conversion on each data item
