@@ -1,3 +1,6 @@
+# Column references should always be done numerically
+# Each function must reset it's index once finished (if an index is set)
+
 # General Imports
 import common
 # Pandas Import Statements - Once completed unused ones can be removed
@@ -24,20 +27,18 @@ class Process:
     def pandasInit(self):
         # Load in CSV and print CSV contents
         self.df = pd.read_csv(self.convertedCsvFilePath)
-        # Set Index
-        self.df.set_index('Date/Time', inplace=True)
         # Converting the First Column to DateTime (Used for Compression)
-        self.df.index = pd.to_datetime(self.df.index)
-        # Converting the Second Column to DateTime (Used for Compression)
-        self.df.iloc[:, 0] = pd.to_timedelta(self.df.iloc[:, 0], unit='s')
-        # Printing Data Types
-        print("\n" + str(self.df.dtypes))
+        self.df.iloc[:, 0] = pd.to_datetime(self.df.iloc[:, 0])
+        # Converting the Second Column to TimeDelta (Used for Compression)
+        self.df.iloc[:, 1] = pd.to_timedelta(self.df.iloc[:, 1], unit='s')
 
     # Current Data Output
     def currentData(self):
         # Printing top of the data
         print("\nCurrent Data Preview:")
         print(self.df.head())
+        # Printing Data Types
+        print("\n" + str(self.df.dtypes))
 
     # Filter Functions
     def filter(self):
@@ -45,10 +46,23 @@ class Process:
 
     # Compress Functions
     def compress(self):
-        # print(self.df.iloc[:, 0])
+        # Set Time Interval for Time
+        # Set Index
+        # self.df.set_index(self.df.iloc[:, 1], inplace=True)
+
         print("\nCOMPRESSION\n")
-        self.df = self.df.iloc[:, 1:].resample('T').mean()
+        # self.df = self.df.iloc[:, 1:].resample('T').mean()
         # self.df = self.df.resample('T').mean()
+
+        # self.df = self.df.resample('T', on='Time Interval (Seconds)').mean().reset_index()
+        # self.df.set_index(['Date/Time', 'Time Interval (Seconds)'], inplace=True)
+        # self.df = self.df('Date/Time').resample('T', level=-1).mean()
+
+        # self.df = self.df.groupby(['Date/Time', pd.Grouper(key='Time Interval (Seconds)', freq='T')]).sum()
+
+        # Need to sort duplication of time
+        self.df.set_index(self.df.iloc[:, 0], inplace=True)
+        self.df = self.df.resample('T').first().reset_index(drop=True)
 
     # Plot Functions
     def plot(self):
@@ -58,7 +72,7 @@ class Process:
     def pandasExit(self):
         print("\nWriting CSV...")
         # Write CSV
-        self.df.to_csv(self.processedCsvFilePath, sep=',', index=True)
+        self.df.to_csv(self.processedCsvFilePath, sep=',', index=False)
         print("\nSuccess")
 
 
