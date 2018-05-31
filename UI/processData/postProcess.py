@@ -3,6 +3,7 @@
 
 # General Imports
 import common
+import time
 # Pandas Import Statements - Once completed unused ones can be removed
 import pandas as pd
 import numpy as np
@@ -34,10 +35,13 @@ class Process:
 
     # Current Data Output
     def currentData(self):
+        # Short Delay to stop your head going blurry
+        time.sleep(0.5)
         # Printing top of the data
         print("\nCurrent Data Preview:")
         print(self.df.head())
         # Printing Data Types
+        print("\nCurrent Data Types (Excl Selected Index):")
         print("\n" + str(self.df.dtypes))
 
     # Filter Functions
@@ -72,7 +76,8 @@ class Process:
 
     # Plot Functions
     def plot(self):
-        pass
+        self.df.plot(x=self.df.columns[1], y=self.df.columns[2])
+        plt.show()
 
     # Write Updated CSV File
     def pandasExit(self):
