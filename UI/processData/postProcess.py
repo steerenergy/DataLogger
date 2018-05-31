@@ -44,16 +44,31 @@ class Process:
     def filter(self):
         pass
 
-    # Compress Functions
+    # Compress Functions (using Pandas Resample Func)
     def compress(self):
-        # Set index (Get column heading of second column in process)
-        self.df.set_index(self.df.columns[1], inplace=True)
-        # Resample data and drop index
-        self.df = self.df.iloc[:, :].resample('T').first().reset_index()
-        # Reset Column Positioning
-        cols = list(self.df.columns.values)
-        cols[0], cols[1] = cols[1], cols[0]
-        self.df = self.df[cols]
+        try:
+            # Find out what user wants the compression time
+            num = float(input("Type in the new logging interval desired in Seconds: "))
+
+            # Set Index to column with time interval (By getting heading name of second column in process)
+            self.df.set_index(self.df.columns[1], inplace=True)
+            # Resample Date/Time, then the rest. Do this on two separate dataframes
+            dfComp1 = self.df[self.df.columns[0]].resample(str(num)+'S').first()
+            # Change '.mean' to whatever function you wish from the following URL:
+            # (http://pandas.pydata.org/pandas-docs/stable/groupby.html#groupby-dispatch)
+            dfComp2 = self.df[self.df.columns[1:]].resample(str(num) + 'S').mean()
+
+            # Combine the dataframes and set equal to the original one
+            self.df = pd.concat([dfComp1, dfComp2], axis=1)
+            # Remove Index
+            self.df.reset_index(inplace=True)
+
+            # Reset Column Positioning (move Time-Interval back to position 2)
+            cols = list(self.df.columns.values)
+            cols[0], cols[1] = cols[1], cols[0]
+            self.df = self.df[cols]
+        except ValueError:
+            common.other()
 
     # Plot Functions
     def plot(self):
@@ -62,8 +77,12 @@ class Process:
     # Write Updated CSV File
     def pandasExit(self):
         print("\nWriting CSV...")
+        # Convert time interval back to previous format
+        self.df.iloc[:, 1] = pd.to_numeric(self.df.iloc[:, 1])
         # Write CSV
         self.df.to_csv(self.processedCsvFilePath, sep=',', index=False)
+        # Reset time interval as before
+        self.df.iloc[:, 1] = pd.to_timedelta(self.df.iloc[:, 1], unit='s')
         print("\nSuccess")
 
 
