@@ -46,23 +46,14 @@ class Process:
 
     # Compress Functions
     def compress(self):
-        # Set Time Interval for Time
-        # Set Index
-        # self.df.set_index(self.df.iloc[:, 1], inplace=True)
-
-        print("\nCOMPRESSION\n")
-        # self.df = self.df.iloc[:, 1:].resample('T').mean()
-        # self.df = self.df.resample('T').mean()
-
-        # self.df = self.df.resample('T', on='Time Interval (Seconds)').mean().reset_index()
-        # self.df.set_index(['Date/Time', 'Time Interval (Seconds)'], inplace=True)
-        # self.df = self.df('Date/Time').resample('T', level=-1).mean()
-
-        # self.df = self.df.groupby(['Date/Time', pd.Grouper(key='Time Interval (Seconds)', freq='T')]).sum()
-
-        # Need to sort duplication of time
-        self.df.set_index(self.df.iloc[:, 0], inplace=True)
-        self.df = self.df.resample('T').first().reset_index(drop=True)
+        # Set index (Get column heading of second column in process)
+        self.df.set_index(self.df.columns[1], inplace=True)
+        # Resample data and drop index
+        self.df = self.df.iloc[:, :].resample('T').first().reset_index()
+        # Reset Column Positioning
+        cols = list(self.df.columns.values)
+        cols[0], cols[1] = cols[1], cols[0]
+        self.df = self.df[cols]
 
     # Plot Functions
     def plot(self):
