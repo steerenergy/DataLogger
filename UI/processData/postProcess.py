@@ -76,7 +76,7 @@ class Process:
 
     # Plot Functions
     def plot(self):
-        self.df.plot(x=self.df.columns[1], y=self.df.columns[1:])
+        self.df.plot(x=self.df.columns[1], y=self.df.columns[2:])
         plt.show()
 
     # Write Updated CSV File
