@@ -23,7 +23,7 @@ class Process:
         # Trigger Pandas Init
         self.pandasInit()
 
-    # Initiate pandas and load CSV
+    # Initiate Pandas and load CSV
     def pandasInit(self):
         # Load in CSV and print CSV contents
         self.df = pd.read_csv(self.convertedCsvFilePath)
