@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 
 
 # Contains all the functions for processing data and loading/exporting the CSV file
+# def defines the methods in the class 'Process' these are functions in the class
 class Process:
     def __init__(self):
         # This is a temporary file path. A file selection system will need to be implemented (See X01 doc)
@@ -46,7 +47,9 @@ class Process:
 
     # Filter Functions
     def filter(self):
-        pass
+        # Print that we are in the filter function
+        print("\n In the Filter Option")
+        # Rolling is the pandas moving average function
 
     # Compress Functions (using Pandas Resample Func)
     def compress(self):
