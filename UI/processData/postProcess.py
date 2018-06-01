@@ -8,6 +8,8 @@ import time
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
 
 
 # Contains all the functions for processing data and loading/exporting the CSV file
@@ -23,6 +25,8 @@ class Process:
         self.df = None
         # Trigger Pandas Init
         self.pandasInit()
+        # Hold Padas DF graph
+        self.ax1 = None
 
     # Initiate Pandas and load CSV
     def pandasInit(self):
@@ -76,7 +80,14 @@ class Process:
 
     # Plot Functions
     def plot(self):
-        self.df.plot(x=self.df.columns[1], y=self.df.columns[2:])
+        userTitle = "Test"
+        # userTitle = input("\nInput the Graph Title: ")
+        self.df.iloc[:, 1] = pd.to_numeric(self.df.iloc[:, 1])
+        self.ax1 = self.df.plot(kind='scatter', x=self.df.columns[1], y=self.df.columns[2], title=userTitle,
+                               subplots=False)
+        self.ax1 = self.df.plot(kind='scatter', x=self.df.columns[1], y=self.df.columns[3], title=userTitle,
+                               subplots=False, ax=self.ax1)
+        self.ax1.set(ylabel="y label")
         plt.show()
 
     # Write Updated CSV File
