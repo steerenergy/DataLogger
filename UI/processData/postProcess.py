@@ -82,14 +82,15 @@ class Process:
     def plot(self):
         userTitle = "Test"
         # userTitle = input("\nInput the Graph Title: ")
+        # Convert time to numeric for plotting
         self.df.iloc[:, 1] = pd.to_numeric(self.df.iloc[:, 1])
-        self.ax1 = self.df.plot(kind='scatter', x=self.df.columns[1], y=self.df.columns[2], title=userTitle,
-                               subplots=False)
-        self.ax1 = self.df.plot(kind='scatter', x=self.df.columns[1], y=self.df.columns[3], title=userTitle,
-                               subplots=False, ax=self.ax1)
-        self.ax1.set(ylabel="y label")
+        for y in self.df.columns[2:]:
+            # self.ax1 = self.df.plot(kind='scatter', x=self.df.columns[1], y=self.df.columns[2], title=userTitle)
+            self.df.plot(kind='scatter', x=self.df.columns[1], y=y, title=userTitle, ax=self.ax1)
+        # self.ax1.set(ylabel="y label")
         plt.show()
-
+        # Convert time back to timedelta
+        self.df.iloc[:, 1] = pd.to_numeric(self.df.iloc[:, 1])
     # Write Updated CSV File
     def pandasExit(self):
         print("\nWriting CSV...")
