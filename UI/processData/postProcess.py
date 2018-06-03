@@ -83,8 +83,6 @@ class Process:
     # Plot Functions
     def plot(self):
         # Menu for selecting options for user to choose what the graph Looks Like
-        print(self.df.columns[2:4])
-        print(self.df.columns[2, 3])
         try:
             while True:
                 option = input("\nPlot Options - Current Settings: \nChoose a Option to change a setting"
