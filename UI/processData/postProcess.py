@@ -25,8 +25,10 @@ class Process:
         self.df = None
         # Trigger Pandas Init
         self.pandasInit()
-        # Hold Padas DF graph
-        self.ax1 = None
+        # Hold Pandas DF graph
+        self.ax = None
+        # Graph Settings
+        self.userTitle = "Plot"
 
     # Initiate Pandas and load CSV
     def pandasInit(self):
@@ -80,17 +82,42 @@ class Process:
 
     # Plot Functions
     def plot(self):
-        userTitle = "Test"
-        # userTitle = input("\nInput the Graph Title: ")
-        # Convert time to numeric for plotting
-        self.df.iloc[:, 1] = pd.to_numeric(self.df.iloc[:, 1])
-        for y in self.df.columns[2:]:
-            # self.ax1 = self.df.plot(kind='scatter', x=self.df.columns[1], y=self.df.columns[2], title=userTitle)
-            self.df.plot(kind='scatter', x=self.df.columns[1], y=y, title=userTitle, ax=self.ax1)
-        # self.ax1.set(ylabel="y label")
-        plt.show()
-        # Convert time back to timedelta
-        self.df.iloc[:, 1] = pd.to_numeric(self.df.iloc[:, 1])
+        # Menu for selecting options for user to choose what the graph Looks Like
+        print(self.df.columns[2:4])
+        print(self.df.columns[2, 3])
+        try:
+            while True:
+                option = input("\nPlot Options - Current Settings: \nChoose a Option to change a setting"
+                               "(based on the corresponding number): "
+                               "\n1. Data Selected: {}\n2. Plot Title: {}\n3. Y Axis Title: {}\n4. Plot"
+                               "\n----------------\n5. Back\n6. Quit \n\nOption Chosen: "
+                               .format("placeholder", "placeholder2", "placeholder3", "placeholder4"))
+                if option == "1":
+                    # self.dataSelection = input("")
+                    pass
+                elif option == "2":
+                    self.userTitle = input("\nInput the Graph Title: ")
+                elif option == "3":
+                    pass
+                elif option == "4":
+                    # Convert time to numeric for plotting
+                    self.df.iloc[:, 1] = pd.to_numeric(self.df.iloc[:, 1])
+                    self.df.plot(x=self.df.columns[1], y=self.df.columns[2:], title=self.userTitle)
+                    # Set Y axis Label (X axis is already set by default as column heading)
+                    # self.ax.set(ylabel="y label")
+                    plt.minorticks_on()
+                    plt.show()
+                    # Convert time back to timedelta
+                    self.df.iloc[:, 1] = pd.to_timedelta(self.df.iloc[:, 1])
+                elif option == "5":
+                    common.back()
+                elif option == "6":
+                    common.quit()
+                else:
+                    common.other()
+        except StopIteration:
+            pass
+
     # Write Updated CSV File
     def pandasExit(self):
         print("\nWriting CSV...")
