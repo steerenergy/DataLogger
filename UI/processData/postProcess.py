@@ -28,9 +28,11 @@ class Process:
         # Hold Pandas DF graph
         self.ax = None
         # Graph Settings
-        self.userTitle = "Plot"
+        self.chosenData = self.df.columns[2:]
+        self.plotTitle = "Plot"
+        self.plotyTitle = "Values"
 
-    # Initiate Pandas and load CSV
+        # Initiate Pandas and load CSV
     def pandasInit(self):
         # Load in CSV and print CSV contents
         self.df = pd.read_csv(self.convertedCsvFilePath)
@@ -81,29 +83,43 @@ class Process:
             common.other()
 
     # Plot Functions
-    def plot(self):
-        # Menu for selecting options for user to choose what the graph Looks Like
+    def plotSettings(self):
+        # Menu for selecting options for user to choose what the grap1h Looks Like
         try:
             while True:
+                # Print options and current settings
                 option = input("\nPlot Options - Current Settings: \nChoose a Option to change a setting"
                                "(based on the corresponding number): "
                                "\n1. Data Selected: {}\n2. Plot Title: {}\n3. Y Axis Title: {}\n4. Plot"
                                "\n----------------\n5. Back\n6. Quit \n\nOption Chosen: "
-                               .format("placeholder", "placeholder2", "placeholder3", "placeholder4"))
+                               .format("placeholder 1", self.plotTitle, self.plotyTitle))
                 if option == "1":
-                    # self.dataSelection = input("")
-                    pass
+                    
+                    # TO DEVELOP
+                    '''print("\nChosen Data:\n{}".format(", ".join(self.chosenData)))
+                    userData = input("\nType in a comma separated list of the numbers corresponding to the columns"
+                                     " you want on the Y axis: ")
+                    userDataList = [userData]
+                    print(userDataList)
+                    self.chosenData = []
+                    for columnNo in userDataList:
+                        self.chosenData.append(self.df.columns[columnNo])
+                    print("Chosen Data: {}".format(self.chosenData))'''
                 elif option == "2":
-                    self.userTitle = input("\nInput the Graph Title: ")
+                    # Change Title of Graph
+                    self.plotTitle = input("\nInput the Graph Title: ")
                 elif option == "3":
-                    pass
+                    # Change Y axis Title
+                    self.plotyTitle = input("\nInput the Graph Title: ")
                 elif option == "4":
                     # Convert time to numeric for plotting
                     self.df.iloc[:, 1] = pd.to_numeric(self.df.iloc[:, 1])
-                    self.df.plot(x=self.df.columns[1], y=self.df.columns[2:], title=self.userTitle)
+                    self.ax = self.df.plot(x=self.df.columns[1], y=self.df.columns[2:], title=self.plotTitle)
                     # Set Y axis Label (X axis is already set by default as column heading)
-                    # self.ax.set(ylabel="y label")
+                    self.ax.set(ylabel=self.plotyTitle)
+                    # Turn on Minor Ticks on Graph for better reading
                     plt.minorticks_on()
+                    # Show the graph
                     plt.show()
                     # Convert time back to timedelta
                     self.df.iloc[:, 1] = pd.to_timedelta(self.df.iloc[:, 1])
@@ -144,7 +160,7 @@ def init():
             elif option == "2":
                 data.compress()
             elif option == "3":
-                data.plot()
+                data.plotSettings()
             elif option == "4":
                 data.pandasExit()
             elif option == "5":
