@@ -52,12 +52,8 @@ class Process:
         # Rolling is the pandas moving average function
         # Try rolling - self.df has been reassigned to itself
 
-        # WRONG
-        # self.df = self.df.[self.df.columns[2]].rolling(2).sum()
-        # EITHER
-        # self.df = self.df[self.df.columns[2]].rolling(2).sum()
-        # OR (below much better)
-        self.df = self.df.iloc[:, 2].rolling(2).sum()
+        # self is re-writing itself iloc is a pandas function to reference the array
+        self.df.iloc[:, 2] = self.df.iloc[:, 2].rolling(4).sum()
 
     # Compress Functions (using Pandas Resample Func)
     def compress(self):
