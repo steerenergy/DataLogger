@@ -187,7 +187,7 @@ class Process:
             common.other()
 
     def plotGraph(self):
-        # Create list of columns to be plotted on y axis
+        # Create list of columns to be plotted on y axis (using list comprehension)
         yColumns = [column for column in self.yData if self.yData[column] is True]
         # Convert time to numeric for plotting
         self.df.iloc[:, 1] = pd.to_numeric(self.df.iloc[:, 1])
