@@ -51,7 +51,13 @@ class Process:
         print("\n In the Filter Option")
         # Rolling is the pandas moving average function
         # Try rolling - self.df has been reassigned to itself
+
+        # WRONG
         # self.df = self.df.[self.df.columns[2]].rolling(2).sum()
+        # EITHER
+        # self.df = self.df[self.df.columns[2]].rolling(2).sum()
+        # OR (below much better)
+        self.df = self.df.iloc[:, 2].rolling(2).sum()
 
     # Compress Functions (using Pandas Resample Func)
     def compress(self):
