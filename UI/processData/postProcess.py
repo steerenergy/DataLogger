@@ -8,8 +8,7 @@ import time
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib
-matplotlib.style.use('ggplot')
+plt.style.use('ggplot')
 
 
 # Contains all the functions for processing data and loading/exporting the CSV file
@@ -21,16 +20,19 @@ class Process:
         self.convertedCsvFilePath = self.csvDirectory + "/" + self.convertedCsvFile
         self.processedCsvFile = self.convertedCsvFile.replace("converted", "processed")
         self.processedCsvFilePath = self.csvDirectory + "/" + self.processedCsvFile
+
         # Pandas DataFrame
         self.df = None
-        # Trigger Pandas Init
-        self.pandasInit()
         # Hold Pandas DF graph
         self.ax = None
+
         # Graph Settings
-        self.chosenData = self.df.columns[2:]
+        self.yData = {}
         self.plotTitle = "Plot"
-        self.plotyTitle = "Values"
+        self.plotYTitle = "Values"
+
+        # Trigger Pandas Init
+        self.pandasInit()
 
         # Initiate Pandas and load CSV
     def pandasInit(self):
@@ -40,6 +42,12 @@ class Process:
         self.df.iloc[:, 0] = pd.to_datetime(self.df.iloc[:, 0])
         # Converting the Second Column to TimeDelta (Used for Compression)
         self.df.iloc[:, 1] = pd.to_timedelta(self.df.iloc[:, 1], unit='s')
+        # Add columns to yData dict for plot selection and set all to true by default beyond the first two time columns
+        for column in self.df.columns:
+            if column in self.df.columns[2:]:
+                self.yData[column] = True
+            else:
+                self.yData[column] = False
 
     # Current Data Output
     def currentData(self):
@@ -92,37 +100,17 @@ class Process:
                                "(based on the corresponding number): "
                                "\n1. Data Selected: {}\n2. Plot Title: {}\n3. Y Axis Title: {}\n4. Plot"
                                "\n----------------\n5. Back\n6. Quit \n\nOption Chosen: "
-                               .format("placeholder 1", self.plotTitle, self.plotyTitle))
+                               .format("placeholder 1", self.plotTitle, self.plotYTitle))
                 if option == "1":
-                    
-                    # TO DEVELOP
-                    '''print("\nChosen Data:\n{}".format(", ".join(self.chosenData)))
-                    userData = input("\nType in a comma separated list of the numbers corresponding to the columns"
-                                     " you want on the Y axis: ")
-                    userDataList = [userData]
-                    print(userDataList)
-                    self.chosenData = []
-                    for columnNo in userDataList:
-                        self.chosenData.append(self.df.columns[columnNo])
-                    print("Chosen Data: {}".format(self.chosenData))'''
+                    self.plotSelectData()
                 elif option == "2":
                     # Change Title of Graph
                     self.plotTitle = input("\nInput the Graph Title: ")
                 elif option == "3":
                     # Change Y axis Title
-                    self.plotyTitle = input("\nInput the Graph Title: ")
+                    self.plotYTitle = input("\nInput the Graph Title: ")
                 elif option == "4":
-                    # Convert time to numeric for plotting
-                    self.df.iloc[:, 1] = pd.to_numeric(self.df.iloc[:, 1])
-                    self.ax = self.df.plot(x=self.df.columns[1], y=self.df.columns[2:], title=self.plotTitle)
-                    # Set Y axis Label (X axis is already set by default as column heading)
-                    self.ax.set(ylabel=self.plotyTitle)
-                    # Turn on Minor Ticks on Graph for better reading
-                    plt.minorticks_on()
-                    # Show the graph
-                    plt.show()
-                    # Convert time back to timedelta
-                    self.df.iloc[:, 1] = pd.to_timedelta(self.df.iloc[:, 1])
+                    self.plotGraph()
                 elif option == "5":
                     common.back()
                 elif option == "6":
@@ -131,6 +119,56 @@ class Process:
                     common.other()
         except StopIteration:
             pass
+
+    def plotSelectData(self):
+        try:
+            while True:
+                print("Y Axis: Columns Selected for Plotting ")
+                # Counter used for options
+                x = 1
+                # Print Output in nice format
+                for item in self.yData:
+                    print("{}. {:>24} : {}".format(x, item, self.yData[item]))
+                    x += 1
+                print("{} \n{}. Save/Back".format("-"*30,x))
+                # User Selection
+                option = input("Choose a number to toggle: ")
+                # If valid number on the list then toggle it
+                # Get name of column
+                if 0 < int(option) <= len(self.yData):
+                    colName = self.df.columns[int(option) - 1]
+                    self.yData[colName] = not self.yData[colName]
+                # Go back if back option selected
+                elif option == x:
+                    common.back()
+                # If a number is typed in out of range
+                else:
+                    common.other()
+        except StopIteration:
+            pass
+        # If someone does not put in an integer
+        except ValueError:
+            common.other()
+        #
+        # --
+        # Print All Columns and selection status
+        # User Selects each column they want to be enabled until they choose 'save'
+        # Selected columns added to list of columns to be plotted
+
+        # TO DEVELOP
+
+    def plotGraph(self):
+        # Convert time to numeric for plotting
+        self.df.iloc[:, 1] = pd.to_numeric(self.df.iloc[:, 1])
+        self.ax = self.df.plot(x=self.df.columns[1], y=self.df.columns[2:], title=self.plotTitle)
+        # Set Y axis Label (X axis is already set by default as column heading)
+        self.ax.set(ylabel=self.plotYTitle)
+        # Turn on Minor Ticks on Graph for better reading
+        plt.minorticks_on()
+        # Show the graph
+        plt.show()
+        # Convert time back to timedelta
+        self.df.iloc[:, 1] = pd.to_timedelta(self.df.iloc[:, 1])
 
     # Write Updated CSV File
     def pandasExit(self):
