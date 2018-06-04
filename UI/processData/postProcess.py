@@ -112,7 +112,7 @@ class Process:
                     self.plotTitle = input("\nInput the Graph Title: ")
                 elif option == "3":
                     # Change Y axis Title
-                    self.plotYTitle = input("\nInput the Graph Title: ")
+                    self.plotYTitle = input("\nInput the Y Axis Title: ")
                 elif option == "4":
                     self.plotGraph()
                 elif option == "5":
