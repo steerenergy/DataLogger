@@ -51,7 +51,7 @@ class Process:
         print("\n In the Filter Option")
         # Rolling is the pandas moving average function
         # Try rolling - self.df has been reassigned to itself
-        self.df = self.df.[self.df.columns[2]].rolling(2).sum()
+        # self.df = self.df.[self.df.columns[2]].rolling(2).sum()
 
     # Compress Functions (using Pandas Resample Func)
     def compress(self):
@@ -62,10 +62,10 @@ class Process:
             # Set Index to column with time interval (By getting heading name of second column in process)
             self.df.set_index(self.df.columns[1], inplace=True)
             # Resample Date/Time, then the rest. Do this on two separate dataframes
-            dfComp1 = self.df[self.df.columns[0]].resample(str(num)+'S').first()
+            dfComp1 = self.df.iloc[:, 0].resample(str(num)+'S').first()
             # Change '.mean' to whatever function you wish from the following URL:
             # (http://pandas.pydata.org/pandas-docs/stable/groupby.html#groupby-dispatch)
-            dfComp2 = self.df[self.df.columns[1:]].resample(str(num) + 'S').mean()
+            dfComp2 = self.df.iloc[:, 1:].resample(str(num) + 'S').mean()
 
             # Combine the dataframes and set equal to the original one
             self.df = pd.concat([dfComp1, dfComp2], axis=1)
