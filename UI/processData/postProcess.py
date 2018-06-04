@@ -28,6 +28,7 @@ class Process:
 
         # Graph Settings
         self.yData = {}
+        self.xData = None
         self.plotTitle = "Plot"
         self.plotYTitle = "Values"
 
@@ -35,6 +36,7 @@ class Process:
         self.pandasInit()
 
         # Initiate Pandas and load CSV
+
     def pandasInit(self):
         # Load in CSV and print CSV contents
         self.df = pd.read_csv(self.convertedCsvFilePath)
@@ -48,6 +50,8 @@ class Process:
                 self.yData[column] = True
             else:
                 self.yData[column] = False
+        # Set default x column for plotting
+        self.xData = self.df.columns[0]
 
     # Current Data Output
     def currentData(self):
@@ -98,7 +102,7 @@ class Process:
                 # Print options and current settings
                 option = input("\nPlot Options - Current Settings: \nChoose a Option to change a setting"
                                " (based on the corresponding number): "
-                               "\n1. Select Data\n2. Plot Title: {}\n3. Y Axis Title: {}\n4. Plot"
+                               "\n1. Select Data\n2. Plot Title: '{}'\n3. Y Axis Title: '{}'\n4. Plot"
                                "\n----------------\n5. Back\n6. Quit \n\nOption Chosen: "
                                .format(self.plotTitle, self.plotYTitle))
                 if option == "1":
@@ -121,24 +125,55 @@ class Process:
             pass
 
     def plotSelectData(self):
+        # Choose Y axis Data
         try:
             while True:
-                print("Y Axis: Columns Selected for Plotting ")
+                print("\nY Axis: Columns Selected for Plotting ")
                 # Counter used for options
                 x = 1
                 # Print Output in nice format
                 for item in self.yData:
                     print("{}. {:>24} : {}".format(x, item, self.yData[item]))
                     x += 1
-                print("{} \n{}. Save/Back".format("-"*35, x))
+                print("{} \n{}. Save/Next".format("-"*35, x))
                 # User Selection
-                option = input("Choose a number to toggle: ")
+                option = int(input("Choose a number to toggle selection: "))
                 # If valid number on the list then toggle it
                 # Get name of column
-                if 0 < int(option) <= len(self.yData):
-                    colName = self.df.columns[int(option) - 1]
+                if 0 < option <= len(self.yData):
+                    colName = self.df.columns[option - 1]
                     self.yData[colName] = not self.yData[colName]
-                # Go back if back option selected
+                # Go back, if back option is selected
+                elif option == x:
+                    common.back()
+                # If a number is typed in out of range
+                else:
+                    common.other()
+        except StopIteration:
+            pass
+        # If someone does not put in an integer
+        except ValueError:
+            common.other()
+
+        # X Axis Selection
+        try:
+            while True:
+                print("\nX Axis: Currently Selected: {} ".format(self.xData))
+                # Counter used for options
+                x = 1
+                # Print Output in nice format
+                for item in self.yData:
+                    print("{}. {}".format(x, item))
+                    x += 1
+                print("{} \n{}. Save/Next".format("-"*30, x))
+                # User Selection
+                option = int(input("Choose a number to select column: "))
+                # If valid number on the list then toggle it
+                # Get name of column
+                if 0 < option <= len(self.yData):
+                    colName = self.df.columns[option - 1]
+                    self.xData = colName
+                # Go back, if back option is selected
                 elif option == x:
                     common.back()
                 # If a number is typed in out of range
