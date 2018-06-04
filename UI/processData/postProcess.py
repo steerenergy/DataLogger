@@ -124,6 +124,7 @@ class Process:
         except StopIteration:
             pass
 
+    # Select for the Y and X Axis
     def plotSelectData(self):
         # Choose Y axis Data
         try:
@@ -188,7 +189,7 @@ class Process:
     def plotGraph(self):
         # Convert time to numeric for plotting
         self.df.iloc[:, 1] = pd.to_numeric(self.df.iloc[:, 1])
-        self.ax = self.df.plot(x=self.df.columns[1], y=self.df.columns[2:], title=self.plotTitle)
+        self.ax = self.df.plot(x=self.xData, y=self.df.columns[2:], title=self.plotTitle)
         # Set Y axis Label (X axis is already set by default as column heading)
         self.ax.set(ylabel=self.plotYTitle)
         # Turn on Minor Ticks on Graph for better reading
