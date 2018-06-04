@@ -180,7 +180,7 @@ def log():
         while logEnbl is True:
             # Get time and send to Log
             currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
-            timeElapsed = round(time.perf_counter() - startTime, 4)
+            timeElapsed = round(time.perf_counter() - startTime, 2)
 
             for currentPin, value in enumerate(adcToLog):
                 # Get Raw data from A/D, and add to adcValues list corresponding to the current pin

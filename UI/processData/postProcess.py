@@ -190,7 +190,7 @@ class Process:
         # Create list of columns to be plotted on y axis (using list comprehension)
         yColumns = [column for column in self.yData if self.yData[column] is True]
         # Convert time to numeric for plotting
-        self.df.iloc[:, 1] = pd.to_numeric(self.df.iloc[:, 1])
+        self.df.iloc[:, 1] = pd.to_numeric(self.df.iloc[:, 1].dt.total_seconds())
         # Create graph with x,y and user title chosen
         self.ax = self.df.plot(x=self.xData, y=yColumns, title=self.plotTitle)
         # Set Y axis Label (X axis is already set by default as column heading)
@@ -206,8 +206,8 @@ class Process:
     def pandasExit(self):
         # Write CSV
         print("\nWriting CSV...")
-        # Convert time interval back to previous format
-        self.df.iloc[:, 1] = pd.to_numeric(self.df.iloc[:, 1])
+        # Convert time interval back to a float - ensuring it is in seconds
+        self.df.iloc[:, 1] = pd.to_numeric(self.df.iloc[:, 1].dt.total_seconds())
         # Write CSV
         self.df.to_csv(self.processedCsvFilePath, sep=',', index=False)
         # Reset time interval as before

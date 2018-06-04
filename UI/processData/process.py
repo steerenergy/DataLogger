@@ -157,7 +157,7 @@ def csvProcess():
     print("\nConverting Data...")
     # Skip first 2 columns (Data/Time and Time Interval) and iterate each column thereafter
     for item in df.iloc[:, 2:].columns:
-        # Below line runs convert function on each row in column
+        # Below line runs convert function on each row in column and round
         df[item] = df[item].apply(convert, args=(item,))
         # Rename Column heading to add Units onto the end of them
         df.rename(columns={item: item + " " + config[item]['unit']}, inplace=True)
