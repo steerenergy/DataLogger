@@ -97,10 +97,10 @@ class Process:
             while True:
                 # Print options and current settings
                 option = input("\nPlot Options - Current Settings: \nChoose a Option to change a setting"
-                               "(based on the corresponding number): "
-                               "\n1. Data Selected: {}\n2. Plot Title: {}\n3. Y Axis Title: {}\n4. Plot"
+                               " (based on the corresponding number): "
+                               "\n1. Select Data\n2. Plot Title: {}\n3. Y Axis Title: {}\n4. Plot"
                                "\n----------------\n5. Back\n6. Quit \n\nOption Chosen: "
-                               .format("placeholder 1", self.plotTitle, self.plotYTitle))
+                               .format(self.plotTitle, self.plotYTitle))
                 if option == "1":
                     self.plotSelectData()
                 elif option == "2":
@@ -130,7 +130,7 @@ class Process:
                 for item in self.yData:
                     print("{}. {:>24} : {}".format(x, item, self.yData[item]))
                     x += 1
-                print("{} \n{}. Save/Back".format("-"*30,x))
+                print("{} \n{}. Save/Back".format("-"*35, x))
                 # User Selection
                 option = input("Choose a number to toggle: ")
                 # If valid number on the list then toggle it
@@ -149,13 +149,6 @@ class Process:
         # If someone does not put in an integer
         except ValueError:
             common.other()
-        #
-        # --
-        # Print All Columns and selection status
-        # User Selects each column they want to be enabled until they choose 'save'
-        # Selected columns added to list of columns to be plotted
-
-        # TO DEVELOP
 
     def plotGraph(self):
         # Convert time to numeric for plotting
