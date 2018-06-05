@@ -82,10 +82,9 @@ class Process:
 
     # Create pandas DataFrame object (df) and load CSV
     def pandasInit(self):
-        # Load in CSV and print CSV contents
         print("\nLoading CSV File...")
+        # Load in CSV and print CSV contents
         self.df = pd.read_csv(self.convertedCsvFilePath)
-        print(self.convertedCsvFilePath)
         # Converting the First Column to DateTime (Used for Compression)
         self.df.iloc[:, 0] = pd.to_datetime(self.df.iloc[:, 0])
         # Converting the Second Column to TimeDelta (Used for Compression)
@@ -150,7 +149,7 @@ class Process:
                 option = input("\nPlot Options - Current Settings: \nChoose a Option to change a setting"
                                " (based on the corresponding number): "
                                "\n1. Select Data\n2. Plot Title: '{}'\n3. Y Axis Title: '{}'\n4. Plot"
-                               "\n----------------\n5. Back\n6. Quit \n\nOption Chosen: "
+                               "\n----------------\n5. Back\n\nOption Chosen: "
                                .format(self.plotTitle, self.plotYTitle))
                 if option == "1":
                     self.plotSelectData()
@@ -164,8 +163,6 @@ class Process:
                     self.plotGraph()
                 elif option == "5":
                     common.back()
-                elif option == "6":
-                    common.quit()
                 else:
                     common.other()
         except StopIteration:
@@ -247,7 +244,8 @@ class Process:
         # Show the graph
         plt.show()
         # Convert time back to timedelta
-        self.df.iloc[:, 1] = pd.to_timedelta(self.df.iloc[:, 1])
+        self.df.iloc[:, 1] = pd.to_timedelta(self.df.iloc[:, 1], unit='s')
+        print(self.df.iloc[:, 1:])
 
     # Write Updated CSV File
     def pandasExit(self):
