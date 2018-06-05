@@ -3,6 +3,7 @@
 
 # General Imports
 import common
+import os
 import time
 # Pandas Import Statements - Once completed unused ones can be removed
 import pandas as pd
@@ -14,12 +15,16 @@ plt.style.use('ggplot')
 # Contains all the functions for processing data and loading/exporting the CSV file
 class Process:
     def __init__(self):
-        # This is a temporary file path. A file selection system will need to be implemented (See X01 doc)
+        # File Selection variable
+        self.valid = True
+        # File Holding Variables
+        self.csvList = []
         self.csvDirectory = "files/converted"
-        self.convertedCsvFile = "converted20180529170314.311127.csv"
-        self.convertedCsvFilePath = self.csvDirectory + "/" + self.convertedCsvFile
-        self.processedCsvFile = self.convertedCsvFile.replace("converted", "processed")
-        self.processedCsvFilePath = self.csvDirectory + "/" + self.processedCsvFile
+        self.csvDirContents = os.listdir(self.csvDirectory)
+        self.convertedCsvFile = None
+        self.convertedCsvFilePath = None
+        self.processedCsvFile = None
+        self.processedCsvFilePath = None
 
         # Pandas DataFrame
         self.df = None
@@ -32,14 +37,55 @@ class Process:
         self.plotTitle = "Plot"
         self.plotYTitle = "Values"
 
-        # Trigger Pandas Init
-        self.pandasInit()
+        # Begin File Selection
+        self.fileSelect()
 
-        # Initiate Pandas and load CSV
+        # Trigger Pandas Init if self.valid is true (file correctly selected)
+        if self.valid is True:
+            self.pandasInit()
 
+    def fileSelect(self):
+        # Create list of CSV files with 'converted' in name
+        self.csvList = [fileName for fileName in self.csvDirContents
+                        if fileName.endswith('.csv') and fileName.startswith('converted')]
+
+        # Dealing with cases where there are no matching files in directory
+        if len(self.csvList) <= 0:
+            print("\nNo Data Found - Please ensure there is at least 1 'convertedXXX.csv' file in the folder")
+            # Setting the var false makes the self.fileSelect function not run and stops the program
+            self.valid = False
+        else:
+            try:
+                # Data Selection
+                print("\nData Found - Current Files:")
+                # Counter used for options
+                # Print Output in nice format
+                for pos, fileName in enumerate(self.csvList, start=1):
+                    print("{}. {}".format(pos, fileName))
+                # User Selection
+                option = int(input("Please select a file (by its corresponding number):  "))
+                # If number valid on list, choose that CSV file
+                if 0 < option <= len(self.csvList):
+                    # Set filepath to open and with it the filepath/directories for processed data
+                    self.convertedCsvFile = self.csvList[option-1]
+                    self.convertedCsvFilePath = self.csvDirectory + "/" + self.convertedCsvFile
+                    self.processedCsvFile = self.convertedCsvFile.replace("converted", "processed")
+                    self.processedCsvFilePath = self.csvDirectory + "/" + self.processedCsvFile
+                # If a number is typed in out of range
+                else:
+                    common.other()
+                    self.valid = False
+            # If a user doesn't type in an integer
+            except ValueError:
+                common.other()
+                self.valid = False
+
+    # Create pandas DataFrame object (df) and load CSV
     def pandasInit(self):
         # Load in CSV and print CSV contents
+        print("\nLoading CSV File...")
         self.df = pd.read_csv(self.convertedCsvFilePath)
+        print(self.convertedCsvFilePath)
         # Converting the First Column to DateTime (Used for Compression)
         self.df.iloc[:, 0] = pd.to_datetime(self.df.iloc[:, 0])
         # Converting the Second Column to TimeDelta (Used for Compression)
@@ -52,6 +98,7 @@ class Process:
                 self.yData[column] = False
         # Set default x column for plotting
         self.xData = self.df.columns[0]
+        print("Success!")
 
     # Current Data Output
     def currentData(self):
@@ -139,9 +186,9 @@ class Process:
                 print("{} \n{}. Save/Next".format("-"*35, x))
                 # User Selection
                 option = int(input("Choose a number to toggle selection: "))
-                # If valid number on the list then toggle it
-                # Get name of column
+                # If number is in list index
                 if 0 < option <= len(self.yData):
+                    # Get name of column and toggle visablity on graph
                     colName = self.df.columns[option - 1]
                     self.yData[colName] = not self.yData[colName]
                 # Go back, if back option is selected
@@ -215,30 +262,34 @@ class Process:
         print("\nSuccess")
 
 
-# Main Menu
+# Main PostProcess Menu
 def init():
     # Create instance of process class
     data = Process()
-    try:
-        while True:
-            # Print Current Data
-            data.currentData()
-            option = input("\nPost Process Menu: \nChoose a Option (based on the corresponding number): "
-                           "\n1. Filter\n2. Compress\n3. Plot\n4. Save File"
-                           "\n----------------\n5. Back\n6. Quit \n\nOption Chosen: ")
-            if option == "1":
-                data.filter()
-            elif option == "2":
-                data.compress()
-            elif option == "3":
-                data.plotSettings()
-            elif option == "4":
-                data.pandasExit()
-            elif option == "5":
-                common.back()
-            elif option == "6":
-                common.quit()
-            else:
-                common.other()
-    except StopIteration:
-        pass
+    # Only continue if valid data has been selected
+    if data.valid is True:
+        try:
+            while True:
+                # Print Current Data
+                data.currentData()
+                option = input("\nPost Process Menu: \nChoose a Option (based on the corresponding number): "
+                               "\n1. Filter\n2. Compress\n3. Plot\n4. Save File"
+                               "\n----------------\n5. Back\n\nOption Chosen: ")
+                if option == "1":
+                    data.filter()
+                elif option == "2":
+                    data.compress()
+                elif option == "3":
+                    data.plotSettings()
+                elif option == "4":
+                    data.pandasExit()
+                elif option == "5":
+                    common.back()
+                else:
+                    common.other()
+        except StopIteration:
+            pass
+
+
+
+
