@@ -241,11 +241,12 @@ class Process:
         self.ax.set(ylabel=self.plotYTitle)
         # Turn on minor ticks on Graph for better reading
         plt.minorticks_on()
+        # Warn User to Close Windows to Continue
+        print("Opening Plot... Please close the graph window to continue")
         # Show the graph
         plt.show()
         # Convert time back to timedelta
         self.df.iloc[:, 1] = pd.to_timedelta(self.df.iloc[:, 1], unit='s')
-        print(self.df.iloc[:, 1:])
 
     # Write Updated CSV File
     def pandasExit(self):
