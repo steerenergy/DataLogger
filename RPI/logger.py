@@ -12,9 +12,9 @@ from collections import OrderedDict
 import configparser
 import functools
 # Uncomment below for real adc (if running on Pi)
-# import Adafruit_ADS1x15
+import Adafruit_ADS1x15
 # Uncomment below for fake adc simulation if using a PC
-import Adafruit_ADS1x15Fake as Adafruit_ADS1x15
+# import Adafruit_ADS1x15Fake as Adafruit_ADS1x15
 import csv
 import threading
 import shutil
