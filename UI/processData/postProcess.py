@@ -50,7 +50,6 @@ class Process:
         # Print that we are in the filter function
         print("\n In the Filter Option")
         # Rolling is the pandas moving average function
-        # Try rolling - self.df has been reassigned to itself
 
         # self is re-writing itself iloc is a pandas function to reference the array
         self.df.iloc[:, 2] = self.df.iloc[:, 2].rolling(4).sum()
