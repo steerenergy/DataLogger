@@ -36,6 +36,7 @@ class fileSelect:
         # Run file selection and linking methods
         self.fileLink()
         self.fileSelect()
+        # Only continue if valid data has been selected previously
         if self.valid is True:
             self.filePathLinker()
 
@@ -71,11 +72,11 @@ class fileSelect:
         if len(self.fileSelection) <= 0:
             print("\nNo Data Found - Please ensure there is at least 1 matching raw.csv and logConf.ini file "
                   "inside the inbox directory.")
-            # Setting the var false makes the self.fileSelect function not run and stops the program
+            # Setting the var false prevents self.filePathLinker from running and exists the process module
             self.valid = False
         else:
             # Print the data found in the folder
-            print("Multiple Data Found \nThe file's datestamps are shown below")
+            print("Data Found \nThe file's datestamps are shown below")
             for pos, value in enumerate(self.fileSelection, start=1):
                 print("{}. {}".format(pos, value[0]))
             # Option Selection
