@@ -288,7 +288,3 @@ def init():
                     common.other()
         except StopIteration:
             pass
-
-
-
-
