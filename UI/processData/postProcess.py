@@ -113,6 +113,7 @@ class Process:
 
     # Filter Functions
     def filter(self):
+        # NICK RYA - WORK IN PROGRESS
         # Print that we are in the filter function
         print("\n In the Filter Option")
         # Rolling is the pandas moving average function
@@ -278,7 +279,7 @@ def init():
                 # Print Current Data
                 data.currentData()
                 option = input("\nPost Process Menu: \nChoose a Option (based on the corresponding number): "
-                               "\n1. Filter\n2. Compress\n3. Plot\n4. Save File"
+                               "\n1. Filter (Work in Progress)\n2. Compress\n3. Plot\n4. Save File"
                                "\n----------------\n5. Back\n\nOption Chosen: ")
                 if option == "1":
                     data.filter()
