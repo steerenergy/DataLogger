@@ -77,6 +77,8 @@ class WindowTop(Frame):
             # Clear Text Output
             self.liveDataText['state'] = 'normal'
             self.liveDataText.delete(1.0, END)
+            # Remove history from RAM (to avoid memory Leak
+            self.liveDataText.edit_reset()
             self.liveDataText['state'] = 'disabled'
             # Scroll to Bottom of Blank Box
             self.liveDataText.see(END)
@@ -130,6 +132,8 @@ class WindowTop(Frame):
         self.textIndex = float(self.liveDataText.index('end'))
         if self.textIndex > self.textThreshold:
             self.liveDataText.delete(1.0, self.textIndex-self.textThreshold)
+            # Remove history from RAM (to avoid memory Leak
+            self.liveDataText.edit_reset()
         # Update window content (done by main.loop but when this is triggered inside of a function that won't happen
         # self.liveDataText.update()
         self.liveDataText['state'] = 'disabled'
