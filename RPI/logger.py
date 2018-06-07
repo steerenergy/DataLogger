@@ -234,7 +234,6 @@ def liveData():
         # Sleep - Don't want to go too fast
         time.sleep(0.05)
 
-
 # This is the code that is run when the program is loaded.
 # If the module were to be imported, the code inside the if statement would not run.
 # Calls the init() function and then the log() function

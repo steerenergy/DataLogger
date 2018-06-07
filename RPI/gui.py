@@ -68,7 +68,7 @@ class WindowTop(Frame):
         # Determines the max number of lines on the tkinter GUI at any given point.
         self.textThreshold = 250.
 
-        # The scripts for starting and stopping logging
+    # Contains functions for the start/stop logging buttons
     def logButtons(self):
         # Starting Logging
         if self.logButton['text'] == "Start Logging":
@@ -95,16 +95,29 @@ class WindowTop(Frame):
             # Disable button
             self.logButton['state'] = 'disabled'
             # Print button status
-            print("\nStopping Logger... ", end="", flush=True)
+            print("\nStopping Logger")
+            # Change logEnbl variable to false which stops the loop in logThread and subsequently the live data
             logger.logEnbl = False
-            # Wait until logger thread is finished - delay put in to stop crash of program when start/stop is too quick
-            time.sleep(0.1)
-            self.logThread.join()
-            print("Success!")
+            # Check to see if logThread has ended
+            self.logThreadStopCheck()
+
+    # Is triggered when 'Stop Logging' ic clicked and is called until logThread is dead
+    # If logThread has finished the 'start logging' button is changed and enabled
+    # Else, the function is triggered again after a certain period of time
+    def logThreadStopCheck(self):
+        if self.logThread.isAlive() is False:
             # Change Button Text
             self.logButton.config(text="Start Logging")
+            # Tell user logging has stopped
+            print("Logging Stopped - Success!")
             # Re-enable Button
             self.logButton['state'] = 'normal'
+        else:
+            # Repeat the process after a certain period of time.
+            # Note that time.sleep isn't used here. This is Crucial to why this has been done
+            # The timer works independently to the main thread, allowing the print statments to be processed
+            # This stops the program freezing if logThread is trying to print but the GUI is occupied so it can't
+            self.after(100, self.logThreadStopCheck)
 
     # This redirects all print statements from console to the textbox in the GUI.
     # Note - errors will be displayed in terminal still
@@ -117,9 +130,10 @@ class WindowTop(Frame):
         self.textIndex = float(self.liveDataText.index('end'))
         if self.textIndex > self.textThreshold:
             self.liveDataText.delete(1.0, self.textIndex-self.textThreshold)
-        # If autoscroll is enabled, then scroll to bottom
-        self.liveDataText.update()
+        # Update window content (done by main.loop but when this is triggered inside of a function that won't happen
+        # self.liveDataText.update()
         self.liveDataText['state'] = 'disabled'
+        # If autoscroll is enabled, then scroll to bottom
         if self.autoScrollEnable.get() == 1:
             self.liveDataText.see(END)
 
@@ -138,6 +152,8 @@ root = Tk()
 bigFont = font.Font(family="Helvetica", size=20, weight=font.BOLD)
 smallFont = font.Font(family="Courier", size=14)
 
+# Create instance of GUI
 app = WindowTop(root)
 
+# Mainloop in charge of making the gui do everything
 root.mainloop()
