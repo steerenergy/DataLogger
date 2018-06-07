@@ -63,7 +63,12 @@ class WindowTop(Frame):
         # Redirect normal print commands to textbox on GUI
         sys.stdout.write = self.redirector
 
-    # The scripts for starting and stopping logging
+        # Holds the number of lines in the textbox (updated after each print)
+        self.textIndex = None
+        # Determines the max number of lines on the tkinter GUI at any given point.
+        self.textThreshold = 250.
+
+        # The scripts for starting and stopping logging
     def logButtons(self):
         # Starting Logging
         if self.logButton['text'] == "Start Logging":
@@ -105,12 +110,16 @@ class WindowTop(Frame):
     # Note - errors will be displayed in terminal still
     # It essentially redefines what the print statement does
     def redirector(self, inputStr):
-        # Enable, write data, disable
+        # Enable, write data, delete unecessary data, disable
         self.liveDataText['state'] = 'normal'
         self.liveDataText.insert(END, inputStr)
+        # If over a certain amount of lines, delete all lines from the top up to a threshold
+        self.textIndex = float(self.liveDataText.index('end'))
+        if self.textIndex > self.textThreshold:
+            self.liveDataText.delete(1.0, self.textIndex-self.textThreshold)
+        # If autoscroll is enabled, then scroll to bottom
         self.liveDataText.update()
         self.liveDataText['state'] = 'disabled'
-        # If autoscroll is enabled, then scroll to bottom
         if self.autoScrollEnable.get() == 1:
             self.liveDataText.see(END)
 
