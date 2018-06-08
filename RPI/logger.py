@@ -167,6 +167,7 @@ def log():
     remainingSpace = (shutil.disk_usage(os.path.realpath('/'))[2] / 1e6)
     # Output space - rounding to a nice number
     print("\nCurrent Disk Space: {} MB".format(round(remainingSpace, 2)))
+
     # Calculate amount of time left for logging
     # Find out Size (in MB) of Each Row
     rowMBytes = 7 / 1e6
@@ -176,7 +177,9 @@ def log():
     timeRemSeconds = remainingSpace/MBEachSecond
     # Add time in seconds to current datetime to give data it will run out of space
     timeRemDate = datetime.now() + timedelta(0, timeRemSeconds)
-    print("According to the current configuration, you will run out of space on: {} of storage space".format(timeRemDate))
+    print("According to the current configuration, you will run out of space on: {} of storage space. "
+          "\n If you need more space, try empything the 'Waste Basket' found on the Pi's Desktop".format(timeRemDate))
+
     # Delete outbox, recreate folder and copy config file with new name
     shutil.rmtree('files/outbox')
     os.makedirs('files/outbox')
