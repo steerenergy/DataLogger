@@ -7,7 +7,7 @@
 
 # Import Packages/Modules
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from collections import OrderedDict
 import configparser
 import functools
@@ -132,6 +132,7 @@ def inputImport():
 
 # Output Current Settings
 def settingsOutput():
+    # Print General Settings then Input Settings
     print("\nCurrent General Settings:")
     for key in generalSettings:
         print("{}: {}".format(key.title(), generalSettings[key]))
@@ -141,12 +142,13 @@ def settingsOutput():
         "|{:>6}|{:>6}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|".format("Number", "Name", "Pin Enabled", "Input Type", "Gain",
                                                                   "Scale", "Unit"))
     print("-" * 80)
-    for ADC in adcDict:
+    # Print input settings for each Pin
+    for pin in adcDict:
         x += 1
-        print("|{:>6}|{:>6}|{:>12}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x, adcDict[ADC].name, adcDict[ADC].enabled,
-                                                                            adcDict[ADC].inputType, adcDict[ADC].gain,
-                                                                            adcDict[ADC].scaleLow,
-                                                                            adcDict[ADC].scaleHigh, adcDict[ADC].unit))
+        print("|{:>6}|{:>6}|{:>12}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x, adcDict[pin].name, adcDict[pin].enabled,
+                                                                            adcDict[pin].inputType, adcDict[pin].gain,
+                                                                            adcDict[pin].scaleLow,
+                                                                            adcDict[pin].scaleHigh, adcDict[pin].unit))
 
 
 # Logging Script
@@ -159,10 +161,27 @@ def log():
     adcValues = [0] * csvRows
     # Get timestamp for filename
     timeStamp = datetime.now().strftime("%Y%m%d-%H%M%S%f")
+
+    # FILE MANAGEMENT
+    # Get Users Remaining Disk Space - (Convert it from Bytes into MegaBytes)
+    remainingSpace = (shutil.disk_usage(os.path.realpath('/'))[2] / 1e6)
+    # Output space - rounding to a nice number
+    print("\nCurrent Disk Space: {} MB".format(round(remainingSpace, 2)))
+    # Calculate amount of time left for logging
+    # Find out Size (in MB) of Each Row
+    rowMBytes = 7 / 1e6
+    # Find amount of MB written each second
+    MBEachSecond = (rowMBytes * csvRows)/timeInterval
+    # Calculate time remaining using free space
+    timeRemSeconds = remainingSpace/MBEachSecond
+    # Add time in seconds to current datetime to give data it will run out of space
+    timeRemDate = datetime.now() + timedelta(0, timeRemSeconds)
+    print("According to the current configuration, you will run out of space on: {} of storage space".format(timeRemDate))
     # Delete outbox, recreate folder and copy config file with new name
     shutil.rmtree('files/outbox')
     os.makedirs('files/outbox')
     shutil.copyfile('files/inbox/logConf.ini', 'files/outbox/logConf{}.ini'.format(timeStamp))
+
     # CSV - Create/Open CSV file and print headers
     with open('files/outbox/raw{}.csv'.format(timeStamp), 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
@@ -234,6 +253,7 @@ def liveData():
             print("{}|".format(adcValuesComplPrint))
         # Sleep - Don't want to go too fast
         time.sleep(0.05)
+
 
 # This is the code that is run when the program is loaded.
 # If the module were to be imported, the code inside the if statement would not run.
