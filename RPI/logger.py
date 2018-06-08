@@ -215,6 +215,7 @@ def liveData():
     buffer = 0
     while not adcValuesCompl:
         pass
+    # Livedata Loop - Loops Forever until LogEnbl is False (controlled by GUI)
     while logEnbl is True:
         # Get Complete Set of Logged Data
         # If Data is different to that in the buffer
@@ -239,8 +240,8 @@ def liveData():
 # Calls the init() function and then the log() function
 if __name__ == "__main__":
     # Warning about lack of CSV
-    print("\nWARNING - running this script directly will cause no data in the CSV multithreading. "
-          "\nIf you need data, use 'gui.py'\n")
+    print("\nWARNING - running this script directly may produce a blank CSV. "
+          "\nIf you need data to be recorded, use 'gui.py'\n")
     # Load Config Data and Setup
     init()
     # Print Settings
