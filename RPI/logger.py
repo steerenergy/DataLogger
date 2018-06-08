@@ -180,9 +180,7 @@ def log():
     print("According to the current configuration, you will run out of space on: {} of storage space. "
           "\n If you need more space, try empything the 'Waste Basket' found on the Pi's Desktop".format(timeRemDate))
 
-    # Delete outbox, recreate folder and copy config file with new name
-    shutil.rmtree('files/outbox')
-    os.makedirs('files/outbox')
+    # Make copy of logConf.ini with new name that includes timestamp
     shutil.copyfile('files/inbox/logConf.ini', 'files/outbox/logConf{}.ini'.format(timeStamp))
 
     # CSV - Create/Open CSV file and print headers
