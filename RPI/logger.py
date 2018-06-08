@@ -163,10 +163,11 @@ def log():
     timeStamp = datetime.now().strftime("%Y%m%d-%H%M%S%f")
 
     # FILE MANAGEMENT
+    print("\nDisk Usage:")
     # Get Users Remaining Disk Space - (Convert it from Bytes into MegaBytes)
     remainingSpace = (shutil.disk_usage(os.path.realpath('/'))[2] / 1e6)
     # Output space - rounding to a nice number
-    print("\nCurrent Disk Space: {} MB".format(round(remainingSpace, 2)))
+    print("Current Free Disk Space: {} MB".format(round(remainingSpace, 2)))
 
     # Calculate amount of time left for logging
     # Find out Size (in MB) of Each Row
@@ -177,8 +178,9 @@ def log():
     timeRemSeconds = remainingSpace/MBEachSecond
     # Add time in seconds to current datetime to give data it will run out of space
     timeRemDate = datetime.now() + timedelta(0, timeRemSeconds)
-    print("According to the current configuration, you will run out of space on: {} of storage space. "
-          "\n If you need more space, try empything the 'Waste Basket' found on the Pi's Desktop".format(timeRemDate))
+    print("Under the current config, you will run out of space on approximately: {}"
+          "\nIf you need more space, try emptying the 'Waste Basket' found on the Pi's Desktop"
+          .format(timeRemDate.strftime("%Y-%m-%d %H:%M:%S")))
 
     # Make copy of logConf.ini with new name that includes timestamp
     shutil.copyfile('files/inbox/logConf.ini', 'files/outbox/logConf{}.ini'.format(timeStamp))
