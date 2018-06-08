@@ -6,7 +6,6 @@ from tkinter import *
 from tkinter import font
 import logger
 import sys
-import time
 
 
 class WindowTop(Frame):
