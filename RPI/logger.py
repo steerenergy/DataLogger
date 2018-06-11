@@ -139,13 +139,13 @@ def settingsOutput():
     print("\nCurrent Input Settings:")
     x = 0
     print(
-        "|{:>6}|{:>6}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|".format("Number", "Name", "Pin Enabled", "Input Type", "Gain",
+        "|{:>2}|{:>4}|{:>4}|{:>10}|{:>4}|{:>10}|{:>9}|".format("No", "Name", "Enbl", "Input Type", "Gain",
                                                                   "Scale", "Unit"))
-    print("-" * 80)
+    print("-" * 51)
     # Print input settings for each Pin
     for pin in adcDict:
         x += 1
-        print("|{:>6}|{:>6}|{:>12}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x, adcDict[pin].name, adcDict[pin].enabled,
+        print("|{:>2}|{:>4}|{:>4}|{:>10}|{:>4}|{:>5}{:>5}|{:>9}|".format(x, adcDict[pin].name, adcDict[pin].enabled,
                                                                             adcDict[pin].inputType, adcDict[pin].gain,
                                                                             adcDict[pin].scaleLow,
                                                                             adcDict[pin].scaleHigh, adcDict[pin].unit))

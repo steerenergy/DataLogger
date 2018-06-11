@@ -7,6 +7,7 @@ from tkinter import font, messagebox
 import logger
 import sys
 
+
 class WindowTop(Frame):
     # Main Window - Init function contains all elements of layout
     def __init__(self, master=None):
