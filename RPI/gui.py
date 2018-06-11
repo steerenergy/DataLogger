@@ -64,7 +64,10 @@ class WindowTop(Frame):
         # Holds the number of lines in the textbox (updated after each print)
         self.textIndex = None
         # Determines the max number of lines on the tkinter GUI at any given point.
-        self.textThreshold = 250.
+        self.textThreshold = 250
+
+        # Will later hold logThread
+        self.logThread = None
 
     # Contains functions for the start/stop logging buttons
     def logToggle(self):
