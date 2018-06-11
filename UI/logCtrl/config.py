@@ -53,7 +53,8 @@ class ADC:
         print("\nAvailable Input Types:")
         for pos, value in enumerate(inputTypes, start=1):
             print("{}. {}".format(pos, value))
-        option = input("\nSelect an option by its corresponding number: ")
+        option = input("\n(Note - To change available input types please edit 'progConf.ini'"
+                       "\nSelect an option by its corresponding number: ")
         try:
             # Check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
             if 0 < int(option) <= len(inputTypes):
@@ -94,12 +95,21 @@ class ADC:
         print("\nAvailable Unit Types:")
         for pos, value in enumerate(unitTypes, start=1):
             print("{}. {}".format(pos, value))
+        # Print one more option using list length for custom input
+        print("{}\n{}. Custom Input".format("-"*15, len(unitTypes)+1))
         option = input("\nSelect an option by its corresponding number: ")
         try:
             # Check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
             if 0 < int(option) <= len(unitTypes):
                 self.unit = unitTypes[int(option) - 1]
                 print("Success!")
+            elif int(option) == len(unitTypes)+1:
+                self.unit = input("Please type in the unit you want to use"
+                                  "\n(Note: If you want to add your unit to the default list, "
+                                  "please edit 'progConf.ini')"
+                                  "\n Unit:  ")
+                print("Success!")
+            # When Integer is out of Range
             else:
                 common.other()
         # If someone does not put in an integer
@@ -288,40 +298,46 @@ def generalName():
 
 # INPUT SETUP
 def inputSetup():
+    # Current Settings Print Out
     inputCurrentSettings()
-    chosenPin = input("\nPlease type the Name of Pin (Not the Number) you wish to Edit: ")
-    if chosenPin in adcDict:
-        # Main Menu
-        try:
-            while True:
-                print(
-                    "\nCurrent Pin Settings for: {}"
-                    "\nChoose a Option to edit a Setting (based on the correspondingtre number)"
-                    "\n1. Pin Enabled: {}\n2. Input Type: {}\n3. Gain: {}\n4. Scale: {} - {}\n5. Unit: {}"
-                    "\n----------------\n6. Back".format(
-                        chosenPin, adcDict[chosenPin].enabled, adcDict[chosenPin].inputType, adcDict[chosenPin].gain,
-                        adcDict[chosenPin].scaleLow, adcDict[chosenPin].scaleHigh, adcDict[chosenPin].unit))
-                option = input("\nOption Chosen: ")
-                if option == "1":
-                    adcDict[chosenPin].enabledEdit()
-                elif option == "2":
-                    adcDict[chosenPin].inputTypeEdit()
-                elif option == "3":
-                    adcDict[chosenPin].gainEdit()
-                elif option == "4":
-                    adcDict[chosenPin].scaleEdit()
-                elif option == "5":
-                    adcDict[chosenPin].unitEdit()
-                elif option == "6":
-                    common.back()
-                else:
-                    common.other()
-        except StopIteration:
-            pass
-    else:
+    try:
+        chosenNum = int(input("\nPlease type the number corresponding to the pin you wish to Edit: "))
+        # Find on adcDict if number is in adcDict, else throw an error
+        # If Found in adcDict, set the device to adcDict and continue
+        if chosenNum-1 < len(adcDict):
+            chosenPin = list(adcDict.items())[chosenNum - 1][0]
+            # Input Selection Menu
+            try:
+                while True:
+                    print(
+                        "\nCurrent Pin Settings for: {}"
+                        "\nChoose a Option to edit a Setting (based on the correspondingtre number)"
+                        "\n1. Pin Enabled: {}\n2. Input Type: {}\n3. Gain: {}\n4. Scale: {} - {}\n5. Unit: {}"
+                        "\n----------------\n6. Back".format(
+                            chosenPin, adcDict[chosenPin].enabled, adcDict[chosenPin].inputType, adcDict[chosenPin].gain,
+                            adcDict[chosenPin].scaleLow, adcDict[chosenPin].scaleHigh, adcDict[chosenPin].unit))
+                    option = input("\nOption Chosen: ")
+                    if option == "1":
+                        adcDict[chosenPin].enabledEdit()
+                    elif option == "2":
+                        adcDict[chosenPin].inputTypeEdit()
+                    elif option == "3":
+                        adcDict[chosenPin].gainEdit()
+                    elif option == "4":
+                        adcDict[chosenPin].scaleEdit()
+                    elif option == "5":
+                        adcDict[chosenPin].unitEdit()
+                    elif option == "6":
+                        common.back()
+                    else:
+                        common.other()
+            except StopIteration:
+                pass
+        else:
+            common.other()
+    # If someone doesn't type in an integer
+    except ValueError:
         common.other()
-    # Bring up Options for editing
-    # Next object
 
 
 # Printing Current Input Settings

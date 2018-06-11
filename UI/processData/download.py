@@ -46,12 +46,14 @@ def init():
                 else:
                     print("Invalid Option - File Not Deleted")
 
-        if len(sftp.listdir(path='/home/pi/Github/DataLogger/RPI/files/outbox')) >= 3:
-            print("WARNING - Multiple CSV/Config Files have been found. "
-                  "\nPlease navigate /files/inbox and ensure there is only one CSV and Config File")
+        if len(sftp.listdir(path='/home/pi/Github/DataLogger/RPI/files/outbox')) > 2:
+            print("WARNING - Multiple CSV/Config Files have been found.")
         # Close Connection
+
         sftp.close()
         transport.close()
+        # Print Success
+        print("Success!")
 
     # If connection was unsuccessful
     except socket.error:
