@@ -41,6 +41,7 @@ def init():
                 option = input("\nDo You wish to Delete the file remotely? ")
                 if option == "Y" or option == "y":
                     sftp.remove(remotePath)
+                    print("Successfully Deleted: {}".format(fileName))
                 elif option == "N" or option == "n":
                     print("File Not Deleted")
                 else:
