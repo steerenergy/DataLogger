@@ -235,7 +235,8 @@ def liveData():
     # Print a nice vertical line so it all looks pretty
     print("-" * (9 * len(adcHeader) + 1))
     buffer = 0
-    while not adcValuesCompl:
+    # Don't print live data when adcValuesCompl doesn't exist. Also if logging is stopped, exit loop
+    while not adcValuesCompl and logEnbl is True:
         pass
     # Livedata Loop - Loops Forever until LogEnbl is False (controlled by GUI)
     while logEnbl is True:

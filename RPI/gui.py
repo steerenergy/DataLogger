@@ -3,10 +3,9 @@
 
 import threading
 from tkinter import *
-from tkinter import font
+from tkinter import font, messagebox
 import logger
 import sys
-
 
 class WindowTop(Frame):
     # Main Window - Init function contains all elements of layout
@@ -22,7 +21,7 @@ class WindowTop(Frame):
 
         # Create Layout Frames
         self.topFrame = Frame(master)
-        self.topFrame.pack(expand=1, fill=BOTH, side = LEFT)
+        self.topFrame.pack(expand=1, fill=BOTH, side=LEFT)
         self.liveDataFrame = Frame(master)
         self.liveDataFrame.pack(expand=1, fill=BOTH, side=RIGHT)
         
@@ -31,11 +30,11 @@ class WindowTop(Frame):
         self.title.pack()
 
         # Start/Stop Logging Button 
-        self.logButton = Button(self.topFrame, text="Start Logging", height=3, width=20, command=self.logButtons, font=bigFont)
+        self.logButton = Button(self.topFrame, text="Start Logging", height=3, width=20, command=self.logToggle, font=bigFont)
         self.logButton.pack()
 
         # Start/Stop Logging Button
-        self.quitButton = Button(self.topFrame, text="Quit", height=3, width=20, command=self.client_exit, font=bigFont)
+        self.quitButton = Button(self.topFrame, text="Quit", height=3, width=20, command=self.onClose, font=bigFont)
         self.quitButton.pack(padx=10)
 
         # Live Data Title
@@ -68,11 +67,14 @@ class WindowTop(Frame):
         self.textThreshold = 250.
 
     # Contains functions for the start/stop logging buttons
-    def logButtons(self):
+    def logToggle(self):
         # Starting Logging
         if self.logButton['text'] == "Start Logging":
             # Disable Log Button
             self.logButton['state'] = 'disabled'
+            # Update button.
+            # We need the change to happen now, rather than at the end of the function (in root.mainloop)
+            self.logButton.update()
             # Clear Text Output
             self.liveDataText['state'] = 'normal'
             self.liveDataText.delete(1.0, END)
@@ -124,7 +126,7 @@ class WindowTop(Frame):
     # Note - errors will be displayed in terminal still
     # It essentially redefines what the print statement does
     def redirector(self, inputStr):
-        # Enable, write data, delete unecessary data, disable
+        # Enable, write data, delete unnecessary data, disable
         self.liveDataText['state'] = 'normal'
         self.liveDataText.insert(END, inputStr)
         # If over a certain amount of lines, delete all lines from the top up to a threshold
@@ -133,16 +135,24 @@ class WindowTop(Frame):
             self.liveDataText.delete(1.0, self.textIndex-self.textThreshold)
             # Remove history from RAM (to avoid memory Leak
             self.liveDataText.edit_reset()
-        # Update window content (done by main.loop but when this is triggered inside of a function that won't happen
-        # self.liveDataText.update()
         self.liveDataText['state'] = 'disabled'
         # If autoscroll is enabled, then scroll to bottom
         if self.autoScrollEnable.get() == 1:
             self.liveDataText.see(END)
 
-    @staticmethod
-    def client_exit():
-        quit()
+    # Make sure logging finishes before program closes
+    def onClose(self):
+        try:
+            if logger.logEnbl is True:
+                close = messagebox.askokcancel("Close", "Logging has not be finished. Are you sure you want to quit?")
+                if close:
+                    self.logToggle()
+                    root.destroy()
+            else:
+                root.destroy()
+        # If logger has never been run, logger.logEnbl will not exist
+        except AttributeError:
+            root.destroy()
 
 
 # Create Tkinter Instance
@@ -157,6 +167,9 @@ smallFont = font.Font(family="Courier", size=14)
 
 # Create instance of GUI
 app = WindowTop(root)
+
+# Ensure when the program quit it quits gracefully - e.g. stopping the log first
+root.protocol("WM_DELETE_WINDOW", app.onClose)
 
 # Mainloop in charge of making the gui do everything
 root.mainloop()
