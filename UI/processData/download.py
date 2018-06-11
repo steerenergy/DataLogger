@@ -1,5 +1,13 @@
 # Uses Paramiko to connect to the Pi via ftp and download the csv and config file.
 import paramiko
+# Import socket for error handling
+import socket
+
+
+# Function called to print transfers status
+def printTotals(transferred, toBeTransferred):
+    # Note this doesn't display properly if run in PyCharm/Idle due to the carriage return ('/r')
+    print("Transferred: {}%".format(round(transferred/toBeTransferred * 100, 2)), end="\r")
 
 
 def init():
@@ -22,10 +30,21 @@ def init():
                 # Download File
                 remotePath = '/home/pi/Github/DataLogger/RPI/files/outbox/' + fileName
                 localPath = 'files/inbox/'+fileName
-                sftp.get(remotePath, localPath)
+                # Print name of file being transferred
+                print("\nTransferring: {}...".format(fileName))
+                # Transfer the file and give status of transfer (see printTotals func at top).
+                sftp.get(remotePath, localPath, callback=printTotals)
+                # Print Success
                 print("Successfully Downloaded: {}".format(fileName))
-                # Delete File
-                sftp.remove(remotePath)
+                # Delete File if user wants to
+                # This means file is not deleted if the file is taken off during logging
+                option = input("\nDo You wish to Delete the file remotely? ")
+                if option == "Y" or option == "y":
+                    sftp.remove(remotePath)
+                elif option == "N" or option == "n":
+                    print("File Not Deleted")
+                else:
+                    print("Invalid Option - File Not Deleted")
 
         if len(sftp.listdir(path='/home/pi/Github/DataLogger/RPI/files/outbox')) >= 3:
             print("WARNING - Multiple CSV/Config Files have been found. "
@@ -33,9 +52,18 @@ def init():
         # Close Connection
         sftp.close()
         transport.close()
-    except:
-        print("\n ERROR: Transfer Failed - "
+
+    # If connection was unsuccessful
+    except socket.error:
+        print("\nERROR: Transfer Failed - "
               "Ensure you are Connected to the same Network as the Raspberry Pi and Try Again")
+        # Close Connection if possible
+        try:
+            sftp.close()
+            transport.close()
+        # If the above variables haven't been assigned yet, move on
+        except UnboundLocalError:
+            pass
 
 
 if __name__ == "__main__":

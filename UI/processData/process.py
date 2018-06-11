@@ -58,7 +58,7 @@ class fileSelect:
                     break
             # Error which shows if there was not a match
             if matchFound is False:
-                print("\nERROR - Unable to find matching config for '{}'. \n Please check the '/files/inbox' folder\n"
+                print("\nERROR - Unable to find matching config for '{}'. Please check the '/files/inbox' folder"
                       .format(self.rawCsvFile))
 
     # Allows user to choose which files they want
@@ -70,7 +70,7 @@ class fileSelect:
             common.back()
         else:
             # Print the data found in the folder
-            print("Multiple Data Found \nThe file's datestamps are shown below")
+            print("\nData Found \nThe file's datestamps are shown below:")
             for pos, value in enumerate(self.fileSelection, start=1):
                 print("{}. {}".format(pos, value[0]))
             # Option Selection
