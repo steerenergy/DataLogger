@@ -21,9 +21,9 @@ def init():
             remotePath = '/home/pi/Github/DataLogger/RPI/files/outbox/' + fileName
             localPath = 'files/inbox/'+fileName
             sftp.get(remotePath, localPath)
-        if len(sftp.listdir(path='/home/pi/Github/DataLogger/RPI/files/outbox')) >= 3:
-            print("WARNING - Multiple CSV/Config Files have been found. "
-                  "\nPlease navigate /files/inbox and ensure there is only one CSV and Config File")
+        if len(sftp.listdir(path='/home/pi/Github/DataLogger/RPI/files/outbox')) > 2:
+            print("\nWARNING - Multiple CSV/Config Files have been found. ")
+        print("Success!")
     finally:
         sftp.close()
         transport.close()

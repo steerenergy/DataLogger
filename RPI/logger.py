@@ -12,9 +12,9 @@ from collections import OrderedDict
 import configparser
 import functools
 # Uncomment below for real adc (if running on Pi)
-# import Adafruit_ADS1x15
+import Adafruit_ADS1x15
 # Uncomment below for fake adc simulation if using a PC
-import Adafruit_ADS1x15Fake as Adafruit_ADS1x15
+# import Adafruit_ADS1x15Fake as Adafruit_ADS1x15
 import csv
 import threading
 import shutil
@@ -158,7 +158,7 @@ def log():
     # Set up list to be printed to CSV
     adcValues = [0] * csvRows
     # Get timestamp for filename
-    timeStamp = datetime.now().strftime("%Y%m%d%-H%M%S%f")
+    timeStamp = datetime.now().strftime("%Y%m%d%-H%M%S.%f")
     # Delete outbox, recreate folder and copy config file with new name
     shutil.rmtree('files/outbox')
     os.makedirs('files/outbox')
@@ -179,8 +179,8 @@ def log():
         # Beginning of reading script
         while logEnbl is True:
             # Get time and send to Log
-            currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f")
-            timeElapsed = round(time.perf_counter() - startTime, 4)
+            currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+            timeElapsed = round(time.perf_counter() - startTime, 2)
 
             for currentPin, value in enumerate(adcToLog):
                 # Get Raw data from A/D, and add to adcValues list corresponding to the current pin
