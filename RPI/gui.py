@@ -25,17 +25,18 @@ class WindowTop(Frame):
         self.liveDataFrame = Frame(master)
         self.liveDataFrame.pack(expand=1, fill=BOTH, side=RIGHT)
         
-        # Title text
+        # Title Text
         self.title = Label(self.topFrame, text="Log Ctrl:", font=bigFont)
         self.title.pack()
 
-        # Start/Stop Logging Button 
-        self.logButton = Button(self.topFrame, text="Start Logging", height=3, width=20, command=self.logToggle, font=bigFont)
-        self.logButton.pack()
-
         # Start/Stop Logging Button
-        self.quitButton = Button(self.topFrame, text="Quit", height=3, width=20, command=self.onClose, font=bigFont)
-        self.quitButton.pack(padx=10)
+        self.logButton = Button(self.topFrame, text="Start Logging", height=3, width=11,
+                                command=self.logToggle, font=bigFont)
+        self.logButton.pack(padx=5)
+
+        # Quit Button
+        self.quitButton = Button(self.topFrame, text="Quit", height=3, width=11, command=self.onClose, font=bigFont)
+        self.quitButton.pack(padx=5)
 
         # Live Data Title
         self.liveTitle = Label(self.liveDataFrame, text="Live Data:", font=bigFont)
@@ -56,7 +57,7 @@ class WindowTop(Frame):
         self.autoScrollEnable = IntVar()
         self.autoScroll = Checkbutton(self.topFrame, text="AutoScroll", variable=self.autoScrollEnable, font=bigFont)
         self.autoScroll.select()
-        self.autoScroll.pack()
+        self.autoScroll.pack(side=BOTTOM)
 
         # Redirect normal print commands to textbox on GUI
         sys.stdout.write = self.redirector
@@ -165,8 +166,8 @@ root = Tk()
 # root.wm_attributes('-zoomed', 1)
 
 # Fonts
-bigFont = font.Font(family="Helvetica", size=20, weight=font.BOLD)
-smallFont = font.Font(family="Courier", size=14)
+bigFont = font.Font(family="Helvetica", size=16, weight=font.BOLD)
+smallFont = font.Font(family="Courier", size=11)
 
 # Create instance of GUI
 app = WindowTop(root)
