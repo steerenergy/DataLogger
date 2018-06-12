@@ -69,7 +69,7 @@ class ADC:
 
     def gainEdit(self):
         # Gain Settings will not change so it has been written like this.
-        #  Users are instructed to type a number which corresponds to the value of gain they want
+        # Users are instructed to type a number which corresponds to the value of gain they want
         gainSettings = ["1", "2", "4", "8", "16"]
         print("\nAvailable Gain Settings:")
         print("1 = +/-4.096V \n2 = +/-2.048V \n4 = +/-1.024V \n8 = +/-0.512V \n16 = +/-0.256V")
