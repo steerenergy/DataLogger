@@ -88,12 +88,8 @@ class WindowTop(Frame):
             self.liveDataText['state'] = 'disabled'
             # Scroll to Bottom of Blank Box
             self.liveDataText.see(END)
-            # Load Config Data and Setup
-            logger.init()
-            # Print Settings on Console
-            logger.settingsOutput()
-            # Run Logging
-            self.logThread = threading.Thread(target=logger.log)
+            # Load and Start Logger
+            self.logThread = threading.Thread(target=logger.run)
             self.logThread.start()
             # Change Button Text and re-enable
             self.logButton.config(text="Finish Logging")

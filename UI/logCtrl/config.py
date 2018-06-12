@@ -12,6 +12,7 @@ import configparser
 import uuid
 import paramiko
 from . import common
+import os
 
 # Flag for whether config has been set already
 configSet = False
@@ -68,7 +69,7 @@ class ADC:
 
     def gainEdit(self):
         # Gain Settings will not change so it has been written like this.
-        #  Users are instructed to type a number which corresponds to the value of gain they want
+        # Users are instructed to type a number which corresponds to the value of gain they want
         gainSettings = ["1", "2", "4", "8", "16"]
         print("\nAvailable Gain Settings:")
         print("1 = +/-4.096V \n2 = +/-2.048V \n4 = +/-1.024V \n8 = +/-0.512V \n16 = +/-0.256V")
@@ -124,15 +125,24 @@ def init():
     global configSet
     if configSet is False:
         progConfImport()
-        option = input("\nDo you wish to load in your previous config (logConf.ini)? (Y/N) ")
-        if option == "Y" or option == "y":
-            configSet = True
-            importConfInit()
-        elif option == "N" or option == "n":
+        # Check to see if config file present, if so give the option to import it
+        if 'logConf.ini' in os.listdir('files/outbox/'):
+            option = input("\nPrevious Config Found (logConf.ini) Do you wish to import it? (Y/N) ")
+            if option == "Y" or option == "y":
+                print("Importing Config...")
+                configSet = True
+                importConfInit()
+            elif option == "N" or option == "n":
+                print("Creating Default Template...")
+                configSet = True
+                blankConfInit()
+            else:
+                common.other()
+        # If Config File doesn't exist
+        else:
+            print("No Config File Found - Creating Default Template...")
             configSet = True
             blankConfInit()
-        else:
-            common.other()
 
     # Load Menu
     menu()
