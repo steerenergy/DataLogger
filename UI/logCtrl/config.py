@@ -12,6 +12,7 @@ import configparser
 import uuid
 import paramiko
 from . import common
+import os
 
 # Flag for whether config has been set already
 configSet = False
@@ -124,15 +125,24 @@ def init():
     global configSet
     if configSet is False:
         progConfImport()
-        option = input("\nDo you wish to load in your previous config (logConf.ini)? (Y/N) ")
-        if option == "Y" or option == "y":
-            configSet = True
-            importConfInit()
-        elif option == "N" or option == "n":
+        # Check to see if config file present, if so give the option to import it
+        if 'logConf.ini' in os.listdir('files/outbox/'):
+            option = input("\nPrevious Config Found (logConf.ini) Do you wish to import it? (Y/N) ")
+            if option == "Y" or option == "y":
+                print("Importing Config...")
+                configSet = True
+                importConfInit()
+            elif option == "N" or option == "n":
+                print("Creating Default Template...")
+                configSet = True
+                blankConfInit()
+            else:
+                common.other()
+        # If Config File doesn't exist
+        else:
+            print("No Config File Found - Creating Default Template...")
             configSet = True
             blankConfInit()
-        else:
-            common.other()
 
     # Load Menu
     menu()
