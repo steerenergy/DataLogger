@@ -160,8 +160,8 @@ def csvProcess():
     for item in df.iloc[:, 2:].columns:
         # Below line runs convert function on each row in column
         df[item] = df[item].apply(convert, args=(item,))
-        # Rename Column heading to add Units onto the end of them
-        df.rename(columns={item: item + " " + config[item]['unit']}, inplace=True)
+        # Rename Column heading to add friendly Name and Units
+        df.rename(columns={item: config[item]['friendlyname'] + "|" + item + "|" + config[item]['unit']}, inplace=True)
     # Print out Result
     print("\nConverted Data (Top Lines):")
     print(df.head())
