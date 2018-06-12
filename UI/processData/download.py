@@ -49,8 +49,8 @@ def init():
 
         if len(sftp.listdir(path='/home/pi/Github/DataLogger/RPI/files/outbox')) > 2:
             print("WARNING - Multiple CSV/Config Files have been found.")
-        # Close Connection
 
+        # Close Connection
         sftp.close()
         transport.close()
         # Print Success

@@ -23,6 +23,7 @@ class ADC:
     # Create instance variables and set to default values (if prev config is not imported)
     def __init__(self):
         self.enabled = False
+        self.friendlyName = "Default"
         self.inputType = "Edit Me"
         self.gain = 1
         self.scaleLow = 0
@@ -48,6 +49,14 @@ class ADC:
             else:
                 common.other()
         print("Success!\n")
+
+    def friendlyNameEdit(self):
+        option = input("\nType in your chosen friendly name for the pin (max 10 characters) ")
+        # If friendly name is within character limit, set it. Otherwise, through error
+        if len(option) <= 10:
+            self.friendlyName = option
+        else:
+            common.other()
 
     def inputTypeEdit(self):
         # List of input Types (this can be updated and the code will continue to work)
@@ -86,10 +95,13 @@ class ADC:
             common.other()
 
     def scaleEdit(self):
-        option = input("\nWhat is the Low end of the Scale? ")
-        self.scaleLow = option
-        option = input("What is the High end of the Scale? ")
-        self.scaleHigh = option
+        try:
+            option = float(input("\nWhat is the Low end of the Scale? "))
+            self.scaleLow = option
+            option = float(input("What is the High end of the Scale? "))
+            self.scaleHigh = option
+        except ValueError:
+            print("Scale must be a Numerical Value")
 
     def unitEdit(self):
         # List of Unit Types (this can be updated and the code will continue to work)
@@ -97,14 +109,14 @@ class ADC:
         for pos, value in enumerate(unitTypes, start=1):
             print("{}. {}".format(pos, value))
         # Print one more option using list length for custom input
-        print("{}\n{}. Custom Input".format("-"*15, len(unitTypes)+1))
+        print("{}\n{}. Custom Input".format("-" * 15, len(unitTypes) + 1))
         option = input("\nSelect an option by its corresponding number: ")
         try:
             # Check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
             if 0 < int(option) <= len(unitTypes):
                 self.unit = unitTypes[int(option) - 1]
                 print("Success!")
-            elif int(option) == len(unitTypes)+1:
+            elif int(option) == len(unitTypes) + 1:
                 self.unit = input("Please type in the unit you want to use"
                                   "\n(Note: If you want to add your unit to the default list, "
                                   "please edit 'progConf.ini')"
@@ -232,15 +244,16 @@ def importConfInit():
 
     # For all sections but general:
     # Parse the data from logConf and create a new object for each one and set instance variables for each
-    for input in logConf.sections():
-        if input != 'General':
-            adcDict[input] = ADC()
-            adcDict[input].enabled = logConf[input].getboolean('enabled')
-            adcDict[input].inputType = logConf[input]['inputtype']
-            adcDict[input].gain = logConf[input].getint('gain')
-            adcDict[input].scaleLow = logConf[input].getint('scalelow')
-            adcDict[input].scaleHigh = logConf[input].getint('scalehigh')
-            adcDict[input].unit = logConf[input]['unit']
+    for pin in logConf.sections():
+        if pin != 'General':
+            adcDict[pin] = ADC()
+            adcDict[pin].enabled = logConf[pin].getboolean('enabled')
+            adcDict[pin].friendlyName = logConf[pin]['friendlyname']
+            adcDict[pin].inputType = logConf[pin]['inputtype']
+            adcDict[pin].gain = logConf[pin].getint('gain')
+            adcDict[pin].scaleLow = logConf[pin].getfloat('scalelow')
+            adcDict[pin].scaleHigh = logConf[pin].getfloat('scalehigh')
+            adcDict[pin].unit = logConf[pin]['unit']
 
 
 # MAIN MENU
@@ -311,30 +324,34 @@ def inputSetup():
         chosenNum = int(input("\nPlease type the number corresponding to the pin you wish to Edit: "))
         # Find on adcDict if number is in adcDict, else throw an error
         # If Found in adcDict, set the device to adcDict and continue
-        if chosenNum-1 < len(adcDict):
+        if chosenNum - 1 < len(adcDict):
             chosenPin = list(adcDict.items())[chosenNum - 1][0]
             # Input Selection Menu
             try:
                 while True:
                     print(
                         "\nCurrent Pin Settings for: {}"
-                        "\nChoose a Option to edit a Setting (based on the correspondingtre number)"
-                        "\n1. Pin Enabled: {}\n2. Input Type: {}\n3. Gain: {}\n4. Scale: {} - {}\n5. Unit: {}"
-                        "\n----------------\n6. Back".format(
-                            chosenPin, adcDict[chosenPin].enabled, adcDict[chosenPin].inputType, adcDict[chosenPin].gain,
+                        "\nChoose a Option to edit a Setting (based on the corresponding number)"
+                        "\n1. Pin Enabled: {}\n2. Friendly Name: {}\n3. Input Type: {}\n4. Gain: {}\n"
+                        "5. Scale: {} - {}\n6. Unit: {}"
+                        "\n----------------\n7. Back".format(
+                            chosenPin, adcDict[chosenPin].enabled, adcDict[chosenPin].friendlyName,
+                            adcDict[chosenPin].inputType, adcDict[chosenPin].gain,
                             adcDict[chosenPin].scaleLow, adcDict[chosenPin].scaleHigh, adcDict[chosenPin].unit))
                     option = input("\nOption Chosen: ")
                     if option == "1":
                         adcDict[chosenPin].enabledEdit()
-                    elif option == "2":
-                        adcDict[chosenPin].inputTypeEdit()
+                    if option == "2":
+                        adcDict[chosenPin].friendlyNameEdit()
                     elif option == "3":
-                        adcDict[chosenPin].gainEdit()
+                        adcDict[chosenPin].inputTypeEdit()
                     elif option == "4":
-                        adcDict[chosenPin].scaleEdit()
+                        adcDict[chosenPin].gainEdit()
                     elif option == "5":
-                        adcDict[chosenPin].unitEdit()
+                        adcDict[chosenPin].scaleEdit()
                     elif option == "6":
+                        adcDict[chosenPin].unitEdit()
+                    elif option == "7":
                         common.back()
                     else:
                         common.other()
@@ -349,19 +366,24 @@ def inputSetup():
 
 # Printing Current Input Settings
 def inputCurrentSettings():
-    print("Current Input Settings:\n")
-    print("-" * 92)
-    print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|".format("Number", "Name", "Pin Enabled", "Input Type",
-                                                                      "Gain", "Scale", "Unit"))
-    print("-" * 92)
+    print("\nCurrent Input Settings:")
+    print("-" * 95)
+    print("|{:>6}|{:>6}|{:>12}|{:>14}|{:>12}|{:>12}|{:>12}|{:>12}|".format("Number", "Name", "Pin Enabled",
+                                                                           "Friendly Name", "Input Type", "Gain",
+                                                                           "Scale", "Unit"))
+    print("-" * 95)
     x = 0
-    for ADC in adcDict:
+    for pin in adcDict:
         x += 1
-        print("|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x, ADC, adcDict[ADC].enabled,
-                                                                              adcDict[ADC].inputType, adcDict[ADC].gain,
-                                                                              adcDict[ADC].scaleLow,
-                                                                              adcDict[ADC].scaleHigh,
-                                                                              adcDict[ADC].unit))
+        print("|{:>6}|{:>6}|{:>12}|{:>14}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x,
+                                                                                   pin,
+                                                                                   adcDict[pin].enabled,
+                                                                                   adcDict[pin].friendlyName,
+                                                                                   adcDict[pin].inputType,
+                                                                                   adcDict[pin].gain,
+                                                                                   adcDict[pin].scaleLow,
+                                                                                   adcDict[pin].scaleHigh,
+                                                                                   adcDict[pin].unit))
 
 
 # PRE PROCESS - Called by Save Function to determine
@@ -411,28 +433,33 @@ def save():
         logConf["General"][key] = str(generalSettings[key])
     logConf["General"]["uniqueid"] = str(uuid.uuid4())
 
-    # Write data for each A/D
-    for key in adcDict:
-        logConf[key] = {}
-        logConf[key]["enabled"] = str(adcDict[key].enabled)
-        logConf[key]["inputtype"] = str(adcDict[key].inputType)
-        logConf[key]["gain"] = str(adcDict[key].gain)
-        logConf[key]["scalelow"] = str(adcDict[key].scaleLow)
-        logConf[key]["scalehigh"] = str(adcDict[key].scaleHigh)
-        logConf[key]["unit"] = str(adcDict[key].unit)
-        # Only calculate scales if pin enabled
-        if adcDict[key].enabled is True:
-            # This is where m and c are calculated
-            # Note that the lowScale, highScale, input type and gain are all still written to the config
-            m, c = preProcess(adcDict[key].scaleLow, adcDict[key].scaleHigh, adcDict[key].inputType, adcDict[key].gain)
-            logConf[key]["m"] = str(m)
-            logConf[key]["c"] = str(c)
-    # Write File
-    with open('files/outbox/logConf.ini', 'w') as configfile:
-        logConf.write(configfile)
-    print("Success!")
-    print("NOTE - If you manually change the logConf.ini file contents, you must rerun this program,"
-          "load in the config file and save it. Otherwise, the data will be processed incorrectly. ")
+    try:
+        # Write data for each A/D
+        for key in adcDict:
+            logConf[key] = {}
+            logConf[key]["enabled"] = str(adcDict[key].enabled)
+            logConf[key]["friendlyname"] = str(adcDict[key].friendlyName)
+            logConf[key]["inputtype"] = str(adcDict[key].inputType)
+            logConf[key]["gain"] = str(adcDict[key].gain)
+            logConf[key]["scalelow"] = str(adcDict[key].scaleLow)
+            logConf[key]["scalehigh"] = str(adcDict[key].scaleHigh)
+            logConf[key]["unit"] = str(adcDict[key].unit)
+            # Only calculate scales if pin enabled
+            if adcDict[key].enabled is True:
+                # This is where m and c are calculated
+                # Note that the lowScale, highScale, input type and gain are all still written to the config
+                m, c = preProcess(adcDict[key].scaleLow, adcDict[key].scaleHigh,
+                                  adcDict[key].inputType, adcDict[key].gain)
+                logConf[key]["m"] = str(m)
+                logConf[key]["c"] = str(c)
+        # Write File
+        with open('files/outbox/logConf.ini', 'w') as configfile:
+            logConf.write(configfile)
+        print("Success!")
+        print("NOTE - If you manually change the logConf.ini file contents, you must rerun this program,"
+              "load in the config file and save it. Otherwise, the data will be processed incorrectly. ")
+    except KeyError:
+        print("ERROR - Could not write Config File. Have you set your input name and scale?")
 
 
 # FTP Upload of Config File
@@ -442,7 +469,7 @@ def upload():
         # Open a transport
         host = "raspberrypi"
         port = 22
-        transport = paramiko.Transport((host, port))
+        transport = paramiko.Transport(host, port)
         # Auth
         password = "raspberry"
         username = "pi"
