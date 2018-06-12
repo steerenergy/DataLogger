@@ -27,8 +27,8 @@ class ADC:
         self.enabled = config[section].getboolean('enabled')
         self.inputType = config[section]['inputtype']
         self.gain = config[section].getint('gain')
-        self.scaleLow = config[section].getint('scalelow')
-        self.scaleHigh = config[section].getint('scalehigh')
+        self.scaleLow = config[section].getfloat('scalelow')
+        self.scaleHigh = config[section].getfloat('scalehigh')
         self.unit = config[section]['unit']
         if "m" in config[section] and "c" in config[section]:
             self.m = config[section].getfloat('m')
