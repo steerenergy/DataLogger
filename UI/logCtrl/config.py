@@ -13,6 +13,7 @@ import uuid
 import paramiko
 from . import common
 import os
+import socket
 
 # Flag for whether config has been set already
 configSet = False
@@ -482,9 +483,26 @@ def upload():
         localPath = 'files/outbox/logConf.ini'
         sftp.put(localPath, remotePath)
         print("Success!")
-    finally:
+        # Close Connection
         sftp.close()
         transport.close()
+        # Print Success
+        print("Success!")
+        # Close Connection
+        sftp.close()
+        transport.close()
+
+    # If connection was unsuccessful
+    except socket.error:
+        print("\nERROR: Transfer Failed - "
+              "Ensure you are Connected to the same Network as the Raspberry Pi and Try Again")
+        # Close Connection if possible
+        try:
+            sftp.close()
+            transport.close()
+        # If the above variables haven't been assigned yet, move on
+        except UnboundLocalError:
+            pass
 
 
 # Temp Code
