@@ -1,3 +1,7 @@
+# Ignore .csv and .ini files in the 'files' subfolders
+**/files/**/*.ini
+**/files/**/*.csv
+
 # Ignore python files
 # Byte-compiled / optimized / DLL files
 __pycache__/
