@@ -90,9 +90,15 @@ def generalImport():
     # Create dictionary for each item in the general section of the config
     global generalSettings
     generalSettings = OrderedDict()
-    for key in config['General']:
-        generalSettings[key] = config['General'][key]
-    print("Success!")
+    try:
+        for key in config['General']:
+            generalSettings[key] = config['General'][key]
+        print("Success!")
+    # Exception raised when key cannot be found (file doesnt't exist or file is corrupt)
+    except KeyError:
+        print("ERROR - Failed to read General Settings - Have you sent over a 'logConf.ini' file?")
+        global logEnbl
+        logEnbl = False
 
 
 # Import Input Settings
@@ -100,34 +106,42 @@ def inputImport():
     print("Configuring Input Settings... ", end="", flush=True)
     # For all sections but general, parse the data from config.C
     # Create a new object for each one. The init method of the class then imports all the data as instance variables
-    for section in config.sections():
-        if section != 'General':
-            adcDict[section] = ADC(section)
-    # ADC Pin Map List - created now the gain information has been grabbed.
-    # This gives the list of possible functions that can be run to grab data from a pin.
-    global adcPinMap
-    adcPinMap = {
-        "0A0": functools.partial(adc0.read_adc, 0, gain=adcDict["0A0"].gain, data_rate=dataRate),
-        "0A1": functools.partial(adc0.read_adc, 1, gain=adcDict["0A1"].gain, data_rate=dataRate),
-        "0A2": functools.partial(adc0.read_adc, 2, gain=adcDict["0A2"].gain, data_rate=dataRate),
-        "0A3": functools.partial(adc0.read_adc, 3, gain=adcDict["0A3"].gain, data_rate=dataRate),
-        "1A0": functools.partial(adc1.read_adc, 0, gain=adcDict["1A0"].gain, data_rate=dataRate),
-        "1A1": functools.partial(adc1.read_adc, 1, gain=adcDict["1A1"].gain, data_rate=dataRate),
-        "1A2": functools.partial(adc1.read_adc, 2, gain=adcDict["1A2"].gain, data_rate=dataRate),
-        "1A3": functools.partial(adc1.read_adc, 3, gain=adcDict["1A3"].gain, data_rate=dataRate),
-        "2A0": functools.partial(adc2.read_adc, 0, gain=adcDict["2A0"].gain, data_rate=dataRate),
-        "2A1": functools.partial(adc2.read_adc, 1, gain=adcDict["2A1"].gain, data_rate=dataRate),
-        "2A2": functools.partial(adc2.read_adc, 2, gain=adcDict["2A2"].gain, data_rate=dataRate),
-        "2A3": functools.partial(adc2.read_adc, 3, gain=adcDict["2A3"].gain, data_rate=dataRate),
-        "3A0": functools.partial(adc3.read_adc, 0, gain=adcDict["3A0"].gain, data_rate=dataRate),
-        "3A1": functools.partial(adc3.read_adc, 1, gain=adcDict["3A1"].gain, data_rate=dataRate),
-        "3A2": functools.partial(adc3.read_adc, 2, gain=adcDict["3A2"].gain, data_rate=dataRate),
-        "3A3": functools.partial(adc3.read_adc, 3, gain=adcDict["3A3"].gain, data_rate=dataRate)
-    }
-    # Run code to choose which pins to be logged.
-    for adc in adcDict:
-        adcDict[adc].inputSetup()
-    print("Success!")
+    try:
+        for section in config.sections():
+            if section != 'General':
+                adcDict[section] = ADC(section)
+
+        # ADC Pin Map List - created now the gain information has been grabbed.
+        # This gives the list of possible functions that can be run to grab data from a pin.
+        global adcPinMap
+        adcPinMap = {
+            "0A0": functools.partial(adc0.read_adc, 0, gain=adcDict["0A0"].gain, data_rate=dataRate),
+            "0A1": functools.partial(adc0.read_adc, 1, gain=adcDict["0A1"].gain, data_rate=dataRate),
+            "0A2": functools.partial(adc0.read_adc, 2, gain=adcDict["0A2"].gain, data_rate=dataRate),
+            "0A3": functools.partial(adc0.read_adc, 3, gain=adcDict["0A3"].gain, data_rate=dataRate),
+            "1A0": functools.partial(adc1.read_adc, 0, gain=adcDict["1A0"].gain, data_rate=dataRate),
+            "1A1": functools.partial(adc1.read_adc, 1, gain=adcDict["1A1"].gain, data_rate=dataRate),
+            "1A2": functools.partial(adc1.read_adc, 2, gain=adcDict["1A2"].gain, data_rate=dataRate),
+            "1A3": functools.partial(adc1.read_adc, 3, gain=adcDict["1A3"].gain, data_rate=dataRate),
+            "2A0": functools.partial(adc2.read_adc, 0, gain=adcDict["2A0"].gain, data_rate=dataRate),
+            "2A1": functools.partial(adc2.read_adc, 1, gain=adcDict["2A1"].gain, data_rate=dataRate),
+            "2A2": functools.partial(adc2.read_adc, 2, gain=adcDict["2A2"].gain, data_rate=dataRate),
+            "2A3": functools.partial(adc2.read_adc, 3, gain=adcDict["2A3"].gain, data_rate=dataRate),
+            "3A0": functools.partial(adc3.read_adc, 0, gain=adcDict["3A0"].gain, data_rate=dataRate),
+            "3A1": functools.partial(adc3.read_adc, 1, gain=adcDict["3A1"].gain, data_rate=dataRate),
+            "3A2": functools.partial(adc3.read_adc, 2, gain=adcDict["3A2"].gain, data_rate=dataRate),
+            "3A3": functools.partial(adc3.read_adc, 3, gain=adcDict["3A3"].gain, data_rate=dataRate)
+        }
+        # Run code to choose which pins to be logged.
+        for adc in adcDict:
+            adcDict[adc].inputSetup()
+        print("Success!")
+
+    # Exception raised when key cannot be found (file doesnt't exist or file is corrupt)
+    except KeyError:
+        print("ERROR - Failed to read Input Settings - Have you sent over a 'logConf.ini' file?")
+        global logEnbl
+        logEnbl = False
 
 
 # Output Current Settings
@@ -139,16 +153,16 @@ def settingsOutput():
     print("\nCurrent Input Settings:")
     x = 0
     print(
-        "|{:>2}|{:>4}|{:>4}|{:>10}|{:>4}|{:>10}|{:>9}|".format("No", "Name", "Enbl", "Input Type", "Gain",
-                                                                  "Scale", "Unit"))
+        "|{:>2}|{:>4}|{:>4}|{:>10}|{:>4}|{:>10}|{:>9}|".format("No", "Name", "Enbl", "Input Type",
+                                                               "Gain", "Scale", "Unit"))
     print("-" * 51)
     # Print input settings for each Pin
     for pin in adcDict:
         x += 1
         print("|{:>2}|{:>4}|{:>4}|{:>10}|{:>4}|{:>5}{:>5}|{:>9}|".format(x, adcDict[pin].name, adcDict[pin].enabled,
-                                                                            adcDict[pin].inputType, adcDict[pin].gain,
-                                                                            adcDict[pin].scaleLow,
-                                                                            adcDict[pin].scaleHigh, adcDict[pin].unit))
+                                                                         adcDict[pin].inputType, adcDict[pin].gain,
+                                                                         adcDict[pin].scaleLow,
+                                                                         adcDict[pin].scaleHigh, adcDict[pin].unit))
 
 
 # Logging Script
@@ -259,6 +273,18 @@ def liveData():
         time.sleep(0.05)
 
 
+# Contains functions for normal run of logger
+def run():
+    # Load Config Data and Setup
+    init()
+    # Only continue if import was successful
+    if logEnbl is True:
+        # Print Settings
+        settingsOutput()
+        # Run Logging
+        log()
+
+
 # This is the code that is run when the program is loaded.
 # If the module were to be imported, the code inside the if statement would not run.
 # Calls the init() function and then the log() function
@@ -266,9 +292,5 @@ if __name__ == "__main__":
     # Warning about lack of CSV
     print("\nWARNING - running this script directly may produce a blank CSV. "
           "\nIf you need data to be recorded, use 'gui.py'\n")
-    # Load Config Data and Setup
-    init()
-    # Print Settings
-    settingsOutput()
-    # Run Logging
-    log()
+    # Run logger as per normal setup
+    run()
