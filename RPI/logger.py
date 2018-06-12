@@ -7,14 +7,14 @@
 
 # Import Packages/Modules
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from collections import OrderedDict
 import configparser
 import functools
 # Uncomment below for real adc (if running on Pi)
-# import Adafruit_ADS1x15
+import Adafruit_ADS1x15
 # Uncomment below for fake adc simulation if using a PC
-import Adafruit_ADS1x15Fake as Adafruit_ADS1x15
+# import Adafruit_ADS1x15Fake as Adafruit_ADS1x15
 import csv
 import threading
 import shutil
@@ -132,21 +132,23 @@ def inputImport():
 
 # Output Current Settings
 def settingsOutput():
+    # Print General Settings then Input Settings
     print("\nCurrent General Settings:")
     for key in generalSettings:
         print("{}: {}".format(key.title(), generalSettings[key]))
     print("\nCurrent Input Settings:")
     x = 0
     print(
-        "|{:>6}|{:>6}|{:>12}|{:>12}|{:>12}|{:>12}|{:>12}|".format("Number", "Name", "Pin Enabled", "Input Type", "Gain",
+        "|{:>2}|{:>4}|{:>4}|{:>10}|{:>4}|{:>10}|{:>9}|".format("No", "Name", "Enbl", "Input Type", "Gain",
                                                                   "Scale", "Unit"))
-    print("-" * 80)
-    for ADC in adcDict:
+    print("-" * 51)
+    # Print input settings for each Pin
+    for pin in adcDict:
         x += 1
-        print("|{:>6}|{:>6}|{:>12}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x, adcDict[ADC].name, adcDict[ADC].enabled,
-                                                                            adcDict[ADC].inputType, adcDict[ADC].gain,
-                                                                            adcDict[ADC].scaleLow,
-                                                                            adcDict[ADC].scaleHigh, adcDict[ADC].unit))
+        print("|{:>2}|{:>4}|{:>4}|{:>10}|{:>4}|{:>5}{:>5}|{:>9}|".format(x, adcDict[pin].name, adcDict[pin].enabled,
+                                                                            adcDict[pin].inputType, adcDict[pin].gain,
+                                                                            adcDict[pin].scaleLow,
+                                                                            adcDict[pin].scaleHigh, adcDict[pin].unit))
 
 
 # Logging Script
@@ -158,11 +160,31 @@ def log():
     # Set up list to be printed to CSV
     adcValues = [0] * csvRows
     # Get timestamp for filename
-    timeStamp = datetime.now().strftime("%Y%m%d%-H%M%S%f")
-    # Delete outbox, recreate folder and copy config file with new name
-    shutil.rmtree('files/outbox')
-    os.makedirs('files/outbox')
+    timeStamp = datetime.now().strftime("%Y%m%d-%H%M%S.%f")
+
+    # FILE MANAGEMENT
+    print("\nDisk Usage:")
+    # Get Users Remaining Disk Space - (Convert it from Bytes into MegaBytes)
+    remainingSpace = (shutil.disk_usage(os.path.realpath('/'))[2] / 1e6)
+    # Output space - rounding to a nice number
+    print("Current Free Disk Space: {} MB".format(round(remainingSpace, 2)))
+
+    # Calculate amount of time left for logging
+    # Find out Size (in MB) of Each Row
+    rowMBytes = 7 / 1e6
+    # Find amount of MB written each second
+    MBEachSecond = (rowMBytes * csvRows)/timeInterval
+    # Calculate time remaining using free space
+    timeRemSeconds = remainingSpace/MBEachSecond
+    # Add time in seconds to current datetime to give data it will run out of space
+    timeRemDate = datetime.now() + timedelta(0, timeRemSeconds)
+    print("Under the current config, you will run out of space on approximately: {}"
+          "\nIf you need more space, try emptying the 'Waste Basket' found on the Pi's Desktop"
+          .format(timeRemDate.strftime("%Y-%m-%d %H:%M:%S")))
+
+    # Make copy of logConf.ini with new name that includes timestamp
     shutil.copyfile('files/inbox/logConf.ini', 'files/outbox/logConf{}.ini'.format(timeStamp))
+
     # CSV - Create/Open CSV file and print headers
     with open('files/outbox/raw{}.csv'.format(timeStamp), 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
@@ -179,8 +201,8 @@ def log():
         # Beginning of reading script
         while logEnbl is True:
             # Get time and send to Log
-            currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f")
-            timeElapsed = round(time.perf_counter() - startTime, 4)
+            currentDateTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+            timeElapsed = round(time.perf_counter() - startTime, 2)
 
             for currentPin, value in enumerate(adcToLog):
                 # Get Raw data from A/D, and add to adcValues list corresponding to the current pin
@@ -213,8 +235,10 @@ def liveData():
     # Print a nice vertical line so it all looks pretty
     print("-" * (9 * len(adcHeader) + 1))
     buffer = 0
-    while not adcValuesCompl:
+    # Don't print live data when adcValuesCompl doesn't exist. Also if logging is stopped, exit loop
+    while not adcValuesCompl and logEnbl is True:
         pass
+    # Livedata Loop - Loops Forever until LogEnbl is False (controlled by GUI)
     while logEnbl is True:
         # Get Complete Set of Logged Data
         # If Data is different to that in the buffer
@@ -240,8 +264,8 @@ def liveData():
 # Calls the init() function and then the log() function
 if __name__ == "__main__":
     # Warning about lack of CSV
-    print("\nWARNING - running this script directly will cause no data in the CSV multithreading. "
-          "\nIf you need data, use 'gui.py'\n")
+    print("\nWARNING - running this script directly may produce a blank CSV. "
+          "\nIf you need data to be recorded, use 'gui.py'\n")
     # Load Config Data and Setup
     init()
     # Print Settings

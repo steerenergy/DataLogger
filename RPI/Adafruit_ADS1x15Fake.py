@@ -17,6 +17,6 @@ class ADS1115:
         global x
         if pin == 0:
             x = x + 1
-        time.sleep(0.05)
+        time.sleep(0.005)
         # return "P:{} N{}".format(pin, x)
         return random.randint(0, 32767)
