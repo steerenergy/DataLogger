@@ -216,34 +216,31 @@ def blankConfInit():
 
 # Init of input settings from logConf.ini file if user chooses
 def importConfInit():
-    try:
-        # Get data from local logConf.ini file and import (code similar to the logger.py config code)
-        global adcDict
-        adcDict = {}
-        # Open the config file
-        logConf = configparser.ConfigParser()
-        logConf.read('files/outbox/logConf.ini')
+    # Get data from local logConf.ini file and import (code similar to the logger.py config code)
+    global adcDict
+    adcDict = {}
+    # Open the config file
+    logConf = configparser.ConfigParser()
+    logConf.read('files/outbox/logConf.ini')
 
-        # Create dictionary for each item in the general section of the logConf.ini
-        global generalSettings
-        generalSettings = {}
-        for key in logConf['General']:
-            if key != "uniqueid":
-                generalSettings[key] = logConf['General'][key]
+    # Create dictionary for each item in the general section of the logConf.ini
+    global generalSettings
+    generalSettings = {}
+    for key in logConf['General']:
+        if key != "uniqueid":
+            generalSettings[key] = logConf['General'][key]
 
-        # For all sections but general:
-        # Parse the data from logConf and create a new object for each one and set instance variables for each
-        for input in logConf.sections():
-            if input != 'General':
-                adcDict[input] = ADC()
-                adcDict[input].enabled = logConf[input].getboolean('enabled')
-                adcDict[input].inputType = logConf[input]['inputtype']
-                adcDict[input].gain = logConf[input].getint('gain')
-                adcDict[input].scaleLow = logConf[input].getint('scalelow')
-                adcDict[input].scaleHigh = logConf[input].getint('scalehigh')
-                adcDict[input].unit = logConf[input]['unit']
-    except KeyError:
-        print("Error Reading Config - Check logConf.ini exists in the same directory as this program")
+    # For all sections but general:
+    # Parse the data from logConf and create a new object for each one and set instance variables for each
+    for input in logConf.sections():
+        if input != 'General':
+            adcDict[input] = ADC()
+            adcDict[input].enabled = logConf[input].getboolean('enabled')
+            adcDict[input].inputType = logConf[input]['inputtype']
+            adcDict[input].gain = logConf[input].getint('gain')
+            adcDict[input].scaleLow = logConf[input].getint('scalelow')
+            adcDict[input].scaleHigh = logConf[input].getint('scalehigh')
+            adcDict[input].unit = logConf[input]['unit']
 
 
 # MAIN MENU
