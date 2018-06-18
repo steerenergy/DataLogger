@@ -13,9 +13,8 @@
 import common
 import os
 import time
-# Pandas Import Statements - Once completed unused ones can be removed
+# Pandas Import Statements
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 

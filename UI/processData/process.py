@@ -90,7 +90,6 @@ class fileSelect:
                     self.configFile = self.fileSelection[option-1][2]
                     # Works out filename for converted CSV file
                     self.convertedCsvFile = "converted" + self.chosenID + ".csv"
-                    print("Success!")
                 else:
                     common.other()
                     self.valid = False
@@ -108,9 +107,13 @@ class fileSelect:
     # Moves raw and config files that have just been processed into the data directory (where the converted csv is)
     def fileCleanup(self):
         print("Moving Files...")
-        # Converted CSV data is already in the correct place so just need to move raw data and config
-        os.rename(self.configFilePath, self.convertedDirectory + "/" + self.configFile)
-        os.rename(self.rawCsvFilePath, self.convertedDirectory + "/" + self.rawCsvFile)
+        try:
+            # Converted CSV data is already in the correct place so just need to move raw data and config
+            os.rename(self.configFilePath, self.convertedDirectory + "/" + self.configFile)
+            os.rename(self.rawCsvFilePath, self.convertedDirectory + "/" + self.rawCsvFile)
+        except PermissionError:
+            print("\nWARNING - Unable to move one or more files due to a Permission Error."
+                  "\nCheck the files are not being used by another program or process.")
 
 
 # Function called by csvProcess which does the actual data conversion on each data item
@@ -170,7 +173,7 @@ def csvProcess():
     df.to_csv(file.convertedCsvFilePath, sep=',', index=False)
     # Moving raw data and config into data folder with the converted csv
     file.fileCleanup()
-    print("\nSuccess")
+    print("\nSuccess!")
 
 
 if __name__ == "__main__":
