@@ -5,5 +5,5 @@ Icon=/usr/share/pixmaps/openbox.xpm
 Exec=bash -c 'cd "/home/pi/Github/DataLogger/RPI" && python3 gui.py'
 Type=Application
 Encoding=UTF-8
-Terminal=true
+Terminal=False
 Categories=None;
