@@ -19,7 +19,7 @@ import socket
 configSet = False
 
 
-# Setting up the Class for the input setup
+# Class holding all the inputs
 class ADC:
     # Create instance variables and set to default values (if prev config is not imported)
     def __init__(self):
@@ -53,7 +53,7 @@ class ADC:
 
     def friendlyNameEdit(self):
         option = input("\nType in your chosen friendly name for the pin (max 10 characters) ")
-        # If friendly name is within character limit, set it. Otherwise, through error
+        # If friendly name is within character limit, set it. Otherwise, show error
         if len(option) <= 10:
             self.friendlyName = option
         else:
@@ -78,14 +78,14 @@ class ADC:
             common.other()
 
     def gainEdit(self):
-        # Gain Settings will not change so it has been written like this.
+        # Values for Gain can be changed below although this should not need to happen
         # Users are instructed to type a number which corresponds to the value of gain they want
         gainSettings = ["1", "2", "4", "8", "16"]
         print("\nAvailable Gain Settings:")
         print("1 = +/-4.096V \n2 = +/-2.048V \n4 = +/-1.024V \n8 = +/-0.512V \n16 = +/-0.256V")
         option = input("\nPlease type in the gain setting you want: ")
         try:
-            # check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
+            # Check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
             if option in gainSettings:
                 self.gain = option
                 print("Success!")
@@ -96,16 +96,17 @@ class ADC:
             common.other()
 
     def scaleEdit(self):
+        # Set the high and low end of the scale
         try:
             option = float(input("\nWhat is the Low end of the Scale? "))
             self.scaleLow = option
             option = float(input("What is the High end of the Scale? "))
             self.scaleHigh = option
         except ValueError:
-            print("Scale must be a Numerical Value")
+            common.other()
 
     def unitEdit(self):
-        # List of Unit Types (this can be updated and the code will continue to work)
+        # List of Unit Types (from progConf.ini)
         print("\nAvailable Unit Types:")
         for pos, value in enumerate(unitTypes, start=1):
             print("{}. {}".format(pos, value))
@@ -131,7 +132,7 @@ class ADC:
             common.other()
 
 
-# START HERE
+# PROGRAM STARTS HERE
 def init():
     # If user has already entered config section, continue where they left off.
     # Otherwise, give option to create blank config file or to import previous logConf.ini file

@@ -1,3 +1,5 @@
+# This module grabs all CSV and Config files on the Pi's outbox folder and placing them in the UI's inbox folder.
+
 # Uses Paramiko to connect to the Pi via ftp and download the csv and config file.
 import paramiko
 # Import socket for error handling

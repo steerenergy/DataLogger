@@ -6,7 +6,7 @@
 # Definitely check out '10 minutes to pandas' - give it a quick google search
 
 # IMPORTANT RULES when writing or modifying functions:
-# Column references should always be done numerically
+# Column references should always be done numerically (using 'iloc' or 'self.df.columns' where necessary)
 # Each function must reset it's index once finished (if an index is set) and put it back into the right conditions
 
 # General Imports
@@ -64,9 +64,8 @@ class Process:
             self.valid = False
         else:
             try:
-                # Data Selection
+                # Data Selection List
                 print("\nData Found - Current Files:")
-                # Counter used for options
                 # Print Output in nice format
                 for pos, fileName in enumerate(self.csvList, start=1):
                     print("{}. {}".format(pos, fileName))
@@ -256,7 +255,8 @@ class Process:
         # Turn on minor ticks on Graph for better reading
         plt.minorticks_on()
         # Warn User to Close Windows to Continue
-        print("Opening Plot... Please close the graph window to continue")
+        print("Opening Plot... Please close the graph window to continue. "
+              "\nIf the window is closed and the program has not continued after several seconds, press any key'")
         # Show the graph
         plt.show()
         # Convert time back to timedelta

@@ -1,4 +1,4 @@
-# Creates Menu, which in turn
+# Creates menu allowing user to choose different log control options
 # Import Common Commands
 import common
 from logCtrl import config
