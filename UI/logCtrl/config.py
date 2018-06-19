@@ -505,7 +505,3 @@ def upload():
         except UnboundLocalError:
             pass
 
-
-# Temp Code
-if __name__ == "__main__":
-    init()

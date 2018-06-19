@@ -20,7 +20,7 @@ import threading
 import shutil
 import os
 
-
+# Contains information about each pin
 class ADC:
     def __init__(self, section):
         self.name = section
@@ -47,10 +47,10 @@ class ADC:
 
 # Initial Import and Setup
 def init():
-    # Flag for multithreaded use to be triggered to stop logging loop
+    # Flag for multithreaded (GUI) use to be triggered to stop logging loop
     global logEnbl
     logEnbl = True
-    # Setting up key variables for logging
+    # dataRate of the A/D (see the ADS1115 datasheet for more info)
     global dataRate
     dataRate = 860
     # List of pins to be logged and the list containing the logging functions
