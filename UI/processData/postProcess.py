@@ -6,16 +6,15 @@
 # Definitely check out '10 minutes to pandas' - give it a quick google search
 
 # IMPORTANT RULES when writing or modifying functions:
-# Column references should always be done numerically
+# Column references should always be done numerically (using 'iloc' or 'self.df.columns' where necessary)
 # Each function must reset it's index once finished (if an index is set) and put it back into the right conditions
 
 # General Imports
 import common
 import os
 import time
-# Pandas Import Statements - Once completed unused ones can be removed
+# Pandas Import Statements
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 
@@ -23,6 +22,7 @@ plt.style.use('ggplot')
 # Contains all the functions for processing data and loading/exporting the CSV file
 # def defines the methods in the class 'Process' these are functions in the class
 class Process:
+    # Class Constructor
     def __init__(self):
         # File Selection variable
         self.valid = True
@@ -53,6 +53,7 @@ class Process:
         if self.valid is True:
             self.pandasInit()
 
+    # User File Selection
     def fileSelect(self):
         # Create list of CSV files with 'converted' in name
         self.csvList = [fileName for fileName in self.csvDirContents
@@ -65,9 +66,8 @@ class Process:
             self.valid = False
         else:
             try:
-                # Data Selection
+                # Data Selection List
                 print("\nData Found - Current Files:")
-                # Counter used for options
                 # Print Output in nice format
                 for pos, fileName in enumerate(self.csvList, start=1):
                     print("{}. {}".format(pos, fileName))
@@ -245,6 +245,7 @@ class Process:
         except ValueError:
             common.other()
 
+    # Graph Plotting Functions
     def plotGraph(self):
         # Create list of columns to be plotted on y axis (using list comprehension)
         yColumns = [column for column in self.yData if self.yData[column] is True]
@@ -257,7 +258,8 @@ class Process:
         # Turn on minor ticks on Graph for better reading
         plt.minorticks_on()
         # Warn User to Close Windows to Continue
-        print("Opening Plot... Please close the graph window to continue")
+        print("Opening Plot... Please close the graph window to continue. "
+              "\nIf the window is closed and the program has not continued after several seconds, press any key'")
         # Show the graph
         plt.show()
         # Convert time back to timedelta

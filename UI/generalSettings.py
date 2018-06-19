@@ -21,6 +21,7 @@ def init():
     except StopIteration:
         pass
 
+
 # Language Settings
 def language():
     print("\nEnglish Only\n")

@@ -1,4 +1,4 @@
-# Creates Menu, which in turn
+# Creates menu allowing user to choose different log control options
 # Import Common Commands
 import common
 from logCtrl import config
@@ -9,31 +9,16 @@ def init():
         while True:
             # Set Menu Names
             option = input("\nLogger Control Menu: \nChoose a Option (based on the corresponding number): "
-                           "\n1. Control (Start/Stop) Logging\n2. Change Logger Config"
-                           "\n3. Realtime Data Output\n4. Back\n5. Quit"
+                           "\n1. Change Logger Config"
+                           "\n2. Back\n3. Quit"
                            "\n\nOption Chosen: ")
             if option == "1":
-                control()
-            elif option == "2":
                 config.init()
-            elif option == "3":
-                realTime()
-            elif option == "4":
+            elif option == "2":
                 common.back()
-            elif option == "5":
+            elif option == "3":
                 common.quit()
             else:
                 common.other()
     except StopIteration:
         pass
-
-
-# Logger Control Commands
-def control():
-    print("\nRemote Control Coming Soon! "
-          "\nOnce the config is uploaded to the RPI, please start the program manually on the Pi itself.")
-
-
-# Future Real Time Data Code
-def realTime():
-    print("\nComing Soon!")

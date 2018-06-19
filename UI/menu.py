@@ -8,16 +8,17 @@ import processData
 import generalSettings
 
 
-# Printed Title
+# Title printed on program start
 def init():
-    version = "Whatever"
+    version = "1.0"
     welcome = "Steer Energy Data Logger (Version {})".format(version)
     print(welcome)
     print("-" * len(welcome))
+    # Initiate main menu
     main()
 
 
-# Main Menu - Structure very similar to other menus.
+# Main Menu - Structure very similar to all other menus in program
 def main():
     try:
         while True:

@@ -1,4 +1,4 @@
-# Feature Information about Program
+# Features Information about Program
 
 
 def init():

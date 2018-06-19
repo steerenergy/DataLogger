@@ -26,6 +26,3 @@ def init():
     except StopIteration:
         pass
 
-
-if __name__ == "__main__":
-    init()
