@@ -1,3 +1,5 @@
+# This module grabs all CSV and Config files on the Pi's outbox folder and placing them in the UI's inbox folder.
+
 # Uses Paramiko to connect to the Pi via ftp and download the csv and config file.
 import paramiko
 # Import socket for error handling
@@ -10,6 +12,7 @@ def printTotals(transferred, toBeTransferred):
     print("Transferred: {}%".format(round(transferred/toBeTransferred * 100, 2)), end="\r")
 
 
+# Main download script
 def init():
     try:
         print("\nPreparing to Transfer...")
@@ -49,8 +52,8 @@ def init():
 
         if len(sftp.listdir(path='/home/pi/Github/DataLogger/RPI/files/outbox')) > 2:
             print("WARNING - Multiple CSV/Config Files have been found.")
-        # Close Connection
 
+        # Close Connection
         sftp.close()
         transport.close()
         # Print Success
@@ -67,7 +70,3 @@ def init():
         # If the above variables haven't been assigned yet, move on
         except UnboundLocalError:
             pass
-
-
-if __name__ == "__main__":
-    init()

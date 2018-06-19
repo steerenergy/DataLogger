@@ -25,10 +25,11 @@ class ADC:
     def __init__(self, section):
         self.name = section
         self.enabled = config[section].getboolean('enabled')
+        self.friendlyName = config[section]['friendlyName']
         self.inputType = config[section]['inputtype']
         self.gain = config[section].getint('gain')
-        self.scaleLow = config[section].getint('scalelow')
-        self.scaleHigh = config[section].getint('scalehigh')
+        self.scaleLow = config[section].getfloat('scalelow')
+        self.scaleHigh = config[section].getfloat('scalehigh')
         self.unit = config[section]['unit']
         if "m" in config[section] and "c" in config[section]:
             self.m = config[section].getfloat('m')
@@ -152,17 +153,23 @@ def settingsOutput():
         print("{}: {}".format(key.title(), generalSettings[key]))
     print("\nCurrent Input Settings:")
     x = 0
+    print("-" * 62)
+    # Top Row Headings
     print(
-        "|{:>2}|{:>4}|{:>4}|{:>10}|{:>4}|{:>10}|{:>9}|".format("No", "Name", "Enbl", "Input Type",
-                                                               "Gain", "Scale", "Unit"))
-    print("-" * 51)
+        "|{:>2}|{:>4}|{:>4}|{:>10}|{:>10}|{:>4}|{:>10}|{:>9}|".format("No", "Name", "Enbl", "F.Name", "Input Type",
+                                                                      "Gain", "Scale", "Unit"))
+    print("-" * 62)
     # Print input settings for each Pin
     for pin in adcDict:
         x += 1
-        print("|{:>2}|{:>4}|{:>4}|{:>10}|{:>4}|{:>5}{:>5}|{:>9}|".format(x, adcDict[pin].name, adcDict[pin].enabled,
-                                                                         adcDict[pin].inputType, adcDict[pin].gain,
-                                                                         adcDict[pin].scaleLow,
-                                                                         adcDict[pin].scaleHigh, adcDict[pin].unit))
+        print("|{:>2}|{:>4}|{:>4}|{:>10}|{:>10}|{:>4}|{:>5}{:>5}|{:>9}|".format(x, adcDict[pin].name,
+                                                                                adcDict[pin].enabled,
+                                                                                adcDict[pin].friendlyName,
+                                                                                adcDict[pin].inputType,
+                                                                                adcDict[pin].gain,
+                                                                                adcDict[pin].scaleLow,
+                                                                                adcDict[pin].scaleHigh,
+                                                                                adcDict[pin].unit))
 
 
 # Logging Script
@@ -187,13 +194,13 @@ def log():
     # Find out Size (in MB) of Each Row
     rowMBytes = 7 / 1e6
     # Find amount of MB written each second
-    MBEachSecond = (rowMBytes * csvRows)/timeInterval
+    MBEachSecond = (rowMBytes * csvRows) / timeInterval
     # Calculate time remaining using free space
-    timeRemSeconds = remainingSpace/MBEachSecond
+    timeRemSeconds = remainingSpace / MBEachSecond
     # Add time in seconds to current datetime to give data it will run out of space
     timeRemDate = datetime.now() + timedelta(0, timeRemSeconds)
-    print("Under the current config, you will run out of space on approximately: {}"
-          "\nIf you need more space, try emptying the 'Waste Basket' found on the Pi's Desktop"
+    print("With the current config, you will run out of space on approximately: {}"
+          "\nIf you need more space, use the UI to downlaod previous logs and delete them on the Pi."
           .format(timeRemDate.strftime("%Y-%m-%d %H:%M:%S")))
 
     # Make copy of logConf.ini with new name that includes timestamp
