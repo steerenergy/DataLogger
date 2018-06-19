@@ -12,6 +12,7 @@ def printTotals(transferred, toBeTransferred):
     print("Transferred: {}%".format(round(transferred/toBeTransferred * 100, 2)), end="\r")
 
 
+# Main download script
 def init():
     try:
         print("\nPreparing to Transfer...")
@@ -69,7 +70,3 @@ def init():
         # If the above variables haven't been assigned yet, move on
         except UnboundLocalError:
             pass
-
-
-if __name__ == "__main__":
-    init()

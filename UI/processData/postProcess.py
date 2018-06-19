@@ -22,6 +22,7 @@ plt.style.use('ggplot')
 # Contains all the functions for processing data and loading/exporting the CSV file
 # def defines the methods in the class 'Process' these are functions in the class
 class Process:
+    # Class Constructor
     def __init__(self):
         # File Selection variable
         self.valid = True
@@ -52,6 +53,7 @@ class Process:
         if self.valid is True:
             self.pandasInit()
 
+    # User File Selection
     def fileSelect(self):
         # Create list of CSV files with 'converted' in name
         self.csvList = [fileName for fileName in self.csvDirContents
@@ -243,6 +245,7 @@ class Process:
         except ValueError:
             common.other()
 
+    # Graph Plotting Functions
     def plotGraph(self):
         # Create list of columns to be plotted on y axis (using list comprehension)
         yColumns = [column for column in self.yData if self.yData[column] is True]

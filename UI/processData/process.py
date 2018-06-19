@@ -15,6 +15,7 @@ import os
 import common
 
 
+# File Selection
 class fileSelect:
     def __init__(self):
         # Declaring all variables needed
@@ -174,7 +175,3 @@ def csvProcess():
     # Moving raw data and config into data folder with the converted csv
     file.fileCleanup()
     print("\nSuccess!")
-
-
-if __name__ == "__main__":
-    init()
