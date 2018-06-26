@@ -33,23 +33,26 @@ class ADC:
 
     def enabledEdit(self):
         # If enabled, give option to disable, if disabled give option to enable
+        # Option to Enable
         if self.enabled is False:
             option = input("\nEnable Pin? (Y/N) ")
             if option == "Y" or option == "y":
                 self.enabled = True
+                print("Pin Enabled")
             elif option == "N" or option == "n":
-                self.enabled = False
+                print("Pin Left Disabled")
             else:
                 common.other()
+        # Option to Disable
         elif self.enabled is True:
             option = input("\nDisable Pin? (Y/N) ")
             if option == "Y" or option == "y":
                 self.enabled = False
+                print("Pin Disabled")
             elif option == "N" or option == "n":
-                self.enabled = True
+                print("Pin Left Enabled")
             else:
                 common.other()
-        print("Success!\n")
 
     def friendlyNameEdit(self):
         option = input("\nType in your chosen friendly name for the pin (max 10 characters) ")
@@ -241,6 +244,7 @@ def importConfInit():
     global generalSettings
     generalSettings = {}
     for key in logConf['General']:
+        # Don't allow user to change uniqueId as this is automatically generated
         if key != "uniqueid":
             generalSettings[key] = logConf['General'][key]
 
@@ -343,7 +347,7 @@ def inputSetup():
                     option = input("\nOption Chosen: ")
                     if option == "1":
                         adcDict[chosenPin].enabledEdit()
-                    if option == "2":
+                    elif option == "2":
                         adcDict[chosenPin].friendlyNameEdit()
                     elif option == "3":
                         adcDict[chosenPin].inputTypeEdit()
@@ -408,13 +412,13 @@ def saveUploadMenu():
         while True:
             print(
                 "\nSave/Upload:\nChoose a Option (based on the corresponding number)"
-                "\n1. Save \n2. Save and Upload\n3. Back")
+                "\n1. Save and Upload to Pi\n2. Save Only \n3. Back")
             option = input("\nOption Chosen: ")
             if option == "1":
                 save()
+                upload()
             elif option == "2":
                 save()
-                upload()
             elif option == "3":
                 common.back()
             else:
@@ -458,7 +462,7 @@ def save():
         with open('files/outbox/logConf.ini', 'w') as configfile:
             logConf.write(configfile)
         print("Success!")
-        print("NOTE - If you manually change the logConf.ini file contents, you must rerun this program,"
+        print("NOTE - If you manually change the logConf.ini file contents, you must rerun this program, "
               "load in the config file and save it. Otherwise, the data will be processed incorrectly. ")
     except KeyError:
         print("ERROR - Could not write Config File. Have you set your input name and scale?")

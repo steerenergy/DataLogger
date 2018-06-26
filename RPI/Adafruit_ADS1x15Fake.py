@@ -1,5 +1,5 @@
 # NOTE - DELETE/Rename WHEN RUNNING ON PI!
-# This script is for testing code when the pis isn't available
+# This script is for testing code when the pi isn't available
 # It will simply return a number regardless of the pin
 import time
 import random

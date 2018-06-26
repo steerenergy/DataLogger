@@ -10,7 +10,7 @@ import generalSettings
 
 # Title printed on program start
 def init():
-    version = "0.1.1"
+    version = "1.0.0"
     welcome = "Steer Energy Data Logger (Version {})".format(version)
     print(welcome)
     print("-" * len(welcome))
@@ -24,7 +24,7 @@ def main():
         while True:
             option = input(
                 "\nMain Menu: \nChoose a Option (based on the corresponding number):"
-                "\n1. Logger Control\n2. Process Data \n3. General Settings \n4. About \n5. Quit" 
+                "\n1. Logger Control (Config)\n2. Process Data \n3. General Settings \n4. About \n5. Quit" 
                 "\n\nOption Chosen: ")
             # Set Menu Names
             if option == "1":

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Start Data Logger (Debugging Mode)
+Comment=Start the Steer Energy Data Logger with Debugging Mode Enabled (Terminal Window Open)
+Icon=/usr/share/pixmaps/openbox.xpm
+Exec=bash -c 'cd "/home/pi/Github/DataLogger/RPI" && python3 gui.py'
+Type=Application
+Encoding=UTF-8
+Terminal=True
+Categories=None;
