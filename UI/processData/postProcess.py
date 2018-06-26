@@ -117,7 +117,7 @@ class Process:
         print(self.df.head())
         # Printing Data Types
         print("\nCurrent Data Types (Excl Selected Index):")
-        print("\n" + str(self.df.dtypes))
+        print(str(self.df.dtypes) + "\n")
 
     # Filter Functions
     def filter(self):
@@ -200,7 +200,7 @@ class Process:
                 option = int(input("Choose a number to toggle selection: "))
                 # If number is in list index
                 if 0 < option <= len(self.yData):
-                    # Get name of column and toggle visablity on graph
+                    # Get name of column and toggle visibility on graph
                     colName = self.df.columns[option - 1]
                     self.yData[colName] = not self.yData[colName]
                 # Go back, if back option is selected
