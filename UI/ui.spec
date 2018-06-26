@@ -28,10 +28,11 @@ exe = EXE(pyz,
           runtime_tmpdir=None,
           console=True )
 
-# Create folder structure and move Config
+# Create folder structure and move Config and Readme
 import shutil
 import os
 shutil.copyfile('progConf.ini', '{0}/progConf.ini'.format(DISTPATH))
+shutil.copyfile('READMEDIST.txt', '{0}/README.txt'.format(DISTPATH))
 dirList = ["files", "files/inbox", "files/converted", "files/outbox"]
 for directory in dirList:
     os.makedirs("{}/{}".format(DISTPATH, directory))

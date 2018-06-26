@@ -1,8 +1,6 @@
 # DataLogger
-More to come - watch this space... maybe
+Developed By Steer Energy
 
-See technical documentation/project log for more for more.
+See Documentation/Log for More (X01) for more for more.
 
 Will require install of several libraries to run
-
-If developing ensure you read the technical documentation before trying anything.
