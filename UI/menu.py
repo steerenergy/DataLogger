@@ -10,7 +10,7 @@ import generalSettings
 
 # Title printed on program start
 def init():
-    version = "0.1.1"
+    version = "1.0.0"
     welcome = "Steer Energy Data Logger (Version {})".format(version)
     print(welcome)
     print("-" * len(welcome))
