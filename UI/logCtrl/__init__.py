@@ -9,7 +9,7 @@ def init():
         while True:
             # Set Menu Names
             option = input("\nLogger Control Menu: \nChoose a Option (based on the corresponding number): "
-                           "\n1. Change Logger Config"
+                           "\n1. Change Logger Configuration"
                            "\n2. Back\n3. Quit"
                            "\n\nOption Chosen: ")
             if option == "1":
