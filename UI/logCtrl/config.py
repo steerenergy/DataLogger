@@ -24,12 +24,12 @@ class ADC:
     # Create instance variables and set to default values (if prev config is not imported)
     def __init__(self):
         self.enabled = False
-        self.friendlyName = "Default"
-        self.inputType = "Edit Me"
+        self.friendlyName = "Edit Me"
+        self.inputType = "Edit Me Too"
         self.gain = 1
         self.scaleLow = 0
         self.scaleHigh = 0
-        self.unit = "Edit Me 2"
+        self.unit = "Edit Me Also"
 
     def enabledEdit(self):
         # If enabled, give option to disable, if disabled give option to enable
@@ -289,7 +289,7 @@ def menu():
 def generalMenu():
     try:
         while True:
-            print("\nConfig: General Settings: \nChoose a Option to edit a Setting (based on the correspnding number)")
+            print("\nConfig: General Settings: \nChoose a Option to edit a Setting (based on the corresponding number)")
             x = 0
             for key in generalSettings:
                 x += 1
@@ -310,7 +310,7 @@ def generalMenu():
 
 # Time Setting
 def generalTime():
-    print("\nCurrent Time Interval is: {} Seconds\n".format(generalSettings["timeinterval"]))
+    print("\nCurrent Time Interval is: {} Second(s)\n".format(generalSettings["timeinterval"]))
     generalSettings["timeinterval"] = input("Enter New Time Interval: ")
     print("Success!\n")
 
@@ -327,7 +327,8 @@ def inputSetup():
     # Current Settings Print Out
     inputCurrentSettings()
     try:
-        chosenNum = int(input("\nPlease type the number corresponding to the pin you wish to Edit: "))
+        chosenNum: int = int(input("\nType the number corresponding to the pin you wish to Edit "
+                                   "or type anything else to go back: "))
         # Find on adcDict if number is in adcDict, else throw an error
         # If Found in adcDict, set the device to adcDict and continue
         if chosenNum - 1 < len(adcDict):
