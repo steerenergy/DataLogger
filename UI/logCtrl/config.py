@@ -492,7 +492,7 @@ def upload():
         sftp.close()
         transport.close()
         # Print Success
-        print("Success!")
+        print("Configuration File Successfully Transferred")
         # Close Connection
         sftp.close()
         transport.close()
