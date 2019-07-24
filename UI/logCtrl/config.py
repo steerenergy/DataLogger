@@ -155,6 +155,7 @@ def init():
                 blankConfInit()
             else:
                 common.other()
+                common.back()
         # If Config File doesn't exist
         else:
             print("No Config File Found - Creating Default Template...")
@@ -267,7 +268,7 @@ def menu():
     try:
         while True:
             option = input(
-                "\nLogger Config Menu:  \nChoose a Option (based on the correspnding number): "
+                "\nLogger Config Menu:  \nChoose a Option (based on the corresponding number): "
                 "\n1. General Settings\n2. Input Setup\n3. Save/Upload Config\n4. Back"
                 "\n\nOption Chosen: ")
             # Set Menu Names
@@ -327,11 +328,14 @@ def inputSetup():
     # Current Settings Print Out
     inputCurrentSettings()
     try:
-        chosenNum: int = int(input("\nType the number corresponding to the pin you wish to Edit "
-                                   "or type anything else to go back: "))
+        userInput = input("\nType the number corresponding to the pin you wish to Edit "
+                          "or press 'Enter' to go back: ")
+        if str(userInput) == '':
+            print("Going Back")
         # Find on adcDict if number is in adcDict, else throw an error
         # If Found in adcDict, set the device to adcDict and continue
-        if chosenNum - 1 < len(adcDict):
+        elif int(userInput) - 1 < len(adcDict):
+            chosenNum = int(userInput)
             chosenPin = list(adcDict.items())[chosenNum - 1][0]
             # Input Selection Menu
             try:
@@ -366,7 +370,7 @@ def inputSetup():
                 pass
         else:
             common.other()
-    # If someone doesn't type in an integer
+    # If someone doesn't type in an integer or press Enter
     except ValueError:
         common.other()
 
