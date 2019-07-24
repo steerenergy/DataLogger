@@ -470,7 +470,8 @@ def save():
         print("NOTE - If you manually change the logConf.ini file contents, you must rerun this program, "
               "load in the config file and save it. Otherwise, the data will be processed incorrectly. ")
     except KeyError:
-        print("ERROR - Could not write Config File. Have you set your input name and scale?")
+        print("ERROR - Unable to Write Config (Invalid Config Entry) \n"
+              "Have you set your input name and scale to a valid setting?")
 
 
 # FTP Upload of Config File
