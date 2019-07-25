@@ -420,8 +420,11 @@ def saveUploadMenu():
                 "\n1. Save and Upload to Pi\n2. Save Only \n3. Back")
             option = input("\nOption Chosen: ")
             if option == "1":
-                save()
-                upload()
+                saveFailed = save()
+                if saveFailed is True:
+                    print("ERROR - Save Upload Failed")
+                else:
+                    upload()
             elif option == "2":
                 save()
             elif option == "3":
@@ -470,8 +473,9 @@ def save():
         print("NOTE - If you manually change the logConf.ini file contents, you must rerun this program, "
               "load in the config file and save it. Otherwise, the data will be processed incorrectly. ")
     except KeyError:
-        print("ERROR - Unable to Write Config (Invalid Config Entry) \n"
-              "Have you set your input name and scale to a valid setting?")
+        print("ERROR - Unable to Write Config (Invalid Config Entry)"
+              " - Have you set your input name and scale to a valid setting?")
+        return True
 
 
 # FTP Upload of Config File
