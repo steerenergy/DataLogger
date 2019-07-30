@@ -388,7 +388,7 @@ def inputCurrentSettings():
         x += 1
         print("|{:>6}|{:>6}|{:>12}|{:>14}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x,
                                                                                    pin,
-                                                                                   adcDict[pin].enabled,
+                                                                                   str(adcDict[pin].enabled),
                                                                                    adcDict[pin].friendlyName,
                                                                                    adcDict[pin].inputType,
                                                                                    adcDict[pin].gain,
@@ -518,4 +518,3 @@ def upload():
         # If the above variables haven't been assigned yet, move on
         except UnboundLocalError:
             pass
-
