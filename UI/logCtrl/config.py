@@ -24,12 +24,12 @@ class ADC:
     # Create instance variables and set to default values (if prev config is not imported)
     def __init__(self):
         self.enabled = False
-        self.friendlyName = "Default"
-        self.inputType = "Edit Me"
+        self.friendlyName = "Edit Me"
+        self.inputType = "Edit Me Too"
         self.gain = 1
         self.scaleLow = 0
         self.scaleHigh = 0
-        self.unit = "Edit Me 2"
+        self.unit = "Edit Me Also"
 
     def enabledEdit(self):
         # If enabled, give option to disable, if disabled give option to enable
@@ -155,6 +155,7 @@ def init():
                 blankConfInit()
             else:
                 common.other()
+                common.back()
         # If Config File doesn't exist
         else:
             print("No Config File Found - Creating Default Template...")
@@ -267,7 +268,7 @@ def menu():
     try:
         while True:
             option = input(
-                "\nLogger Config Menu:  \nChoose a Option (based on the correspnding number): "
+                "\nLogger Config Menu:  \nChoose a Option (based on the corresponding number): "
                 "\n1. General Settings\n2. Input Setup\n3. Save/Upload Config\n4. Back"
                 "\n\nOption Chosen: ")
             # Set Menu Names
@@ -289,7 +290,7 @@ def menu():
 def generalMenu():
     try:
         while True:
-            print("\nConfig: General Settings: \nChoose a Option to edit a Setting (based on the correspnding number)")
+            print("\nConfig: General Settings: \nChoose a Option to edit a Setting (based on the corresponding number)")
             x = 0
             for key in generalSettings:
                 x += 1
@@ -310,7 +311,7 @@ def generalMenu():
 
 # Time Setting
 def generalTime():
-    print("\nCurrent Time Interval is: {} Seconds\n".format(generalSettings["timeinterval"]))
+    print("\nCurrent Time Interval is: {} Second(s)\n".format(generalSettings["timeinterval"]))
     generalSettings["timeinterval"] = input("Enter New Time Interval: ")
     print("Success!\n")
 
@@ -327,10 +328,14 @@ def inputSetup():
     # Current Settings Print Out
     inputCurrentSettings()
     try:
-        chosenNum = int(input("\nPlease type the number corresponding to the pin you wish to Edit: "))
+        userInput = input("\nType the number corresponding to the pin you wish to Edit "
+                          "or press 'Enter' to go back: ")
+        if str(userInput) == '':
+            print("Going Back")
         # Find on adcDict if number is in adcDict, else throw an error
         # If Found in adcDict, set the device to adcDict and continue
-        if chosenNum - 1 < len(adcDict):
+        elif int(userInput) - 1 < len(adcDict):
+            chosenNum = int(userInput)
             chosenPin = list(adcDict.items())[chosenNum - 1][0]
             # Input Selection Menu
             try:
@@ -365,7 +370,7 @@ def inputSetup():
                 pass
         else:
             common.other()
-    # If someone doesn't type in an integer
+    # If someone doesn't type in an integer or press Enter
     except ValueError:
         common.other()
 
@@ -383,7 +388,7 @@ def inputCurrentSettings():
         x += 1
         print("|{:>6}|{:>6}|{:>12}|{:>14}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x,
                                                                                    pin,
-                                                                                   adcDict[pin].enabled,
+                                                                                   str(adcDict[pin].enabled),
                                                                                    adcDict[pin].friendlyName,
                                                                                    adcDict[pin].inputType,
                                                                                    adcDict[pin].gain,
@@ -415,8 +420,11 @@ def saveUploadMenu():
                 "\n1. Save and Upload to Pi\n2. Save Only \n3. Back")
             option = input("\nOption Chosen: ")
             if option == "1":
-                save()
-                upload()
+                saveFailed = save()
+                if saveFailed is True:
+                    print("ERROR - Save Upload Failed")
+                else:
+                    upload()
             elif option == "2":
                 save()
             elif option == "3":
@@ -465,7 +473,9 @@ def save():
         print("NOTE - If you manually change the logConf.ini file contents, you must rerun this program, "
               "load in the config file and save it. Otherwise, the data will be processed incorrectly. ")
     except KeyError:
-        print("ERROR - Could not write Config File. Have you set your input name and scale?")
+        print("ERROR - Unable to Write Config (Invalid Config Entry)"
+              " - Have you set your input name and scale to a valid setting?")
+        return True
 
 
 # FTP Upload of Config File
@@ -492,7 +502,7 @@ def upload():
         sftp.close()
         transport.close()
         # Print Success
-        print("Success!")
+        print("Configuration File Successfully Transferred")
         # Close Connection
         sftp.close()
         transport.close()
@@ -508,4 +518,3 @@ def upload():
         # If the above variables haven't been assigned yet, move on
         except UnboundLocalError:
             pass
-

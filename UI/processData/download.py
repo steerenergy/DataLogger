@@ -49,8 +49,8 @@ def init():
                     print("Successfully Downloaded: {}".format(fileName))
                     # Delete File if user wants to
                     # This means file is not deleted if the file is taken off during logging
-                    option = input("Do You wish to Delete the file remotely? "
-                                   "IMPORTANT: Do not delete files during logger operation!\n(Y/N): ")
+                    option = input("Delete File Remotely?"
+                                   " - IMPORTANT: Do not delete files during logger operation!\n(Y/N): ")
                     if option == "Y" or option == "y":
                         sftp.remove(remotePath)
                         print("Successfully Deleted: {}".format(fileName))
