@@ -151,27 +151,37 @@ def settingsOutput():
     print("\nCurrent General Settings:")
     for key in generalSettings:
         print("{}: {}".format(key.title(), generalSettings[key]))
-    print("\nCurrent Input Settings:")
+    print("\nCurrent Input Settings: (Settings hidden for Disabled Inputs)")
     x = 0
-    print("-" * 62)
+    print("-" * 65)
     # Top Row Headings
     print(
-        "|{:>2}|{:>4}|{:>4}|{:>10}|{:>10}|{:>4}|{:>10}|{:>9}|".format("No", "Name", "Enbl", "F.Name", "Input Type",
+        "|{:>2}|{:>4}|{:>5}|{:>10}|{:>10}|{:>4}|{:>12}|{:>9}|".format("No", "Name", "Enbl", "F.Name", "Input Type",
                                                                       "Gain", "Scale", "Unit"))
-    print("-" * 62)
+    print("-" * 65)
     # Print input settings for each Pin
     for pin in adcDict:
-        x += 1
-        print("|{:>2}|{:>4}|{:>4}|{:>10}|{:>10}|{:>4}|{:>5}{:>5}|{:>9}|".format(x, adcDict[pin].name,
-                                                                                adcDict[pin].enabled,
-                                                                                adcDict[pin].friendlyName,
-                                                                                adcDict[pin].inputType,
-                                                                                adcDict[pin].gain,
-                                                                                adcDict[pin].scaleLow,
-                                                                                adcDict[pin].scaleHigh,
-                                                                                adcDict[pin].unit))
-
-
+        # Only print full settings if that channel is enabled
+        if adcDict[pin].enabled == 1:
+            x += 1
+            print("|{:>2}|{:>4}|{:>5}|{:>10}|{:>10}|{:>4}|{:>6}{:>6}|{:>9}|".format(x, adcDict[pin].name,
+                                                                                    str(adcDict[pin].enabled),
+                                                                                    adcDict[pin].friendlyName,
+                                                                                    adcDict[pin].inputType,
+                                                                                    adcDict[pin].gain,
+                                                                                    adcDict[pin].scaleLow,
+                                                                                    adcDict[pin].scaleHigh,
+                                                                                    adcDict[pin].unit))
+        # If channel not enabled
+        else:
+            print("|{:>2}|{:>4}|{:>5}|{:>10}|{:>10}|{:>4}|{:>6}{:>6}|{:>9}|".format(x, adcDict[pin].name,
+                                                                                    str(adcDict[pin].enabled),
+                                                                                    "-",
+                                                                                    "-",
+                                                                                    "-",
+                                                                                    "-",
+                                                                                    "-",
+                                                                                    "-"))
 # Logging Script
 def log():
     # Set Time Interval
@@ -200,7 +210,7 @@ def log():
     # Add time in seconds to current datetime to give data it will run out of space
     timeRemDate = datetime.now() + timedelta(0, timeRemSeconds)
     print("With the current config, you will run out of space on approximately: {}"
-          "\nIf you need more space, use the UI to downlaod previous logs and delete them on the Pi."
+          "\nIf you need more space, use the UI to download previous logs and delete them on the Pi."
           .format(timeRemDate.strftime("%Y-%m-%d %H:%M:%S")))
 
     # Make copy of logConf.ini with new name that includes timestamp
@@ -209,7 +219,7 @@ def log():
     # CSV - Create/Open CSV file and print headers
     with open('files/outbox/raw{}.csv'.format(timeStamp), 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow(['Date/Time', 'Time Interval (Seconds)'] + adcHeader)
+        writer.writerow(['Date/Time', 'Time Interval (seconds)'] + adcHeader)
         print("\nStart Logging...\n")
 
         # Start live data thread
