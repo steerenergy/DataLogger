@@ -31,8 +31,7 @@ class WindowTop(Frame):
         self.title.pack()
 
         # Start/Stop Logging Button
-        self.logButton = Button(self.topFrame, text="Start Logging", height=3, width=11,
-                                command=self.logToggle, font=bigFont)
+        self.logButton = Button(self.topFrame, text="Start Logging", height=3, width=11, command=self.logToggle, font=bigFont)
         self.logButton.pack(padx=5)
 
         # Quit Button
@@ -48,7 +47,7 @@ class WindowTop(Frame):
         self.liveDataScrollBar.pack(side=RIGHT, fill=Y)
 
         # Live Data Text Box
-        self.liveDataText = Text(self.liveDataFrame, yscrollcommand=self.liveDataScrollBar.set, font=smallFont, state='disabled')
+        self.liveDataText = Text(self.liveDataFrame, width=68, yscrollcommand=self.liveDataScrollBar.set, font=smallFont, state='disabled')
         self.liveDataText.pack()
 
         # Config ScrollBar
@@ -83,7 +82,7 @@ class WindowTop(Frame):
             # Clear Text Output
             self.liveDataText['state'] = 'normal'
             self.liveDataText.delete(1.0, END)
-            # Remove history from RAM (to avoid memory Leak
+            # Remove history from RAM (to avoid memory leak)
             self.liveDataText.edit_reset()
             self.liveDataText['state'] = 'disabled'
             # Scroll to Bottom of Blank Box
