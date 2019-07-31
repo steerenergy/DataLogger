@@ -386,16 +386,27 @@ def inputCurrentSettings():
     x = 0
     for pin in adcDict:
         x += 1
-        print("|{:>6}|{:>6}|{:>12}|{:>14}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x,
-                                                                                   pin,
-                                                                                   str(adcDict[pin].enabled),
-                                                                                   adcDict[pin].friendlyName,
-                                                                                   adcDict[pin].inputType,
-                                                                                   adcDict[pin].gain,
-                                                                                   adcDict[pin].scaleLow,
-                                                                                   adcDict[pin].scaleHigh,
-                                                                                   adcDict[pin].unit))
+        if adcDict[pin].enabled ==1:
+            print("|{:>6}|{:>6}|{:>12}|{:>14}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x,
+                                                                                       pin,
+                                                                                       str(adcDict[pin].enabled),
+                                                                                       adcDict[pin].friendlyName,
+                                                                                       adcDict[pin].inputType,
+                                                                                       adcDict[pin].gain,
+                                                                                       adcDict[pin].scaleLow,
+                                                                                       adcDict[pin].scaleHigh,
+                                                                                       adcDict[pin].unit))
 
+        else:
+            print("|{:>6}|{:>6}|{:>12}|{:>14}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x,
+                                                                                       pin,
+                                                                                       str(adcDict[pin].enabled),
+                                                                                       "-",
+                                                                                       "-",
+                                                                                       "-",
+                                                                                       "-",
+                                                                                       "-",
+                                                                                       "-"))
 
 # PRE PROCESS - Called by Save Function to determine
 # Generate 'm' and 'c' to be used in processing data
