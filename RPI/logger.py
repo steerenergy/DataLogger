@@ -162,8 +162,8 @@ def settingsOutput():
     # Print input settings for each Pin
     for pin in adcDict:
         # Only print full settings if that channel is enabled
+        x += 1
         if adcDict[pin].enabled == 1:
-            x += 1
             print("|{:>2}|{:>4}|{:>5}|{:>10}|{:>10}|{:>4}|{:>6}{:>6}|{:>9}|".format(x, adcDict[pin].name,
                                                                                     str(adcDict[pin].enabled),
                                                                                     adcDict[pin].friendlyName,
