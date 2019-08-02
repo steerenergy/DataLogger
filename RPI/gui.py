@@ -1,6 +1,8 @@
 # This uses tkinter which is a really common multi-platform GUI
 # Script connects to logger.py and acts a front end to it
 
+import logging
+from datetime import datetime
 import threading
 from tkinter import *
 from tkinter import font, messagebox
@@ -153,6 +155,27 @@ class WindowTop(Frame):
         # If logger has never been run, logger.logEnbl will not exist
         except AttributeError:
             root.destroy()
+
+
+# Setup error logging
+def errorLoggingSetup():
+    logger = logging.getLogger('error_logger')
+    logger.setLevel(logging.DEBUG)
+    # create file handler which logs even debug messages
+    fh = logging.FileHandler('error.log')
+    fh.setLevel(logging.DEBUG)
+    logger.addHandler(fh)
+
+
+def exceptionHandler(type, value, tb):
+    print("UNANDELED EXCEPTION - Check Log File")
+    logger.error("Unhandled Exception!\nType: {}\nValue: {}\nTraceback: {}\nDate/Time:{}".format(type, value, tb, datetime.now()))
+
+
+# Start Logging
+errorLoggingSetup()
+# Redirect Unhandled Exceptions to file
+sys.excepthook = exceptionHandler
 
 
 # Create Tkinter Instance
