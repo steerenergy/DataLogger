@@ -9,31 +9,6 @@ from tkinter import font, messagebox
 import logger
 import sys
 
-# Create new class to ensure errors while logging (which runs in a seperate thread to the GUI) are recorded in error.log
-class logThread(threading.Thread):
-    """logThread should always be used in preference to threading.Thread.
-
-    The interface provided by logThread is identical to that of threading.Thread,
-    however, if an exception occurs in the thread the error will be logged
-    (using logging.exception) rather than printed to stderr.
-
-    This is important in daemon style applications where stderr is redirected
-    to /dev/null.
-
-    """
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self._real_run = self.run
-        self.run = self._wrap_run
-
-    def _wrap_run(self):
-        try:
-            self._real_run()
-        except:
-            errorLogger = logging.getLogger('error_logger')
-            print("\n***UNHANDLED EXCEPTION WHILE LOGGING - Check error.log for more info\nLogging ABORTED***\n")
-            errorLogger.exception("\nUnhandled Exception in Logger Script! \nTime/Date: {}\nDetails:\n".format(datetime.now()))
-
 
 class WindowTop(Frame):
     # Main Window - Init function contains all elements of layout
@@ -114,8 +89,8 @@ class WindowTop(Frame):
             self.liveDataText['state'] = 'disabled'
             # Scroll to Bottom of Blank Box
             self.liveDataText.see(END)
-            # Load and Start Logger thread - using new LogThread class created above
-            self.logThread = logThread(target=logger.run)
+            # Load and Start Logger thread
+            self.logThread = threading.Thread(target=logger.run)
             self.logThread.start()
             # Change Button Text and re-enable
             self.logButton.config(text="Finish Logging")
@@ -138,7 +113,6 @@ class WindowTop(Frame):
         if self.logThread.isAlive() is False:
             # Change Button Text
             self.logButton.config(text="Start Logging")
-            raise Exception
             # Tell user logging has stopped
             print("Logging Stopped - Success!")
             # Re-enable Button
@@ -188,7 +162,6 @@ class WindowTop(Frame):
 
 
 # Setup error logging
-# Note exceptions will print to console when running from Thonny IDE! To test, run script from GUI
 def errorLoggingSetup():
     # Used to set logger
     errorLogger = logging.getLogger('error_logger')
@@ -199,13 +172,21 @@ def errorLoggingSetup():
     fh.setLevel(logging.INFO)
     errorLogger.addHandler(fh)
     # Print Top Line to make it easy to identify new instance of program
-    errorLogger.info("\n\n{}\nNEW INSTANCE OF LOGGER GUI @ {}\n{}".format('-'*75, datetime.now(), '-'*75))
+    errorLogger.info("\n\n{}\nNEW INSTANCE OF LOGGER GUI @ {}\n{}\n".format('-'*75, datetime.now(), '-'*75))
 
+def stderrRedirect(buf):
+    errorLogger = logging.getLogger('error_logger')
+    for line in buf.rstrip().splitlines():
+        errorLogger.error(line.rstrip())
 
 ### PROGRAM START ###
 
 # Start Error Logging
 errorLoggingSetup()
+# Warn Users of error locations
+print("Warning - all stderr output from this point onwards is logged in error.log")
+# Redirect all stderr to text file
+sys.stderr.write = stderrRedirect
 
 
 # Create Tkinter Instance
@@ -223,10 +204,6 @@ app = WindowTop(root)
 
 # Ensure when the program quit it quits gracefully - e.g. stopping the log first
 root.protocol("WM_DELETE_WINDOW", app.onClose)
-
-
-errorLogger = logging.getLogger('error_logger')
-root.report_callback_exception = lambda *args: errorLogger.error("Error: {}".format(args))
 
 # Mainloop in charge of making the gui do everything
 root.mainloop()
