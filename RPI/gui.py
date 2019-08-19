@@ -9,6 +9,31 @@ from tkinter import font, messagebox
 import logger
 import sys
 
+# Create new class to ensure errors while logging (which runs in a seperate thread to the GUI) are recorded in error.log
+class logThread(threading.Thread):
+    """logThread should always be used in preference to threading.Thread.
+
+    The interface provided by logThread is identical to that of threading.Thread,
+    however, if an exception occurs in the thread the error will be logged
+    (using logging.exception) rather than printed to stderr.
+
+    This is important in daemon style applications where stderr is redirected
+    to /dev/null.
+
+    """
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._real_run = self.run
+        self.run = self._wrap_run
+
+    def _wrap_run(self):
+        try:
+            self._real_run()
+        except:
+            errorLogger = logging.getLogger('error_logger')
+            print("\n***UNHANDLED EXCEPTION WHILE LOGGING - Check error.log for more info\nLogging ABORTED***\n")
+            errorLogger.exception("\nUnhandeled Exception in Logger Script! \nTime/Date: {}\nDetails:\n".format(datetime.now()))
+
 
 class WindowTop(Frame):
     # Main Window - Init function contains all elements of layout
@@ -89,8 +114,8 @@ class WindowTop(Frame):
             self.liveDataText['state'] = 'disabled'
             # Scroll to Bottom of Blank Box
             self.liveDataText.see(END)
-            # Load and Start Logger
-            self.logThread = threading.Thread(target=logger.run)
+            # Load and Start Logger thread - using new LogThread class created above
+            self.logThread = logThread(target=logger.run)
             self.logThread.start()
             # Change Button Text and re-enable
             self.logButton.config(text="Finish Logging")
@@ -144,55 +169,62 @@ class WindowTop(Frame):
 
     # Make sure logging finishes before program closes
     def onClose(self):
+        errorLogger = logging.getLogger('error_logger')
         try:
             if logger.logEnbl is True:
                 close = messagebox.askokcancel("Close", "Logging has not be finished. Are you sure you want to quit?")
                 if close:
                     self.logToggle()
                     root.destroy()
+                    errorLogger.info("\nGUI Closed Successfully")
             else:
                 root.destroy()
+                errorLogger.info("\nGUI Closed Successfully")
         # If logger has never been run, logger.logEnbl will not exist
         except AttributeError:
             root.destroy()
+            errorLogger.info("\nGUI Closed Successfully")
 
 
 # Setup error logging
+# Note exceptions will print to console when running from Thonny IDE! To test, run script from GUI
 def errorLoggingSetup():
-    logger = logging.getLogger('error_logger')
-    logger.setLevel(logging.DEBUG)
+    # Used to set logger
+    errorLogger = logging.getLogger('error_logger')
+    # Select min level of severity to log
+    errorLogger.setLevel(logging.INFO)
     # create file handler which logs even debug messages
     fh = logging.FileHandler('error.log')
-    fh.setLevel(logging.DEBUG)
-    logger.addHandler(fh)
+    fh.setLevel(logging.INFO)
+    errorLogger.addHandler(fh)
+    # Print Top Line to make it easy to identify new instance of program
+    errorLogger.info("\n\n{}\nNEW INSTANCE OF LOGGER GUI @ {}\n{}\n".format('-'*75, datetime.now(), '-'*75))
 
 
-def exceptionHandler(type, value, tb):
-    print("UNANDELED EXCEPTION - Check Log File")
-    logger.error("Unhandled Exception!\nType: {}\nValue: {}\nTraceback: {}\nDate/Time:{}".format(type, value, tb, datetime.now()))
-
+### PROGRAM START ###
 
 # Start Logging
 errorLoggingSetup()
-# Redirect Unhandled Exceptions to file
-sys.excepthook = exceptionHandler
 
+try: 
+    # Create Tkinter Instance
+    root = Tk()
 
-# Create Tkinter Instance
-root = Tk()
+    # Size of the window (Uncomment for Full Screen)
+    # root.wm_attributes('-zoomed', 1)
 
-# Size of the window (Uncomment for Full Screen)
-# root.wm_attributes('-zoomed', 1)
+    # Fonts
+    bigFont = font.Font(family="Helvetica", size=16, weight=font.BOLD)
+    smallFont = font.Font(family="Courier", size=11)
 
-# Fonts
-bigFont = font.Font(family="Helvetica", size=16, weight=font.BOLD)
-smallFont = font.Font(family="Courier", size=11)
+    # Create instance of GUI
+    app = WindowTop(root)
 
-# Create instance of GUI
-app = WindowTop(root)
+    # Ensure when the program quit it quits gracefully - e.g. stopping the log first
+    root.protocol("WM_DELETE_WINDOW", app.onClose)
 
-# Ensure when the program quit it quits gracefully - e.g. stopping the log first
-root.protocol("WM_DELETE_WINDOW", app.onClose)
-
-# Mainloop in charge of making the gui do everything
-root.mainloop()
+    # Mainloop in charge of making the gui do everything
+    root.mainloop()
+except Exception:
+    errorLogger = logging.getLogger('error_logger')
+    errorLogger.exception("Unhandeled Exception in GUI Script! \nTime/Date: {}\nDetails:\n".format(datetime.now()))
