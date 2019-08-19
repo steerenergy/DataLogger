@@ -183,7 +183,7 @@ def stderrRedirect(buf):
         errorLogger.error(line.rstrip())
 
 
-## PROGRAM START ##
+# PROGRAM START #
 
 # Start Error Logging
 errorLoggingSetup()
