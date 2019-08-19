@@ -17,7 +17,7 @@ class WindowTop(Frame):
         Frame.__init__(self, master)
         # Setting self.master = master window
         self.master = master
-        
+
         # Changing the title of our master widget
         self.master.title("Steer Energy Data Logger")
         self.pack()
@@ -27,13 +27,14 @@ class WindowTop(Frame):
         self.topFrame.pack(expand=1, fill=BOTH, side=LEFT)
         self.liveDataFrame = Frame(master)
         self.liveDataFrame.pack(expand=1, fill=BOTH, side=RIGHT)
-        
+
         # Title Text
         self.title = Label(self.topFrame, text="Log Ctrl:", font=bigFont)
         self.title.pack()
 
         # Start/Stop Logging Button
-        self.logButton = Button(self.topFrame, text="Start Logging", height=3, width=11, command=self.logToggle, font=bigFont)
+        self.logButton = Button(self.topFrame, text="Start Logging", height=3, width=11, command=self.logToggle,
+                                font=bigFont)
         self.logButton.pack(padx=5)
 
         # Quit Button
@@ -49,7 +50,8 @@ class WindowTop(Frame):
         self.liveDataScrollBar.pack(side=RIGHT, fill=Y)
 
         # Live Data Text Box
-        self.liveDataText = Text(self.liveDataFrame, width=68, yscrollcommand=self.liveDataScrollBar.set, font=smallFont, state='disabled')
+        self.liveDataText = Text(self.liveDataFrame, width=68, yscrollcommand=self.liveDataScrollBar.set,
+                                 font=smallFont, state='disabled')
         self.liveDataText.pack()
 
         # Config ScrollBar
@@ -134,7 +136,7 @@ class WindowTop(Frame):
         # If over a certain amount of lines, delete all lines from the top up to a threshold
         self.textIndex = float(self.liveDataText.index('end'))
         if self.textIndex > self.textThreshold:
-            self.liveDataText.delete(1.0, self.textIndex-self.textThreshold)
+            self.liveDataText.delete(1.0, self.textIndex - self.textThreshold)
             # Remove history from RAM (to avoid memory Leak
             self.liveDataText.edit_reset()
         self.liveDataText['state'] = 'disabled'
@@ -168,26 +170,27 @@ def errorLoggingSetup():
     # Select min level of severity to log
     errorLogger.setLevel(logging.INFO)
     # create file handler which logs even debug messages
-    fh = logging.FileHandler('error.log')
+    fh = logging.FileHandler('piError.log')
     fh.setLevel(logging.INFO)
     errorLogger.addHandler(fh)
     # Print Top Line to make it easy to identify new instance of program
-    errorLogger.info("\n\n{}\nNEW INSTANCE OF LOGGER GUI @ {}\n{}\n".format('-'*75, datetime.now(), '-'*75))
+    errorLogger.info("\n\n{}\nNEW INSTANCE OF LOGGER GUI @ {}\n{}\n".format('-' * 75, datetime.now(), '-' * 75))
+
 
 def stderrRedirect(buf):
     errorLogger = logging.getLogger('error_logger')
     for line in buf.rstrip().splitlines():
         errorLogger.error(line.rstrip())
 
-### PROGRAM START ###
+
+## PROGRAM START ##
 
 # Start Error Logging
 errorLoggingSetup()
 # Warn Users of error locations
-print("Warning - all stderr output from this point onwards is logged in error.log")
+print("Warning - all stderr output from this point onwards is logged in piError.log")
 # Redirect all stderr to text file
 sys.stderr.write = stderrRedirect
-
 
 # Create Tkinter Instance
 root = Tk()
