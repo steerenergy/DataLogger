@@ -20,6 +20,7 @@ import threading
 import shutil
 import os
 
+
 # Contains information about each pin
 class ADC:
     def __init__(self, section):

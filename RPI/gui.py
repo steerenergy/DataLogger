@@ -9,6 +9,7 @@ from tkinter import font, messagebox
 import logger
 import sys
 
+
 class WindowTop(Frame):
     # Main Window - Init function contains all elements of layout
     def __init__(self, master=None):
@@ -177,15 +178,18 @@ def errorLoggingSetup():
 
 
 def stderrRedirect(buf):
-    # Set errorlogger up
+    # Setup error logging
     errorLogger = logging.getLogger('error_logger')
     # Print Stderr to error logger
-    for line in buf.rstrip().splitlines():
-        errorLogger.error(line.rstrip())
-    # Print endline with time of errorr
-    errorLogger.error("\nError! @ {}".format(datetime.now()))    
-    # Show Message Box in Program to warn user of error
-    messagebox.showerror("Error","Unhandled Exception! Check piError.log")
+    if buf == '\n':
+        pass
+    else:
+        for line in buf.rstrip().splitlines():
+            errorLogger.error(line.rstrip())
+        # Print end line with time of error
+        errorLogger.error("\nError @ {}\n\n".format(datetime.now()))
+        # Show Message Box in Program to warn user of error
+        messagebox.showerror("Error", "Unhandled Exception! Check piError.log")
 
 
 # PROGRAM START #
