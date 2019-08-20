@@ -5,7 +5,6 @@ Icon=/usr/share/pixmaps/openbox.png
 Exec=bash -c 'cd "/home/pi/Github/DataLogger/RPI" && python3 gui.py'
 Type=Application
 Encoding=UTF-8
-tartupNotify=true
 Categories=Applications;
 StartupNotify=true
 Terminal=false
