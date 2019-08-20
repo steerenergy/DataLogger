@@ -93,7 +93,7 @@ def generalImport():
     generalSettings = OrderedDict()
     try:
         for key in config['General']:
-            generalSettings[key] = config['General'][key]
+            generalSettings[key] = config['General'][key]   
         print("Success!")
     # Exception raised when key cannot be found (file doesnt't exist or file is corrupt)
     except KeyError:
@@ -104,6 +104,8 @@ def generalImport():
 
 # Import Input Settings
 def inputImport():
+    # Load logEnbl variable
+    global logEnbl
     print("Configuring Input Settings... ", end="", flush=True)
     # For all sections but general, parse the data from config.C
     # Create a new object for each one. The init method of the class then imports all the data as instance variables
@@ -137,11 +139,15 @@ def inputImport():
         for adc in adcDict:
             adcDict[adc].inputSetup()
         print("Success!")
-
+    
+        # Check to see at least 1 input is enabled
+        if len(adcToLog) == 0:
+            print("\nERROR - No Inputs set to Log! Please enable at least one input and try again") 
+            logEnbl = False
+    
     # Exception raised when key cannot be found (file doesnt't exist or file is corrupt)
     except KeyError:
         print("ERROR - Failed to read Input Settings - Have you sent over a 'logConf.ini' file?")
-        global logEnbl
         logEnbl = False
 
 
