@@ -127,7 +127,7 @@ class ADC:
                               "please edit 'progConf.ini')"
                               "\nUnit:  ")
                 # If unit is within character limit, set it. Otherwise, show error
-                if len(entry) <= 7:
+                if len(entry) <= 9:
                     self.unit = entry
                     print("Success!")
                 else:
