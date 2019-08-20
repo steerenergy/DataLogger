@@ -9,7 +9,6 @@ from tkinter import font, messagebox
 import logger
 import sys
 
-
 class WindowTop(Frame):
     # Main Window - Init function contains all elements of layout
     def __init__(self, master=None):
@@ -194,6 +193,10 @@ sys.stderr.write = stderrRedirect
 
 # Create Tkinter Instance
 root = Tk()
+
+# Set Window Icon
+img = PhotoImage(file='icon.png')
+root.tk.call('wm', 'iconphoto', root._w, img)
 
 # Size of the window (Uncomment for Full Screen)
 # root.wm_attributes('-zoomed', 1)
