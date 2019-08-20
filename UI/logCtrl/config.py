@@ -25,11 +25,11 @@ class ADC:
     def __init__(self):
         self.enabled = False
         self.friendlyName = "Edit Me"
-        self.inputType = "Edit Me Too"
+        self.inputType = "Edit Me"
         self.gain = 1
         self.scaleLow = 0
         self.scaleHigh = 0
-        self.unit = "Edit Me Also"
+        self.unit = "Edit Me"
 
     def enabledEdit(self):
         # If enabled, give option to disable, if disabled give option to enable
@@ -122,11 +122,16 @@ class ADC:
                 self.unit = unitTypes[int(option) - 1]
                 print("Success!")
             elif int(option) == len(unitTypes) + 1:
-                self.unit = input("Please type in the unit you want to use"
-                                  "\n(Note: If you want to add your unit to the default list, "
-                                  "please edit 'progConf.ini')"
-                                  "\n Unit:  ")
-                print("Success!")
+                entry = input("\nPlease type in the unit you want to use (Max 7 Characters)"
+                              "\n(Note: If you want to add your unit to the default list, "
+                              "please edit 'progConf.ini')"
+                              "\nUnit:  ")
+                # If unit is within character limit, set it. Otherwise, show error
+                if len(entry) <= 7:
+                    self.unit = entry
+                    print("Success!")
+                else:
+                    common.other()
             # When Integer is out of Range
             else:
                 common.other()
@@ -386,7 +391,7 @@ def inputCurrentSettings():
     x = 0
     for pin in adcDict:
         x += 1
-        if adcDict[pin].enabled ==1:
+        if adcDict[pin].enabled == 1:
             print("|{:>6}|{:>6}|{:>12}|{:>14}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x,
                                                                                        pin,
                                                                                        str(adcDict[pin].enabled),
@@ -407,6 +412,7 @@ def inputCurrentSettings():
                                                                                        "-",
                                                                                        "-",
                                                                                        "-"))
+
 
 # PRE PROCESS - Called by Save Function to determine
 # Generate 'm' and 'c' to be used in processing data
