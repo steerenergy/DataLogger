@@ -177,9 +177,15 @@ def errorLoggingSetup():
 
 
 def stderrRedirect(buf):
+    # Set errorlogger up
     errorLogger = logging.getLogger('error_logger')
+    # Print Stderr to error logger
     for line in buf.rstrip().splitlines():
         errorLogger.error(line.rstrip())
+    # Print endline with time of errorr
+    errorLogger.error("\nError! @ {}".format(datetime.now()))    
+    # Show Message Box in Program to warn user of error
+    messagebox.showerror("Error","Unhandled Exception! Check piError.log")
 
 
 # PROGRAM START #
@@ -208,8 +214,8 @@ smallFont = font.Font(family="Courier", size=11)
 # Create instance of GUI
 app = WindowTop(root)
 
-# Ensure when the program quit it quits gracefully - e.g. stopping the log first
+# Ensure when the program quits, it quits gracefully - e.g. stopping the log first
 root.protocol("WM_DELETE_WINDOW", app.onClose)
 
-# Mainloop in charge of making the gui do everything
+# Tkinter Mainloop in charge of making the gui do everything
 root.mainloop()
