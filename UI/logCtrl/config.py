@@ -489,9 +489,9 @@ def save():
         print("Success!")
         print("NOTE - If you manually change the logConf.ini file contents, you must rerun this program, "
               "load in the config file and save it. Otherwise, the data will be processed incorrectly. ")
-    except KeyError:
-        print("ERROR - Unable to Write Config (Invalid Config Entry)"
-              " - Have you set your input name and scale to a valid setting?")
+    except KeyError as e:
+        print("ERROR - Unable to Write Config (Invalid Config Entry - {})"
+              " - Have you set your input name and scale to a valid setting?".format(str(e)))
         return True
 
 
