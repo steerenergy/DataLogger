@@ -71,9 +71,10 @@ class ADC:
         # Users are instructed to type a number which corresponds to the value of gain they want
         gainSettings = ["1", "2", "4", "8", "16"]
         print("\nAvailable Gain Settings (See User Manual for More Info):")
-        print("|Gain|Full Scale V|")
-        print("-" * 19)
-        print("|1   |   4.096V   |\n|2   |   2.048V   |\n|4   |   1.024V   |\n|8   |   0.512V   |\n|16  |   0.256V   |")
+        print("|Gain|Full Scale Voltage|")
+        print("-" * 25)
+        print("|1   |      4.096V      |\n|2   |      2.048V      |\n|4   "
+              "|      1.024V      |\n|8   |      0.512V      |\n|16  |      0.256V      |")
         option = input("\nPlease type in the gain setting you want: ")
         try:
             # Check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
@@ -89,9 +90,9 @@ class ADC:
     def scaleEdit(self):
         # Set the high and low end of the scale
         try:
-            option = float(input("\nWhat is the Low end of the Scale? "))
+            option = float(input("\nWhat is the Low end of the Scale (Excluding Units)? "))
             self.scaleLow = option
-            option = float(input("What is the High end of the Scale? "))
+            option = float(input("What is the High end of the Scale (Excluding Units)? "))
             self.scaleHigh = option
         except ValueError:
             common.other()
