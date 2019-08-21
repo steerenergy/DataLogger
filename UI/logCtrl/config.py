@@ -149,8 +149,8 @@ def init():
         progConfImport()
         # Check to see if config file present, if so give the option to import it
         if 'logConf.ini' in os.listdir('files/outbox/'):
-            option = input("\nPrevious Config Found (logConf.ini) Do you wish to import it? (Y/N) ")
-            if option == "Y" or option == "y":
+            option = input("\nPrevious Config Found (logConf.ini) Do you wish to import it? (Enter or Y/N) ")
+            if option == "Y" or option == "y" or option == "":
                 print("Importing Config...")
                 configSet = True
                 importConfInit()
