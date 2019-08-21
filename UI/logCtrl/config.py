@@ -214,7 +214,7 @@ def blankConfInit():
     # Initial Functions - setting up dictionaries with default values (will read config in future)
     # Setup dictionary with default settings for general settings
     global generalSettings
-    generalSettings = {"timeinterval": 1, "name": "Default"}
+    generalSettings = {"timeinterval": 1.0, "name": "Default"}
     # Init all objects for 16 channels.
     global adcDict
     adcDict = {
@@ -316,9 +316,23 @@ def generalMenu():
 
 # Time Setting
 def generalTime():
-    print("\nCurrent Time Interval is: {} Second(s)\n".format(generalSettings["timeinterval"]))
-    generalSettings["timeinterval"] = input("Enter New Time Interval: ")
-    print("Success!\n")
+    # Print Current time Interval
+    print("\nCurrent Time Interval is: {} second(s)\n".format(generalSettings["timeinterval"]))
+    # Get user to input new time interval and check it's valid
+    try:
+        interval = float(input("Enter New Time Interval (min 0.1): "))
+        # Only change timeinterval if a valid int above 0.1 seconds
+        # (note this will not stop users editing the config for time intervals less than 0.1 seconds
+        if interval >= 0.1:
+            generalSettings["timeinterval"] = interval
+            print("Success!\n")
+        else:
+            common.other()
+
+        print("NOTE: Time intervals less than 0.1 seconds can be configured by manually editing logConf.ini "
+              "before importing.\nThis is beyond the specification of the logger so do so at your own risk!")
+    except ValueError:
+        common.other()
 
 
 # Name Setting
