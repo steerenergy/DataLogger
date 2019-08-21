@@ -321,7 +321,7 @@ def generalTime():
     # Get user to input new time interval and check it's valid
     try:
         interval = float(input("Enter New Time Interval (min 0.1): "))
-        # Only change timeinterval if a valid int above 0.1 seconds
+        # Only change time interval if a valid int above 0.1 seconds
         # (note this will not stop users editing the config for time intervals less than 0.1 seconds
         if interval >= 0.1:
             generalSettings["timeinterval"] = interval
@@ -344,54 +344,61 @@ def generalName():
 
 # INPUT SETUP
 def inputSetup():
-    # Current Settings Print Out
-    inputCurrentSettings()
     try:
-        userInput = input("\nType the number corresponding to the pin you wish to Edit "
-                          "or press 'Enter' to go back: ")
-        if str(userInput) == '':
-            print("Going Back")
-        # Find on adcDict if number is in adcDict, else throw an error
-        # If Found in adcDict, set the device to adcDict and continue
-        elif int(userInput) > 0 and int(userInput) - 1 < len(adcDict):
-            chosenNum = int(userInput)
-            chosenPin = list(adcDict.items())[chosenNum - 1][0]
-            # Input Selection Menu
+        # Stay in input selection until user leaves pressing 'Enter'
+        while True:
             try:
-                while True:
-                    print(
-                        "\nCurrent Pin Settings for: {}"
-                        "\nChoose a Option to edit a Setting (based on the corresponding number)"
-                        "\n1. Pin Enabled: {}\n2. Friendly Name: {}\n3. Input Type: {}\n4. Gain: {}\n"
-                        "5. Scale: {} - {}\n6. Unit: {}"
-                        "\n----------------\n7. Back".format(
-                            chosenPin, adcDict[chosenPin].enabled, adcDict[chosenPin].friendlyName,
-                            adcDict[chosenPin].inputType, adcDict[chosenPin].gain,
-                            adcDict[chosenPin].scaleLow, adcDict[chosenPin].scaleHigh, adcDict[chosenPin].unit))
-                    option = input("\nOption Chosen: ")
-                    if option == "1":
-                        adcDict[chosenPin].enabledEdit()
-                    elif option == "2":
-                        adcDict[chosenPin].friendlyNameEdit()
-                    elif option == "3":
-                        adcDict[chosenPin].inputTypeEdit()
-                    elif option == "4":
-                        adcDict[chosenPin].gainEdit()
-                    elif option == "5":
-                        adcDict[chosenPin].scaleEdit()
-                    elif option == "6":
-                        adcDict[chosenPin].unitEdit()
-                    elif option == "7":
-                        common.back()
-                    else:
-                        common.other()
-            except StopIteration:
-                pass
-        else:
-            common.other()
-    # If someone doesn't type in an integer or press Enter
-    except ValueError:
-        common.other()
+                # Current Settings Print Out
+                inputCurrentSettings()
+                userInput = input("\nType the number corresponding to the pin you wish to Edit "
+                                  "or press 'Enter' to go back: ")
+                if str(userInput) == '':
+                    print("Going Back")
+                    common.back()
+                # Find on adcDict if number is in adcDict, else throw an error
+                # If Found in adcDict, set the device to adcDict and continue
+                elif int(userInput) > 0 and int(userInput) - 1 < len(adcDict):
+                    chosenNum = int(userInput)
+                    chosenPin = list(adcDict.items())[chosenNum - 1][0]
+                    # Input Selection Menu
+                    try:
+                        while True:
+                            print(
+                                "\nCurrent Pin Settings for: {}"
+                                "\nChoose a Option to edit a Setting (based on the corresponding number)"
+                                "\n1. Pin Enabled: {}\n2. Friendly Name: {}\n3. Input Type: {}\n4. Gain: {}\n"
+                                "5. Scale: {} - {}\n6. Unit: {}"
+                                "\n----------------\n7. Back".format(
+                                    chosenPin, adcDict[chosenPin].enabled, adcDict[chosenPin].friendlyName,
+                                    adcDict[chosenPin].inputType, adcDict[chosenPin].gain,
+                                    adcDict[chosenPin].scaleLow, adcDict[chosenPin].scaleHigh, adcDict[chosenPin].unit))
+                            option = input("\nOption Chosen: ")
+                            if option == "1":
+                                adcDict[chosenPin].enabledEdit()
+                            elif option == "2":
+                                adcDict[chosenPin].friendlyNameEdit()
+                            elif option == "3":
+                                adcDict[chosenPin].inputTypeEdit()
+                            elif option == "4":
+                                adcDict[chosenPin].gainEdit()
+                            elif option == "5":
+                                adcDict[chosenPin].scaleEdit()
+                            elif option == "6":
+                                adcDict[chosenPin].unitEdit()
+                            elif option == "7":
+                                common.back()
+                            else:
+                                common.other()
+                    except StopIteration:
+                        pass
+                else:
+                    common.other()
+            # If someone doesn't type in an integer or press Enter
+            except ValueError:
+                common.other()
+    # Used to break the loop if someone selects a back option.
+    except StopIteration:
+        pass
 
 
 # Printing Current Input Settings
