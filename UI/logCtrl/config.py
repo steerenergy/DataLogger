@@ -353,7 +353,7 @@ def inputSetup():
             print("Going Back")
         # Find on adcDict if number is in adcDict, else throw an error
         # If Found in adcDict, set the device to adcDict and continue
-        elif int(userInput) - 1 < len(adcDict):
+        elif int(userInput) > 0 and int(userInput) - 1 < len(adcDict):
             chosenNum = int(userInput)
             chosenPin = list(adcDict.items())[chosenNum - 1][0]
             # Input Selection Menu
