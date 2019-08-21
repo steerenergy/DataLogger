@@ -32,27 +32,13 @@ class ADC:
         self.unit = "Edit Me"
 
     def enabledEdit(self):
-        # If enabled, give option to disable, if disabled give option to enable
-        # Option to Enable
+        # Toggle Pin on and Off
         if self.enabled is False:
-            option = input("\nEnable Pin? (Y/N) ")
-            if option == "Y" or option == "y":
-                self.enabled = True
-                print("Pin Enabled")
-            elif option == "N" or option == "n":
-                print("Pin Left Disabled")
-            else:
-                common.other()
-        # Option to Disable
+            self.enabled = True
+            print("Pin Enabled")
         elif self.enabled is True:
-            option = input("\nDisable Pin? (Y/N) ")
-            if option == "Y" or option == "y":
-                self.enabled = False
-                print("Pin Disabled")
-            elif option == "N" or option == "n":
-                print("Pin Left Enabled")
-            else:
-                common.other()
+            self.enabled = False
+            print("Pin Disabled")
 
     def friendlyNameEdit(self):
         option = input("\nType in your chosen friendly name for the pin (max 10 characters) ")
