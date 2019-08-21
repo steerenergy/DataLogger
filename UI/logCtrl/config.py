@@ -70,8 +70,10 @@ class ADC:
         # Values for Gain can be changed below although this should not need to happen
         # Users are instructed to type a number which corresponds to the value of gain they want
         gainSettings = ["1", "2", "4", "8", "16"]
-        print("\nAvailable Gain Settings:")
-        print("1 = +/-4.096V \n2 = +/-2.048V \n4 = +/-1.024V \n8 = +/-0.512V \n16 = +/-0.256V")
+        print("\nAvailable Gain Settings (See User Manual for More Info):")
+        print("|Gain|Full Scale V|")
+        print("-" * 19)
+        print("|1   |   4.096V   |\n|2   |   2.048V   |\n|4   |   1.024V   |\n|8   |   0.512V   |\n|16  |   0.256V   |")
         option = input("\nPlease type in the gain setting you want: ")
         try:
             # Check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
