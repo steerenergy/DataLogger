@@ -273,6 +273,8 @@ def menu():
             elif option == "3":
                 saveUploadMenu()
             elif option == "4":
+                # Warn users that unsaved changes will be lost
+                print("\nWarning! Any unsaved changes will be lost on program close!\n")
                 common.back()
             else:
                 common.other()
