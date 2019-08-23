@@ -6,12 +6,15 @@ import logCtrl
 import about
 import processData
 import generalSettings
+import ctypes
 
 
 # Title printed on program start
 def init():
     version = "1.1.0 Alpha"
+    # Set Windows Title
     welcome = "Steer Energy Data Logger (Version {})".format(version)
+    ctypes.windll.kernel32.SetConsoleTitleW(welcome)
     print(welcome)
     print("-" * len(welcome))
     # Initiate main menu
