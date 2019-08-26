@@ -158,7 +158,7 @@ def settingsOutput():
     print("\nCurrent General Settings:")
     for key in generalSettings:
         print("{}: {}".format(key.title(), generalSettings[key]))
-    print("\nCurrent Input Settings: (Settings hidden for Disabled Inputs)")
+    print("\nCurrent Input Settings: (Settings Hidden for Disabled Inputs)")
     x = 0
     print("-" * 65)
     # Top Row Headings
