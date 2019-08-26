@@ -1,3 +1,6 @@
+# Note - references to files must be absolute!
+# If you are running this script from any other machine than Tom's (Old Sebs) Laptop,
+# ensure you update the file references accordingly
 # -*- mode: python -*-
 
 block_cipher = None
@@ -26,7 +29,8 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           runtime_tmpdir=None,
-          console=True )
+          console=True,
+          icon='C:\\Users\\Seb\\Documents\\GitHub\\DataLogger\\UI\\icon.ico')
 
 # Create folder structure and move Config and Readme
 import shutil
