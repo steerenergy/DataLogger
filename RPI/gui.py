@@ -177,24 +177,24 @@ def errorLoggingSetup():
     errorLogger.info("\n\n{}\nNEW INSTANCE OF LOGGER GUI @ {}\n{}\n".format('-' * 75, datetime.now(), '-' * 75))
 
 
-# Method called every time an error is written to stderr.
+# Function called every time a line of an error is written to sys.stderr
 # Redirects them from the (invisible) console to the log file
+# Note: - Function may be called once per error (if error originates in a separate thread)
+# or several times until error is written.
 def stderrRedirect(buf):
     # Setup error logging
     errorLogger = logging.getLogger('error_logger')
-    # Print Stderr to error logger
-    if buf == '\n':
-        pass
-    else:
-        for line in buf.rstrip().splitlines():
-            errorLogger.error(line.rstrip())
-        # Print end line with time of error
-        errorLogger.error("\nError @ {}\n\n".format(datetime.now()))
-        # Show Message Box in Program to warn user of error
-        messagebox.showerror("Error", "Unhandled Exception! Check piError.log")
-
+    # Print Stderr to error logger with a timestamp
+    for line in buf.rstrip().splitlines():
+        errorLogger.error("{}  - {}".format(datetime.now(), line.rstrip()))
+    # Show Message Box in Program to warn user of error - note several may appear for a given error
+    # If statement to try and reduce number of message boxes
+    if buf == "":
+        messagebox.showerror("Error", "More Unhandled Exceptions! Check piError.log"
+                                      "\nNote: This message may appear several times for a given error")
 
 # PROGRAM START #
+
 
 # Start Error Logging
 errorLoggingSetup()

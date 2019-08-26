@@ -2,9 +2,6 @@
 **/files/**/*.ini
 **/files/**/*.csv
 
-~ Ignore Error Logs
-error.log
-
 # Ignore python files
 # Byte-compiled / optimized / DLL files
 __pycache__/
