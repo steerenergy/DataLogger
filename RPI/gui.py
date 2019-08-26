@@ -177,6 +177,8 @@ def errorLoggingSetup():
     errorLogger.info("\n\n{}\nNEW INSTANCE OF LOGGER GUI @ {}\n{}\n".format('-' * 75, datetime.now(), '-' * 75))
 
 
+# Method called every time an error is written to stderr.
+# Redirects them from the (invisible) console to the log file
 def stderrRedirect(buf):
     # Setup error logging
     errorLogger = logging.getLogger('error_logger')
