@@ -188,9 +188,7 @@ def stderrRedirect(buf):
     for line in buf.rstrip().splitlines():
         errorLogger.error("{}  - {}".format(datetime.now(), line.rstrip()))
     # Show Message Box in Program to warn user of error - note several may appear for a given error
-    # If statement to try and reduce number of message boxes
-    if buf == "":
-        messagebox.showerror("Error", "More Unhandled Exceptions! Check piError.log"
+    messagebox.showerror("Error", "More Unhandled Exceptions! Check piError.log"
                                       "\nNote: This message may appear several times for a given error")
 
 # PROGRAM START #
