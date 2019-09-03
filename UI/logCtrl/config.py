@@ -537,9 +537,11 @@ def upload():
         transport.close()
 
     # If connection was unsuccessful
-    except socket.error:
+    except socket.error as e:
         print("\nERROR: Transfer Failed - "
               "Ensure you are Connected to the same Network as the Raspberry Pi and Try Again")
+        # Print Error Info
+        print(e)
         # Close Connection if possible
         try:
             sftp.close()

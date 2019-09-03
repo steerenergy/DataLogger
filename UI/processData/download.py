@@ -34,8 +34,12 @@ def init():
         # Get List of Files
         filesList = sftp.listdir(path='/home/pi/Github/DataLogger/RPI/files/outbox')
 
+        # Remove .gitkeep file from list (we don't want to download/delete it)
+        if ".gitkeep" in filesList:
+            filesList.remove(".gitkeep")
+
         # Give warning if there are no files to download
-        if len(filesList) <= 1:
+        if len(filesList) <= 0:
             print("No Files found to Download")
         else:
             # Print Number of Files Found
@@ -45,30 +49,27 @@ def init():
             print("-"*(len(noFiles)-1))
             # Download all files in remote outbox folder and delete them after
             for fileName in filesList:
-                # Don't download .gitkeep file or bad things happen
-                if fileName != ".gitkeep":
-                    # Download File
-                    remotePath = '/home/pi/Github/DataLogger/RPI/files/outbox/' + fileName
-                    localPath = 'files/inbox/' + fileName
-                    # Print name of file being transferred
-                    print("File: {}:".format(fileName))
-                    # Transfer the file and give status of transfer (see printTotals func at top).
-                    sftp.get(remotePath, localPath, callback=printTotals)
-                    # Print Success (note this is printed on the line above
-                    # due to carriage return on the above statement
-                    print("Transferred: 100% - Success")
+                # Download File
+                remotePath = '/home/pi/Github/DataLogger/RPI/files/outbox/' + fileName
+                localPath = 'files/inbox/' + fileName
+                # Print name of file being transferred
+                print("File: {}:".format(fileName))
+                # Transfer the file and give status of transfer (see printTotals func at top).
+                sftp.get(remotePath, localPath, callback=printTotals)
+                # Print Success (note this is printed on the line above
+                # due to carriage return on the above statement
+                print("Transferred: 100% - Success")
 
             # Give option for user to delete all files on Pi
             # This means files are not deleted if the file is taken off during logging
+            # Files should be deleted in all other circumstances
             option = input("Delete Files On Pi?"
                            " - IMPORTANT: Do not delete files during logger operation!\n(Y/N): ")
             if option == "Y" or option == "y":
                 for fileName in filesList:
-                    # Don't download .gitkeep file or bad things happen
-                    if fileName != ".gitkeep":
-                        # Get remote path and delete
-                        remotePath = '/home/pi/Github/DataLogger/RPI/files/outbox/' + fileName
-                        sftp.remove(remotePath)
+                    # Get remote path and delete
+                    remotePath = '/home/pi/Github/DataLogger/RPI/files/outbox/' + fileName
+                    sftp.remove(remotePath)
                 print("Successfully Deleted Files on Pi")
             elif option == "N" or option == "n":
                 print("Files Not Deleted")
@@ -82,9 +83,11 @@ def init():
         print("\nSuccess!")
 
     # If connection was unsuccessful
-    except socket.error:
+    except socket.error as e:
         print("\nERROR: Transfer Failed - "
               "Ensure you are Connected to the same Network as the Raspberry Pi and Try Again")
+        # Print Error Info
+        print(e)
         # Close Connection if possible
         try:
             sftp.close()
