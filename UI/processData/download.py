@@ -4,6 +4,8 @@
 import paramiko
 # Import socket for error handling
 import socket
+# Import comms module for dealing with hostname of logger selection
+import comms
 
 
 # Function called to print transfers status
@@ -19,12 +21,11 @@ def init():
         remoteFolder = '/home/pi/Github/DataLogger/RPI/files/outbox/'
         localFolder = 'files/inbox/'
 
-        print("\nPreparing to Transfer...")
+        print("\nPreparing to Download From: '{}'...".format(comms.loggerHostname.host))
 
-        # Open a transport
-        host = "raspberrypi"
+        # Open a transport + import hostname
         port = 22
-        transport = paramiko.Transport((host, port))
+        transport = paramiko.Transport(comms.loggerHostname.host, port)
 
         # Auth
         password = "raspberry"
@@ -89,8 +90,9 @@ def init():
 
     # If connection was unsuccessful
     except socket.error as e:
-        print("\nERROR: Transfer Failed - "
-              "Ensure you are Connected to the same Network as the Raspberry Pi and Try Again")
+        print("ERROR: Failed To Download Files From: '{}' - "
+              "Ensure you are Connected to the same Network as the Logger and Try Again"
+              .format(comms.loggerHostname.host))
         # Print Error Info
         print(e)
         # Close Connection if possible

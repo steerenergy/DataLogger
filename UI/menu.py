@@ -1,4 +1,5 @@
-# Main Menu - Initialised by UI.py and creates main menu linking to other imported modules
+# Main Menu - Initialised by UI.py
+# First gives option for user to select the logger hostname and creates main menu linking to other imported modules
 
 # Import local python files for operation
 import common
@@ -10,6 +11,7 @@ import ctypes
 from datetime import datetime
 import logging
 import sys
+import comms
 
 
 # Title printed on program start
@@ -20,10 +22,12 @@ def init():
     sys.stderr.write = stderrRedirect
     version = "1.1.0 Alpha"
     # Set Windows Title
-    welcome = "Steer Energy Data Logger (Version {})".format(version)
-    ctypes.windll.kernel32.SetConsoleTitleW(welcome)
-    print(welcome)
-    print("-" * len(welcome))
+    welcomeMessage = "Steer Energy Data Logger (Version {})".format(version)
+    ctypes.windll.kernel32.SetConsoleTitleW(welcomeMessage)
+    print(welcomeMessage)
+    print("-" * len(welcomeMessage))
+    # Initiate hostname selection - welcomeMessage sent so window title can be updated
+    comms.init(welcomeMessage)
     # Initiate main menu
     main()
 
@@ -50,6 +54,9 @@ def stderrRedirect(buf):
     # Print Stderr to error logger with a timestamp
     for line in buf.rstrip().splitlines():
         errorLogger.error("{}  - {}".format(datetime.now(), line.rstrip()))
+
+
+
 
 
 # Main Menu - Structure very similar to all other menus in program

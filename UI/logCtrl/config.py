@@ -11,7 +11,8 @@
 import configparser
 import uuid
 import paramiko
-from . import common
+import common
+import comms
 import os
 import socket
 
@@ -511,11 +512,10 @@ def save():
 # FTP Upload of Config File
 def upload():
     try:
-        print("\nPreparing to Transfer...")
-        # Open a transport
-        host = "raspberrypi"
+        print("\nPreparing to Transfer To: '{}'...".format(comms.loggerHostname.host))
+        # Open a transport + import hostname
         port = 22
-        transport = paramiko.Transport(host, port)
+        transport = paramiko.Transport(comms.loggerHostname.host, port)
         # Auth
         password = "raspberry"
         username = "pi"
@@ -539,8 +539,9 @@ def upload():
 
     # If connection was unsuccessful
     except socket.error as e:
-        print("\nERROR: Transfer Failed - "
-              "Ensure you are Connected to the same Network as the Raspberry Pi and Try Again")
+        print("ERROR: Failed To Trasnfer Config To: '{}' - "
+              "Ensure you are Connected to the same Network as the Logger and Try Again"
+              .format(comms.loggerHostname.host))
         # Print Error Info
         print(e)
         # Close Connection if possible
