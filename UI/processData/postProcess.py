@@ -39,12 +39,15 @@ class Process:
         self.df = None
         # Hold Pandas DF graph
         self.ax = None
+        self.ax2 = None
 
         # Graph Settings
-        self.yData = {}
+        self.yDataPrimary = {}
+        self.yDataSecondary = {}
         self.xData = None
         self.plotTitle = "Plot"
-        self.plotYTitle = "Values"
+        self.plotYPrimaryTitle = "Values"
+        self.plotYSecondaryTitle = "Values"
 
         # Begin File Selection
         self.fileSelect()
@@ -101,9 +104,11 @@ class Process:
         # Add columns to yData dict for plot selection and set all to true by default beyond the first two time columns
         for column in self.df.columns:
             if column in self.df.columns[2:]:
-                self.yData[column] = True
+                self.yDataPrimary[column] = True
             else:
-                self.yData[column] = False
+                self.yDataPrimary[column] = False
+            # By Default, Secondary Axis is turned off
+            self.yDataSecondary[column] = False
         # Set default x column for plotting
         self.xData = self.df.columns[0]
         print("Success!")
@@ -163,20 +168,25 @@ class Process:
                 # Print options and current settings
                 option = input("\nPlot Options - Current Settings: \nChoose a Option to change a setting"
                                " (based on the corresponding number): "
-                               "\n1. Select Data\n2. Plot Title: '{}'\n3. Y Axis Title: '{}'\n4. Plot"
-                               "\n----------------\n5. Back\n\nOption Chosen: "
-                               .format(self.plotTitle, self.plotYTitle))
+                               "\n1. Select Data\n2. Plot Title: '{}'\n3. Primary Y Axis Title: '{}'"
+                               "\n4. Secondary Y Axis Title: '{}'\n5. Plot "
+                               "\n----------------\n6. Back\n\nOption Chosen: "
+                               .format(self.plotTitle, self.plotYPrimaryTitle, self.plotYSecondaryTitle))
                 if option == "1":
                     self.plotSelectData()
                 elif option == "2":
                     # Change Title of Graph
                     self.plotTitle = input("\nInput the Graph Title: ")
                 elif option == "3":
-                    # Change Y axis Title
-                    self.plotYTitle = input("\nInput the Y Axis Title: ")
+                    # Change Primary Y Axis Title
+                    self.plotYPrimaryTitle = input("\nInput the Primary Y Axis Title: ")
                 elif option == "4":
-                    self.plotGraph()
+                    # Change Secondary Y Axis Title
+                    self.plotYSecondaryTitle = input("\nInput the Secondary Y Axis Title: ")
+
                 elif option == "5":
+                    self.plotGraph()
+                elif option == "6":
                     common.back()
                 else:
                     common.other()
@@ -185,25 +195,55 @@ class Process:
 
     # Select for the Y and X Axis
     def plotSelectData(self):
-        # Choose Y axis Data
+        # Choose Primary Y axis Data
         try:
             while True:
-                print("\nY Axis: Columns Selected for Plotting ")
+                print("\nPrimary Y Axis: Columns Selected for Plotting ")
                 # Counter used for options
                 x = 1
                 # Print Output in nice format
-                for item in self.yData:
-                    print("{}. {:>24} : {}".format(x, item, self.yData[item]))
+                for item in self.yDataPrimary:
+                    print("{}. {:>24} : {}".format(x, item, self.yDataPrimary[item]))
                     x += 1
                 print("{} \n{}. Save/Next".format("-"*35, x))
                 # User Selection
                 option = int(input("Choose a number to toggle selection: "))
                 # If number is in list index
-                if 0 < option <= len(self.yData):
+                if 0 < option <= len(self.yDataPrimary):
                     # Get name of column and toggle visibility on graph
                     colName = self.df.columns[option - 1]
-                    self.yData[colName] = not self.yData[colName]
-                # Go back, if back option is selected
+                    self.yDataPrimary[colName] = not self.yDataPrimary[colName]
+                # End loop if next option is selected
+                elif option == x:
+                    common.back()
+                # If a number is typed in out of range
+                else:
+                    common.other()
+        except StopIteration:
+            pass
+        # If someone does not put in an integer
+        except ValueError:
+            common.other()
+
+        # Choose Secondary Y axis Data
+        try:
+            while True:
+                print("\nSecondary Y Axis: Columns Selected for Plotting ")
+                # Counter used for options
+                x = 1
+                # Print Output in nice format
+                for item in self.yDataSecondary:
+                    print("{}. {:>24} : {}".format(x, item, self.yDataSecondary[item]))
+                    x += 1
+                print("{} \n{}. Save/Next".format("-" * 35, x))
+                # User Selection
+                option = int(input("Choose a number to toggle selection: "))
+                # If number is in list index
+                if 0 < option <= len(self.yDataSecondary):
+                    # Get name of column and toggle visibility on graph
+                    colName = self.df.columns[option - 1]
+                    self.yDataSecondary[colName] = not self.yDataSecondary[colName]
+                # End loop if next option is selected
                 elif option == x:
                     common.back()
                 # If a number is typed in out of range
@@ -222,7 +262,7 @@ class Process:
                 # Counter used for options
                 x = 1
                 # Print Output in nice format
-                for item in self.yData:
+                for item in self.yDataPrimary:
                     print("{}. {}".format(x, item))
                     x += 1
                 print("{} \n{}. Save/Next".format("-"*30, x))
@@ -230,11 +270,12 @@ class Process:
                 option = int(input("Choose a number to select column: "))
                 # If valid number on the list then toggle it
                 # Get name of column
-                if 0 < option <= len(self.yData):
+                if 0 < option <= len(self.yDataPrimary):
                     colName = self.df.columns[option - 1]
                     self.xData = colName
-                # Go back, if back option is selected
+                # End loop if next option is selected
                 elif option == x:
+                    print("Success! - Plot Settings Updated")
                     common.back()
                 # If a number is typed in out of range
                 else:
@@ -247,18 +288,30 @@ class Process:
 
     # Graph Plotting Functions
     def plotGraph(self):
-        # Create list of columns to be plotted on y axis (using list comprehension)
-        yColumns = [column for column in self.yData if self.yData[column] is True]
+        # Create list of primary columns to be plotted on y axis (using list comprehension)
+        yColumnsPrimary = [column for column in self.yDataPrimary if self.yDataPrimary[column] is True]
+        # Create list of secondary columns to be plotted on y axis (using list comprehension)
+        yColumnsSecondary = [column for column in self.yDataSecondary if self.yDataSecondary[column] is True]
         # Convert time to numeric for plotting
         self.df.iloc[:, 1] = pd.to_numeric(self.df.iloc[:, 1].dt.total_seconds())
         # Create graph with x,y and user title chosen
-        self.ax = self.df.plot(x=self.xData, y=yColumns, title=self.plotTitle)
-        # Set Y axis Label (X axis is already set by default as column heading)
-        self.ax.set(ylabel=self.plotYTitle)
+        self.ax = self.df.plot(x=self.xData, y=yColumnsPrimary, title=self.plotTitle)
+        # Set Primary Y Axis Label (X axis is already set by default as column heading)
+        self.ax.set_ylabel(self.plotYPrimaryTitle)
+
+        # Plot secondary axis only if it isn't full
+        if len(yColumnsSecondary) > 0:
+            # Set Twin Axis
+            self.ax2 = self.ax.twinx()
+            # Plot 2nd axis
+            self.df.plot(x=self.xData, y=yColumnsSecondary, ax=self.ax2)
+            # Set Secondary Y Axis Label
+            self.ax2.set_ylabel(self.plotYSecondaryTitle, rotation=270, va='top')
+
         # Turn on minor ticks on Graph for better reading
         plt.minorticks_on()
         # Warn User to Close Windows to Continue
-        print("Opening Plot... Please close the graph window to continue. "
+        print("Opening Plot... Please close the graph window to continue."
               "\nIf the window is closed and the program has not continued after several seconds, press any key'")
         # Show the graph
         plt.show()
