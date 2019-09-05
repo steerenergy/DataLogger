@@ -115,6 +115,7 @@ class fileSelect:
         except PermissionError:
             print("\nWARNING - Unable to move one or more files due to a Permission Error."
                   "\nCheck the files are not being used by another program or process.")
+        print("Success! - Converted File Saved To: '{}'".format(self.convertedCsvFilePath))
 
 
 # Function called by csvProcess which does the actual data conversion on each data item
@@ -172,6 +173,6 @@ def csvProcess():
     # Write Converted CSV Data
     print("\nWriting CSV...")
     df.to_csv(file.convertedCsvFilePath, sep=',', index=False)
-    # Moving raw data and config into data folder with the converted csv
+    # Moving raw data and config into data folder with the converted csv (it also prints success)
     file.fileCleanup()
-    print("\nSuccess!")
+

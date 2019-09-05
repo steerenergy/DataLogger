@@ -15,6 +15,10 @@ def printTotals(transferred, toBeTransferred):
 # Main download script
 def init():
     try:
+        # Set Directory of Remote and Local Folders
+        remoteFolder = '/home/pi/Github/DataLogger/RPI/files/outbox/'
+        localFolder = 'files/inbox/'
+
         print("\nPreparing to Transfer...")
 
         # Open a transport
@@ -32,7 +36,7 @@ def init():
         sftp = paramiko.SFTPClient.from_transport(transport)
 
         # Get List of Files
-        filesList = sftp.listdir(path='/home/pi/Github/DataLogger/RPI/files/outbox')
+        filesList = sftp.listdir(path=remoteFolder)
 
         # Remove .gitkeep file from list (we don't want to download/delete it)
         if ".gitkeep" in filesList:
@@ -50,8 +54,8 @@ def init():
             # Download all files in remote outbox folder and delete them after
             for fileName in filesList:
                 # Download File
-                remotePath = '/home/pi/Github/DataLogger/RPI/files/outbox/' + fileName
-                localPath = 'files/inbox/' + fileName
+                remotePath = remoteFolder + fileName
+                localPath = localFolder + fileName
                 # Print name of file being transferred
                 print("File: {}:".format(fileName))
                 # Transfer the file and give status of transfer (see printTotals func at top).
@@ -63,24 +67,25 @@ def init():
             # Give option for user to delete all files on Pi
             # This means files are not deleted if the file is taken off during logging
             # Files should be deleted in all other circumstances
-            option = input("Delete Files On Pi?"
+            option = input("Delete Files On Logger?"
                            " - IMPORTANT: Do not delete files during logger operation!\n(Y/N): ")
             if option == "Y" or option == "y":
                 for fileName in filesList:
                     # Get remote path and delete
-                    remotePath = '/home/pi/Github/DataLogger/RPI/files/outbox/' + fileName
+                    remotePath = remoteFolder + fileName
                     sftp.remove(remotePath)
-                print("Successfully Deleted Files on Pi")
+                print("Successfully Deleted Files on Logger")
             elif option == "N" or option == "n":
                 print("Files Not Deleted")
             else:
                 print("Invalid Option - Files Not Deleted")
+            # Print Success
+            print("\nSuccess! - Files Downloaded to: '{}'"
+                  "\nNOTE: You'll need to 'Convert Data' before the data can be processed\n".format(localFolder))
 
         # Close Connection
         sftp.close()
         transport.close()
-        # Print Success
-        print("\nSuccess!")
 
     # If connection was unsuccessful
     except socket.error as e:

@@ -499,7 +499,7 @@ def save():
         directory = 'files/outbox/logConf.ini'
         with open(directory, 'w') as configfile:
             logConf.write(configfile)
-        print("Success! - File Written to '{}'".format(directory))
+        print("Success! - Config Saved To: '{}'".format(directory))
         print("NOTE - If you manually change the logConf.ini file contents, you must rerun this program, "
               "load in the config file and save it. Otherwise, the data will be processed incorrectly. ")
     except KeyError as e:
