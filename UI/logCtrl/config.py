@@ -139,11 +139,13 @@ def init():
         progConfImport()
         # Check to see if config file present, if so give the option to import it
         if 'logConf.ini' in os.listdir('files/outbox/'):
-            option = input("\nPrevious Config Found (logConf.ini) Do you wish to import it? (Enter or Y/N) ")
+            option = input("\nDo you wish to import the last saved config (logConf.ini)"
+                           "(Note: You can import a different config file at the next menu)\n(Enter or Y/N) ")
             if option == "Y" or option == "y" or option == "":
                 print("Importing Config...")
                 configSet = True
-                importConfInit()
+                # Send argument of location to import file
+                importConfInit('files/outbox/logConf.ini')
             elif option == "N" or option == "n":
                 print("Creating Default Template...")
                 configSet = True
@@ -227,14 +229,14 @@ def blankConfInit():
     }
 
 
-# Init of input settings from logConf.ini file if user chooses
-def importConfInit():
+# Init of logger settings from logConf.ini file if user chooses
+def importConfInit(configPath):
     # Get data from local logConf.ini file and import (code similar to the logger.py config code)
     global adcDict
     adcDict = {}
     # Open the config file
     logConf = configparser.ConfigParser()
-    logConf.read('files/outbox/logConf.ini')
+    logConf.read(configPath)
 
     # Create dictionary for each item in the general section of the logConf.ini
     global generalSettings
@@ -256,6 +258,7 @@ def importConfInit():
             adcDict[pin].scaleLow = logConf[pin].getfloat('scalelow')
             adcDict[pin].scaleHigh = logConf[pin].getfloat('scalehigh')
             adcDict[pin].unit = logConf[pin]['unit']
+    return("Success! - '{}' Imported".format(configPath))
 
 
 # MAIN MENU
@@ -264,7 +267,7 @@ def menu():
         while True:
             option = input(
                 "\nLogger Config Menu:  \nChoose a Option (based on the corresponding number): "
-                "\n1. General Settings\n2. Input Setup\n3. Save/Upload Config\n4. Back"
+                "\n1. General Settings\n2. Input Setup\n3. Save/Upload Config\n4. Import Another Config\n5. Back"
                 "\n\nOption Chosen: ")
             # Set Menu Names
             if option == "1":
@@ -274,6 +277,8 @@ def menu():
             elif option == "3":
                 saveUploadMenu()
             elif option == "4":
+                configImportSelect()
+            elif option == "5":
                 # Warn users that unsaved changes will be lost
                 print("\nWarning! Any unsaved changes will be lost on program close!\n")
                 common.back()
@@ -551,3 +556,51 @@ def upload():
         # If the above variables haven't been assigned yet, move on
         except UnboundLocalError:
             pass
+
+
+# Allows user to import any file in 'files/savedConfigs' if they wish
+def configImportSelect():
+    # Set Directory of config files
+    directory = 'files/savedConfigs/'
+    # Create list of all files in directory
+    directoryFiles = os.listdir(directory)
+    configList = [fileName for fileName in directoryFiles
+                    if fileName.endswith('.ini')]
+
+    # Dealing with cases where there are no matching files in directory
+    if len(configList) <= 0:
+        print("\nNo Config Files found - "
+              "Please ensure there is at least 1 file ending in '.ini' in '{}'".format(directory))
+    else:
+        try:
+            # List config files found
+            print("\nFiles ending in '.ini' found in '{}':".format(directory))
+            # Print Output in nice format
+            for pos, fileName in enumerate(configList, start=1):
+                print("{}. {}".format(pos, fileName))
+
+            # User file selection
+            configFile = int(input("Please select a file (by its corresponding number):  "))
+            # If number valid on list, choose that config file
+            if 0 < configFile <= len(configList):
+                # Warn users of risk of importing a new file
+                option = input("\nWARNING: Importing a new config will erase currently imported Settings!"
+                               " - Make sure you save your current configuration before importing new settings"
+                               "\nDo You Wish to Continue? (Y/N): ")
+                if option == "Y" or option == "y":
+                    # Call function to import config at new directory
+                    # Placing the function inside print will print a success message at the end
+                    print(importConfInit(directory + fileName))
+                elif option == "N" or option == "n":
+                    print("Import Cancelled")
+                else:
+                    print("Invalid Option: Import Cancelled")
+
+            # If a number is typed in out of range
+            else:
+                common.other()
+        # If a user doesn't type in an integer
+        except ValueError:
+            common.other()
+
+
