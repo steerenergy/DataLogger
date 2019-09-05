@@ -496,9 +496,10 @@ def save():
                 logConf[key]["m"] = str(m)
                 logConf[key]["c"] = str(c)
         # Write File
-        with open('files/outbox/logConf.ini', 'w') as configfile:
+        directory = 'files/outbox/logConf.ini'
+        with open(directory, 'w') as configfile:
             logConf.write(configfile)
-        print("Success!")
+        print("Success! - File Written to '{}'".format(directory))
         print("NOTE - If you manually change the logConf.ini file contents, you must rerun this program, "
               "load in the config file and save it. Otherwise, the data will be processed incorrectly. ")
     except KeyError as e:
@@ -526,12 +527,12 @@ def upload():
         remotePath = '/home/pi/Github/DataLogger/RPI/files/inbox/logConf.ini'
         localPath = 'files/outbox/logConf.ini'
         sftp.put(localPath, remotePath)
-        print("Success!")
         # Close Connection
         sftp.close()
         transport.close()
         # Print Success
-        print("Configuration File Successfully Transferred")
+        print("Success! - Configuration File Successfully Transferred"
+              "\nYou may now start the logger using the touchscreen")
         # Close Connection
         sftp.close()
         transport.close()
