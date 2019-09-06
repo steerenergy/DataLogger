@@ -16,6 +16,7 @@ import time
 # Pandas Import Statements
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
 plt.style.use('ggplot')
 
 
@@ -300,9 +301,15 @@ class Process:
         self.ax.set_ylabel(self.plotYPrimaryTitle)
         # Set Primary Legend Location
         self.ax.legend(loc='upper left')
+        # Set Ticks
+        self.ax.xaxis.set_minor_locator(AutoMinorLocator())
+        self.ax.yaxis.set_minor_locator(AutoMinorLocator())
+        self.ax.tick_params(which='both', width=1)
+        self.ax.tick_params(which='major', length=10, color='black')
+        self.ax.tick_params(which='minor', length=5)
         # Set Grid Lines (Major and Minor)
-        self.ax.grid(which="major", axis="both", color="black", linestyle="-", alpha=2, linewidth=.3)
-        self.ax.grid(which="minor", axis="both", color="black", linestyle=":", alpha=10, linewidth=.15)
+        self.ax.grid(True, which="major", axis="both", color="black", linestyle="-", alpha=2, linewidth=.3)
+        self.ax.grid(True, which="minor", axis="both", color="black", linestyle=":", alpha=10, linewidth=.15)
         # Set Plot Background
         self.ax.set_facecolor('white')
         # Set Spines (Borders) for each side
@@ -324,8 +331,16 @@ class Process:
             self.ax2.legend(loc='upper right')
             # Turn off grid (horizontal lines between ticks)
             self.ax2.grid(None)
-        # Turn on minor ticks on Graph for better reading
-        plt.minorticks_on()
+            # Turn off spines (on each side) as these will be placed over the top of ax's ones
+            for side in ['top', 'bottom', 'left', 'right']:
+                self.ax2.spines[side].set_visible(False)
+            # Set Ticks
+            self.ax2.xaxis.set_minor_locator(AutoMinorLocator())
+            self.ax2.yaxis.set_minor_locator(AutoMinorLocator())
+            self.ax2.tick_params(which='both', width=1)
+            self.ax2.tick_params(which='major', length=10, color='black')
+            self.ax2.tick_params(which='minor', length=5)
+
         # Warn User to Close Windows to Continue
         print("Opening Plot... Please close the graph window to continue."
               "\nIf the window is closed and the program has not continued after several seconds, press any key'")
