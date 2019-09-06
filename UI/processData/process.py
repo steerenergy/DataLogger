@@ -85,8 +85,12 @@ class fileSelect:
                 option = int(input("\nSelect a file by its corresponding number: "))
                 # Check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
                 if 0 < option <= len(self.fileSelection):
+                    # Allow user to put in custom name
+                    customName = str(input("Chosen Name for the CSV file: "))
+                    # Get timestamp of filename and combine with customName to create new filename
+                    timeStamp = self.fileSelection[option-1][0]
+                    self.chosenID = "-{}-{}".format(timeStamp, customName)
                     # Setting the filenames - note these are not the complete file paths
-                    self.chosenID = self.fileSelection[option-1][0]
                     self.rawCsvFile = self.fileSelection[option-1][1]
                     self.configFile = self.fileSelection[option-1][2]
                     # Works out filename for converted CSV file
@@ -110,8 +114,9 @@ class fileSelect:
         print("Moving Files...")
         try:
             # Converted CSV data is already in the correct place so just need to move raw data and config
-            os.rename(self.configFilePath, self.convertedDirectory + "/" + self.configFile)
-            os.rename(self.rawCsvFilePath, self.convertedDirectory + "/" + self.rawCsvFile)
+            # Update filenames to include new custom name chosen
+            os.rename(self.configFilePath, self.convertedDirectory + "/" + "logConf" + self.chosenID + ".ini")
+            os.rename(self.rawCsvFilePath, self.convertedDirectory + "/" + "raw" + self.chosenID + ".csv")
         except PermissionError:
             print("\nWARNING - Unable to move one or more files due to a Permission Error."
                   "\nCheck the files are not being used by another program or process.")
