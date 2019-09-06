@@ -300,8 +300,14 @@ class Process:
         self.ax.set_ylabel(self.plotYPrimaryTitle)
         # Set Primary Legend Location
         self.ax.legend(loc='upper left')
-        # Set Grid Lines
-        self.ax.grid(which="major", axis="both", color="black", linestyle=":", alpha=3, linewidth=.5)
+        # Set Grid Lines (Major and Minor)
+        self.ax.grid(which="major", axis="both", color="black", linestyle="-", alpha=2, linewidth=.3)
+        self.ax.grid(which="minor", axis="both", color="black", linestyle=":", alpha=10, linewidth=.15)
+        # Set Plot Background
+        self.ax.set_facecolor('white')
+        # Set Spines (Borders) for each side
+        for side in ['top', 'bottom', 'left', 'right']:
+            self.ax.spines[side].set_color('black')
 
         # Plot secondary axis only if it isn't empty
         if len(yColumnsSecondary) > 0:
