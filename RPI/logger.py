@@ -198,7 +198,7 @@ def log():
     # Set up list to be printed to CSV
     adcValues = [0] * csvRows
     # Get timestamp for filename
-    timeStamp = datetime.now().strftime("%Y%m%d-%H%M%S.%f")
+    timeStamp = datetime.now().strftime("%Y%m%d-%H%M%S")
 
     # FILE MANAGEMENT
     print("\nDisk Usage:")
