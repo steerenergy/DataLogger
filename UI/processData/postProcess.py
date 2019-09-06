@@ -288,9 +288,9 @@ class Process:
 
     # Graph Plotting Functions
     def plotGraph(self):
-        # Create list of primary columns to be plotted on y axis (using list comprehension)
+        # Create list of primary columns in csv to be plotted on y axis (using list comprehension)
         yColumnsPrimary = [column for column in self.yDataPrimary if self.yDataPrimary[column] is True]
-        # Create list of secondary columns to be plotted on y axis (using list comprehension)
+        # Create list of secondary columns in csv to be plotted on y axis (using list comprehension)
         yColumnsSecondary = [column for column in self.yDataSecondary if self.yDataSecondary[column] is True]
         # Convert time to numeric for plotting
         self.df.iloc[:, 1] = pd.to_numeric(self.df.iloc[:, 1].dt.total_seconds())
@@ -298,16 +298,26 @@ class Process:
         self.ax = self.df.plot(x=self.xData, y=yColumnsPrimary, title=self.plotTitle)
         # Set Primary Y Axis Label (X axis is already set by default as column heading)
         self.ax.set_ylabel(self.plotYPrimaryTitle)
+        # Set Primary Legend Location
+        self.ax.legend(loc='upper left')
+        # Set Grid Lines
+        self.ax.grid(which="major", axis="both", color="black", linestyle=":", alpha=3, linewidth=.5)
 
-        # Plot secondary axis only if it isn't full
+        # Plot secondary axis only if it isn't empty
         if len(yColumnsSecondary) > 0:
             # Set Twin Axis
             self.ax2 = self.ax.twinx()
+            # Set the colour cycle of the 2nd axis to the first
+            # It automatically takes the next colour after the previous on the primary Y axis
+            self.ax2._get_lines.prop_cycler = self.ax._get_lines.prop_cycler
             # Plot 2nd axis
             self.df.plot(x=self.xData, y=yColumnsSecondary, ax=self.ax2)
             # Set Secondary Y Axis Label
-            self.ax2.set_ylabel(self.plotYSecondaryTitle, rotation=270, va='top')
-
+            self.ax2.set_ylabel(self.plotYSecondaryTitle, rotation=270, va='bottom')
+            # Set Secondary Legend Location
+            self.ax2.legend(loc='upper right')
+            # Turn off grid (horizontal lines between ticks)
+            self.ax2.grid(None)
         # Turn on minor ticks on Graph for better reading
         plt.minorticks_on()
         # Warn User to Close Windows to Continue
