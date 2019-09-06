@@ -37,6 +37,6 @@ import shutil
 import os
 shutil.copyfile('progConf.ini', '{0}/progConf.ini'.format(DISTPATH))
 shutil.copyfile('READMEDIST.txt', '{0}/README.txt'.format(DISTPATH))
-dirList = ["files", "files/inbox", "files/converted", "files/outbox"]
+dirList = ["files", "files/inbox", "files/converted", "files/outbox", "files/savedConfigs"]
 for directory in dirList:
     os.makedirs("{}/{}".format(DISTPATH, directory))
