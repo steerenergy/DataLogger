@@ -70,7 +70,7 @@ class ADC:
     def gainEdit(self):
         # Values for Gain can be changed below although this should not need to happen
         # Users are instructed to type a number which corresponds to the value of gain they want
-        gainSettings = ["1", "2", "4", "8", "16"]
+        gainSettings = [1, 2, 4, 8, 16]
         print("\nAvailable Gain Settings (See User Manual for More Info):")
         print("|Gain|Full Scale Voltage|")
         print("-" * 25)
@@ -140,7 +140,7 @@ def init():
         # Check to see if config file present, if so give the option to import it
         if 'logConf.ini' in os.listdir('files/outbox/'):
             option = input("\nDo you wish to import the last saved config (logConf.ini)"
-                           "(Note: You can import a different config file at the next menu)\n(Enter or Y/N) ")
+                           "\n(Note: You can import a different config file at the next menu)\n(Enter or Y/N) ")
             if option == "Y" or option == "y" or option == "":
                 print("Importing Config...")
                 configSet = True
@@ -452,7 +452,7 @@ def saveUploadMenu():
         while True:
             print(
                 "\nSave/Upload:\nChoose a Option (based on the corresponding number)"
-                "\n1. Save and Upload to Pi\n2. Save Only \n3. Back")
+                "\n1. Save and Upload to Logger\n2. Save Only \n3. Back")
             option = input("\nOption Chosen: ")
             if option == "1":
                 saveFailed = save()
@@ -564,8 +564,7 @@ def configImportSelect():
     directory = 'files/savedConfigs/'
     # Create list of all files in directory
     directoryFiles = os.listdir(directory)
-    configList = [fileName for fileName in directoryFiles
-                    if fileName.endswith('.ini')]
+    configList = [fileName for fileName in directoryFiles if fileName.endswith('.ini')]
 
     # Dealing with cases where there are no matching files in directory
     if len(configList) <= 0:
