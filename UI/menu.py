@@ -26,6 +26,8 @@ def init():
     ctypes.windll.kernel32.SetConsoleTitleW(welcomeMessage)
     print(welcomeMessage)
     print("-" * len(welcomeMessage))
+
+    print("Read User Manual before First Use - Use keyboard for input, pressing 'Enter' to confirm input")
     # Initiate hostname selection - welcomeMessage sent so window title can be updated
     comms.init(welcomeMessage)
     # Initiate main menu
@@ -54,9 +56,6 @@ def stderrRedirect(buf):
     # Print Stderr to error logger with a timestamp
     for line in buf.rstrip().splitlines():
         errorLogger.error("{}  - {}".format(datetime.now(), line.rstrip()))
-
-
-
 
 
 # Main Menu - Structure very similar to all other menus in program
