@@ -77,12 +77,12 @@ class fileSelect:
             self.valid = False
         else:
             # Print the data found in the folder
-            print("\nData Found \nThe file's datestamps are shown below:")
+            print("\nData Found in '{}' - The Datestamps of the files are shown Below:".format(self.inboxDirectory))
             for pos, value in enumerate(self.fileSelection, start=1):
                 print("{}. {}".format(pos, value[0]))
             # Option Selection
             try:
-                option = int(input("\nSelect a file by its corresponding number: "))
+                option = int(input("\nPlease select a file (by its corresponding number): "))
                 # Check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
                 if 0 < option <= len(self.fileSelection):
                     # Allow user to put in custom name

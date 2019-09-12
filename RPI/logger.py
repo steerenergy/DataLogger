@@ -163,7 +163,7 @@ def settingsOutput():
     print("-" * 65)
     # Top Row Headings
     print(
-        "|{:>2}|{:>4}|{:>5}|{:>10}|{:>10}|{:>4}|{:>12}|{:>9}|".format("No", "Name", "Enbl", "F.Name", "Input Type",
+        "|{:>2}|{:>4}|{:>5}|{:>10}|{:>10}|{:>4}|{:>14}|{:>9}|".format("No", "Name", "Enbl", "F.Name", "Input Type",
                                                                       "Gain", "Scale", "Unit"))
     print("-" * 65)
     # Print input settings for each Pin
@@ -171,7 +171,7 @@ def settingsOutput():
         # Only print full settings if that channel is enabled
         x += 1
         if adcDict[pin].enabled == 1:
-            print("|{:>2}|{:>4}|{:>5}|{:>10}|{:>10}|{:>4}|{:>6}{:>6}|{:>9}|".format(x, adcDict[pin].name,
+            print("|{:>2}|{:>4}|{:>5}|{:>10}|{:>10}|{:>4}|{:>7}{:>7}|{:>9}|".format(x, adcDict[pin].name,
                                                                                     str(adcDict[pin].enabled),
                                                                                     adcDict[pin].friendlyName,
                                                                                     adcDict[pin].inputType,
@@ -181,7 +181,7 @@ def settingsOutput():
                                                                                     adcDict[pin].unit))
         # If channel not enabled
         else:
-            print("|{:>2}|{:>4}|{:>5}|{:>10}|{:>10}|{:>4}|{:>6}{:>6}|{:>9}|".format(x, adcDict[pin].name,
+            print("|{:>2}|{:>4}|{:>5}|{:>10}|{:>10}|{:>4}|{:>7}{:>7}|{:>9}|".format(x, adcDict[pin].name,
                                                                                     str(adcDict[pin].enabled),
                                                                                     "-",
                                                                                     "-",

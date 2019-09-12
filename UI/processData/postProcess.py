@@ -71,7 +71,7 @@ class Process:
         else:
             try:
                 # Data Selection List
-                print("\nData Found - Current Files:")
+                print("\nData Found in '{}' - Current Files:".format(self.csvDirectory))
                 # Print Output in nice format
                 for pos, fileName in enumerate(self.csvList, start=1):
                     print("{}. {}".format(pos, fileName))
@@ -206,7 +206,7 @@ class Process:
                 for item in self.yDataPrimary:
                     print("{}. {:>24} : {}".format(x, item, self.yDataPrimary[item]))
                     x += 1
-                print("{} \n{}. Save/Next".format("-"*35, x))
+                print("{} \n{}. Save & Next".format("-"*35, x))
                 # User Selection
                 option = int(input("Choose a number to toggle selection: "))
                 # If number is in list index
@@ -236,7 +236,7 @@ class Process:
                 for item in self.yDataSecondary:
                     print("{}. {:>24} : {}".format(x, item, self.yDataSecondary[item]))
                     x += 1
-                print("{} \n{}. Save/Next".format("-" * 35, x))
+                print("{} \n{}. Save & Next".format("-" * 35, x))
                 # User Selection
                 option = int(input("Choose a number to toggle selection: "))
                 # If number is in list index
@@ -266,7 +266,7 @@ class Process:
                 for item in self.yDataPrimary:
                     print("{}. {}".format(x, item))
                     x += 1
-                print("{} \n{}. Save/Next".format("-"*30, x))
+                print("{} \n{}. Save & Finish".format("-"*30, x))
                 # User Selection
                 option = int(input("Choose a number to select column: "))
                 # If valid number on the list then toggle it

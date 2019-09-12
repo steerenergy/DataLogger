@@ -406,7 +406,7 @@ def inputSetup():
 def inputCurrentSettings():
     print("\nCurrent Input Settings:")
     print("-" * 95)
-    print("|{:>6}|{:>6}|{:>12}|{:>14}|{:>12}|{:>12}|{:>12}|{:>12}|".format("Number", "Name", "Pin Enabled",
+    print("|{:>6}|{:>6}|{:>12}|{:>14}|{:>12}|{:>12}|{:>14}|{:>12}|".format("Number", "Name", "Pin Enabled",
                                                                            "Friendly Name", "Input Type", "Gain",
                                                                            "Scale", "Unit"))
     print("-" * 95)
@@ -414,7 +414,7 @@ def inputCurrentSettings():
     for pin in adcDict:
         x += 1
         if adcDict[pin].enabled == 1:
-            print("|{:>6}|{:>6}|{:>12}|{:>14}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x,
+            print("|{:>6}|{:>6}|{:>12}|{:>14}|{:>12}|{:>12}|{:>7}{:>7}|{:>12}|".format(x,
                                                                                        pin,
                                                                                        str(adcDict[pin].enabled),
                                                                                        adcDict[pin].friendlyName,
@@ -425,7 +425,7 @@ def inputCurrentSettings():
                                                                                        adcDict[pin].unit))
 
         else:
-            print("|{:>6}|{:>6}|{:>12}|{:>14}|{:>12}|{:>12}|{:>6}{:>6}|{:>12}|".format(x,
+            print("|{:>6}|{:>6}|{:>12}|{:>14}|{:>12}|{:>12}|{:>7}{:>7}|{:>12}|".format(x,
                                                                                        pin,
                                                                                        str(adcDict[pin].enabled),
                                                                                        "-",
