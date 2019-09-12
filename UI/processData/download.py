@@ -89,7 +89,7 @@ def init():
         transport.close()
 
     # If connection was unsuccessful
-    except socket.error as e:
+    except (socket.error, paramiko.SSHException) as e:
         print("ERROR: Failed To Download Files From: '{}' - "
               "Ensure you are Connected to the same Network as the Logger and Try Again"
               .format(comms.loggerHostname.host))

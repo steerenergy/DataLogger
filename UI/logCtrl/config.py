@@ -280,7 +280,7 @@ def menu():
                 configImportSelect()
             elif option == "5":
                 # Warn users that unsaved changes will be lost
-                print("\nWarning! Any unsaved changes will be lost on program close!\n")
+                print("\nWARNING: Any unsaved changes will be lost on program close!\n")
                 common.back()
             else:
                 common.other()
@@ -543,7 +543,7 @@ def upload():
         transport.close()
 
     # If connection was unsuccessful
-    except socket.error as e:
+    except (socket.error, paramiko.SSHException) as e:
         print("ERROR: Failed To Trasnfer Config To: '{}' - "
               "Ensure you are Connected to the same Network as the Logger and Try Again"
               .format(comms.loggerHostname.host))
