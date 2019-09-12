@@ -189,6 +189,8 @@ def settingsOutput():
                                                                                     "-",
                                                                                     "-",
                                                                                     "-"))
+
+
 # Logging Script
 def log():
     # Set Time Interval
