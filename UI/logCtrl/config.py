@@ -2,7 +2,8 @@
 # It is in charge of creating and writing a config
 # It begins at init(), on first time run offering to create a new config or import a previous.
 # Menu is then initialised, user can change general settings (generalMenu()) or input (inputSetup())
-# Once a user is happy, they enter saveUploadMenu() to write the config file and send via FTP over to the pi
+# They can import a different config file if they wish using configFileSelect()
+# Once the user is happyThey can save (save()) the file or save and upload (save() followed by upload()
 # The save function also triggers preProcess().
 # This generates m and c values (in y = mx + c) and saves to the config allowing for future processing
 
@@ -262,18 +263,26 @@ def menu():
         while True:
             option = input(
                 "\nLogger Config Menu:  \nChoose a Option (based on the corresponding number): "
-                "\n1. General Settings\n2. Input Setup\n3. Save/Upload Config\n4. Import Another Config\n5. Back"
-                "\n\nOption Chosen: ")
+                "\n1. General Settings\n2. Input Setup\n3. Save and Upload Config\n4. Save Config (Don't Upload)"
+                "\n5. Import Stored Config\n6. Back\n\nOption Chosen: ")
             # Set Menu Names
             if option == "1":
                 generalMenu()
             elif option == "2":
                 inputSetup()
             elif option == "3":
-                saveUploadMenu()
+                # Runs save function - and returns 'True' if the save failed for some reason
+                # Used so it doesn't upload a file if the save was unsuccessful
+                saveFailed = save()
+                if saveFailed is True:
+                    print("ERROR - Save Upload Failed")
+                else:
+                    upload()
             elif option == "4":
-                configImportSelect()
+                save()
             elif option == "5":
+                configImportSelect()
+            elif option == "6":
                 # Warn users that unsaved changes will be lost
                 print("\nWARNING: Any unsaved changes will be lost on program close!\n")
                 common.back()
@@ -439,30 +448,6 @@ def preProcess(scaleLow, scaleHigh, inputType, gainVal):
     # As data recorded is raw, and 'x' must be in volts, m is multiplied by the gain scale factor
     m = m * gainList[gainVal] / 32767.0
     return m, c
-
-
-# SAVE/UPLOAD
-def saveUploadMenu():
-    try:
-        while True:
-            print(
-                "\nSave/Upload:\nChoose a Option (based on the corresponding number)"
-                "\n1. Save and Upload to Logger\n2. Save Only \n3. Back")
-            option = input("\nOption Chosen: ")
-            if option == "1":
-                saveFailed = save()
-                if saveFailed is True:
-                    print("ERROR - Save Upload Failed")
-                else:
-                    upload()
-            elif option == "2":
-                save()
-            elif option == "3":
-                common.back()
-            else:
-                common.other()
-    except StopIteration:
-        pass
 
 
 # Save Data to Config File
