@@ -558,10 +558,10 @@ def upload():
             pass
 
 
-# Allows user to import any file in 'files/savedConfigs' if they wish
+# Allows user to import any file in 'files/storedConfigs' if they wish
 def configImportSelect():
     # Set Directory of config files
-    directory = 'files/savedConfigs/'
+    directory = 'files/storedConfigs/'
     # Create list of all files in directory
     directoryFiles = os.listdir(directory)
     configList = [fileName for fileName in directoryFiles if fileName.endswith('.ini')]
