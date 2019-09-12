@@ -160,12 +160,12 @@ def settingsOutput():
         print("{}: {}".format(key.title(), generalSettings[key]))
     print("\nCurrent Input Settings: (Settings Hidden for Disabled Inputs)")
     x = 0
-    print("-" * 65)
+    print("-" * 67)
     # Top Row Headings
     print(
         "|{:>2}|{:>4}|{:>5}|{:>10}|{:>10}|{:>4}|{:>14}|{:>9}|".format("No", "Name", "Enbl", "F.Name", "Input Type",
                                                                       "Gain", "Scale", "Unit"))
-    print("-" * 65)
+    print("-" * 67)
     # Print input settings for each Pin
     for pin in adcDict:
         # Only print full settings if that channel is enabled

@@ -405,11 +405,11 @@ def inputSetup():
 # Printing Current Input Settings
 def inputCurrentSettings():
     print("\nCurrent Input Settings:")
-    print("-" * 95)
+    print("-" * 97)
     print("|{:>6}|{:>6}|{:>12}|{:>14}|{:>12}|{:>12}|{:>14}|{:>12}|".format("Number", "Name", "Pin Enabled",
                                                                            "Friendly Name", "Input Type", "Gain",
                                                                            "Scale", "Unit"))
-    print("-" * 95)
+    print("-" * 97)
     x = 0
     for pin in adcDict:
         x += 1
