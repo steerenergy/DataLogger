@@ -27,7 +27,7 @@ def init():
     print(welcomeMessage)
     print("-" * len(welcomeMessage))
 
-    print("Read User Manual before First Use - Use keyboard for input, pressing 'Enter' to confirm input")
+    print("Read User Manual before First Use - Use keyboard for input, pressing 'Enter' to confirm input\n")
     # Initiate hostname selection - welcomeMessage sent so window title can be updated
     comms.init(welcomeMessage)
     # Initiate main menu

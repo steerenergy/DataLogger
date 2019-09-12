@@ -134,28 +134,24 @@ class ADC:
 def init():
     # If user has already entered config section, continue where they left off.
     # Otherwise, give option to create blank config file or to import previous logConf.ini file
+    # 'configSet' variable flag used to ensure the config is only
+    # imported/default config generated  the first time the program runs
     global configSet
     if configSet is False:
         progConfImport()
-        # Check to see if config file present, if so give the option to import it
+        # If 'logConf.ini' file found in the files/outbox then import this file, otherwise create default config
         if 'logConf.ini' in os.listdir('files/outbox/'):
-            option = input("\nDo you wish to import the last saved config (logConf.ini)"
-                           "\n(Note: You can import a different config file at the next menu)\n(Enter or Y/N) ")
-            if option == "Y" or option == "y" or option == "":
-                print("Importing Config...")
-                configSet = True
-                # Send argument of location to import file
-                importConfInit('files/outbox/logConf.ini')
-            elif option == "N" or option == "n":
-                print("Creating Default Template...")
-                configSet = True
-                blankConfInit()
-            else:
-                common.other()
-                common.back()
+            print("\nImporting Previously Saved Config File...")
+            # Set flag to show config has now been set
+            configSet = True
+            # Send argument of location of logConf.ini to import file
+            # Placing the function inside print will print a success message at the end
+            print(importConfInit('files/outbox/logConf.ini'))
+
         # If Config File doesn't exist
         else:
-            print("No Config File Found - Creating Default Template...")
+            print("\nNo Config File Found - Creating Default Template...")
+            # Set flag to show config has now been set
             configSet = True
             blankConfInit()
 
@@ -203,7 +199,6 @@ def progConfImport():
 
 # Init of input settings if user chooses a blank config
 def blankConfInit():
-    # Initial Functions - setting up dictionaries with default values (will read config in future)
     # Setup dictionary with default settings for general settings
     global generalSettings
     generalSettings = {"timeinterval": 1.0, "name": "Default"}
@@ -229,7 +224,7 @@ def blankConfInit():
     }
 
 
-# Init of logger settings from logConf.ini file if user chooses
+# Init of logger settings from logConf.ini file
 def importConfInit(configPath):
     # Get data from local logConf.ini file and import (code similar to the logger.py config code)
     global adcDict
@@ -258,7 +253,7 @@ def importConfInit(configPath):
             adcDict[pin].scaleLow = logConf[pin].getfloat('scalelow')
             adcDict[pin].scaleHigh = logConf[pin].getfloat('scalehigh')
             adcDict[pin].unit = logConf[pin]['unit']
-    return("Success! - '{}' Imported".format(configPath))
+    return "Success! - '{}' Imported".format(configPath)
 
 
 # MAIN MENU
