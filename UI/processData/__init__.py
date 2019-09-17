@@ -1,3 +1,5 @@
+# Creates menu for all data processing options allowing user to select what they require
+
 # Import Common Commands
 from processData import process, download, postProcess
 import common

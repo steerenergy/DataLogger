@@ -1,6 +1,6 @@
-# This module grabs all CSV and Config files on the Pi's outbox folder and placing them in the UI's inbox folder.
+# This module grabs all CSV and Config files on the logger and saves them to /files/inbox ready to be processed
 
-# Uses Paramiko to connect to the Pi via ftp and download the csv and config file.
+# Uses Paramiko to connect to the Pi via FTP and download the csv and config file.
 import paramiko
 # Import socket for error handling
 import socket
@@ -10,7 +10,7 @@ import comms
 
 # Function called to print transfers status
 def printTotals(transferred, toBeTransferred):
-    # Note this doesn't display properly if run in PyCharm/Idle due to the carriage return ('/r')
+    # Note this doesn't display properly if run in PyCharm/IDLE due to the carriage return ('/r')
     print("Transferred: {}%".format(round(transferred/toBeTransferred * 100, 2)), end="\r")
 
 

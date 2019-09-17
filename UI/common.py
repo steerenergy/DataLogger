@@ -1,4 +1,4 @@
-# Contains common commands used by other programs to reduce code
+# Contains common commands used by other programs to reduce overall code
 import sys
 
 

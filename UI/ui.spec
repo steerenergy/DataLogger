@@ -1,5 +1,5 @@
 # Note - references to files must be absolute!
-# If you are running this script from any other machine than Tom's (Old Sebs) Laptop,
+# If you are running this script from any other machine than Tom's (Old Seb's) Laptop,
 # ensure you update the file references accordingly
 # -*- mode: python -*-
 

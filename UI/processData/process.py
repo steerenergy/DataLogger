@@ -2,11 +2,11 @@
 # Program begins at init() creating the conversion list, creates an instance of fileSelect and triggers main functions
 # The File select constructor (__init__) calls the other functions dealing with selecting the CSV and logConf file
 # This creates variables which are used for loading in files.
-# init() then calls conversionSetup() which loads in the pre calculated m and c values (in y = mx + c).
+# init() then calls conversionSetup() which loads in the pre calculated m and c values (in y = mx + c) from the logConf.
 # These are stored in the 'conversion' list as a tuple
 # Then csvProcess is called which loads the csv and performs the convert() on each cell efficiently via pandas
-# A converted CSV is then written in the data directory. The other files are then move to the same location
-# Note 10 minutes to Pandas is a good tutorial to Pandas.
+# A converted CSV is then written in the data directory. The other files are then moved to the same location
+# Note 10 minutes to Pandas is a good tutorial to Pandas and would help with the understanding of this code.
 
 # Import Stuff
 import pandas as pd

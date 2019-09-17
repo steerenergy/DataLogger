@@ -1,12 +1,11 @@
 # This program is a beast...
 # It is in charge of creating and writing a config
-# It begins at init(), on first time run offering to create a new config or import a previous.
+# It begins at init(), on first time it imports the previously saved 'logConf.ini' under 'files/outbox' if it exists
 # Menu is then initialised, user can change general settings (generalMenu()) or input (inputSetup())
-# They can import a different config file if they wish using configFileSelect()
-# Once the user is happyThey can save (save()) the file or save and upload (save() followed by upload()
-# The save function also triggers preProcess().
-# This generates m and c values (in y = mx + c) and saves to the config allowing for future processing
-
+# They can import a different config file from 'files/storedConfigs' if they wish using configFileSelect()
+# Once the user is happy, they can save (save()) the file or save and upload (save() followed by upload())
+# The save function also triggers preProcess()- generating m and c values (in y = mx + c)
+# These are saved to the config, and are used by the logger and process() to convert data laterto true values later
 
 # Makes all directory references up a level to simplify importing common files
 import configparser

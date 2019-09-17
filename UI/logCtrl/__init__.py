@@ -1,4 +1,6 @@
 # Creates menu allowing user to choose different log control options
+# This menu doesn't really do much and at some point should be removed.
+
 # Import Common Commands
 import common
 from logCtrl import config

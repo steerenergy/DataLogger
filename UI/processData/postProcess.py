@@ -1,4 +1,4 @@
-# PostProcess is responsible for processing converted data to make it more useful
+# PostProcess is responsible for processing converted data (from process()) to make it more useful
 # Program begins at init, creating an instance of the Process class
 # This triggers fileSelect for user file selection and then pandasInit which loads in the CSV into a pandas dataframe
 # Then the ini function creates a menu with a list of functions. Each function links to one of the Process' methods
@@ -7,7 +7,8 @@
 
 # IMPORTANT RULES when writing or modifying functions:
 # Column references should always be done numerically (using 'iloc' or 'self.df.columns' where necessary)
-# Each function must reset it's index once finished (if an index is set) and put it back into the right conditions
+# Each function must reset its index once finished (if an index is set)
+# to ensure the dataset can be accessed by other functions
 
 # General Imports
 import common

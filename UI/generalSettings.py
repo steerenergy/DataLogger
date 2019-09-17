@@ -1,9 +1,10 @@
-# Will Contain future general program settings
+# Placeholder for future settings
 
 # Import Common Commands
 import common
 
 
+# Main Menu
 def init():
     try:
         while True:

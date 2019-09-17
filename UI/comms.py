@@ -1,5 +1,5 @@
-# Select which hostname (i.e. which logger) the UI should upload/download data to/from
-# Ensures this info can be accessed form the download and upload modules
+# Run from menu/py to select which hostname (i.e. which logger) the UI should upload/download data to/from
+# Ensures this info can be accessed from the download and upload modules via the global variable 'loggerHostName'
 
 import common
 import ctypes

@@ -1,5 +1,6 @@
 # Main Menu - Initialised by UI.py
-# First gives option for user to select the logger hostname and creates main menu linking to other imported modules
+# First gives option for user to select the logger hostname and redirects all error messages to 'uiError.log'
+# Then. this creates the main menu linking to other imported modules
 
 # Import local python files for operation
 import common
@@ -18,7 +19,7 @@ import comms
 def init():
     # Start Error Logging
     errorLoggingSetup()
-    # Redirect all stderr to text file
+    # Redirect all stderr to text file - comment the next line out to make errors appear on the console
     sys.stderr.write = stderrRedirect
     version = "1.1.2 Alpha"
     # Set Windows Title
@@ -26,7 +27,6 @@ def init():
     ctypes.windll.kernel32.SetConsoleTitleW(welcomeMessage)
     print(welcomeMessage)
     print("-" * len(welcomeMessage))
-
     print("Read User Manual before First Use - Use keyboard for input, pressing 'Enter' to confirm input\n")
     # Initiate hostname selection - welcomeMessage sent so window title can be updated
     comms.init(welcomeMessage)
