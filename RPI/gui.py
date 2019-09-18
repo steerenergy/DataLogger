@@ -191,14 +191,14 @@ def stderrRedirect(buf):
     messagebox.showerror("Error", "More Unhandled Exceptions! Check piError.log"
                                       "\nNote: This message may appear several times for a given error")
 
+
 # PROGRAM START #
-
-
 # Start Error Logging
 errorLoggingSetup()
+
 # Warn Users of error locations
 print("Warning - all stderr output from this point onwards is logged in piError.log")
-# Redirect all stderr to text file
+# Redirect all stderr to text file. Comment the next line out for errors to be written to the console
 sys.stderr.write = stderrRedirect
 
 # Create Tkinter Instance
