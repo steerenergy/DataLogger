@@ -21,7 +21,7 @@ def init():
     errorLoggingSetup()
     # Redirect all stderr to text file - comment the next line out to make errors appear on the console
     sys.stderr.write = stderrRedirect
-    version = "1.1.2 Alpha"
+    version = "1.1.3"
     # Set Windows Title
     welcomeMessage = "Steer Energy Data Logger (Version {})".format(version)
     ctypes.windll.kernel32.SetConsoleTitleW(welcomeMessage)
