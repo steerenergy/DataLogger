@@ -20,6 +20,7 @@ import threading
 import shutil
 import os
 
+
 # Contains information about each pin
 class ADC:
     def __init__(self, section):
@@ -93,7 +94,7 @@ def generalImport():
     generalSettings = OrderedDict()
     try:
         for key in config['General']:
-            generalSettings[key] = config['General'][key]
+            generalSettings[key] = config['General'][key]   
         print("Success!")
     # Exception raised when key cannot be found (file doesnt't exist or file is corrupt)
     except KeyError:
@@ -104,6 +105,8 @@ def generalImport():
 
 # Import Input Settings
 def inputImport():
+    # Load logEnbl variable
+    global logEnbl
     print("Configuring Input Settings... ", end="", flush=True)
     # For all sections but general, parse the data from config.C
     # Create a new object for each one. The init method of the class then imports all the data as instance variables
@@ -137,11 +140,15 @@ def inputImport():
         for adc in adcDict:
             adcDict[adc].inputSetup()
         print("Success!")
-
+    
+        # Check to see at least 1 input is enabled
+        if len(adcToLog) == 0:
+            print("\nERROR - No Inputs set to Log! Please enable at least one input and try again") 
+            logEnbl = False
+    
     # Exception raised when key cannot be found (file doesnt't exist or file is corrupt)
     except KeyError:
         print("ERROR - Failed to read Input Settings - Have you sent over a 'logConf.ini' file?")
-        global logEnbl
         logEnbl = False
 
 
@@ -151,25 +158,37 @@ def settingsOutput():
     print("\nCurrent General Settings:")
     for key in generalSettings:
         print("{}: {}".format(key.title(), generalSettings[key]))
-    print("\nCurrent Input Settings:")
+    print("\nCurrent Input Settings: (Settings Hidden for Disabled Inputs)")
     x = 0
-    print("-" * 62)
+    print("-" * 67)
     # Top Row Headings
     print(
-        "|{:>2}|{:>4}|{:>4}|{:>10}|{:>10}|{:>4}|{:>10}|{:>9}|".format("No", "Name", "Enbl", "F.Name", "Input Type",
+        "|{:>2}|{:>4}|{:>5}|{:>10}|{:>10}|{:>4}|{:>14}|{:>9}|".format("No", "Name", "Enbl", "F.Name", "Input Type",
                                                                       "Gain", "Scale", "Unit"))
-    print("-" * 62)
+    print("-" * 67)
     # Print input settings for each Pin
     for pin in adcDict:
+        # Only print full settings if that channel is enabled
         x += 1
-        print("|{:>2}|{:>4}|{:>4}|{:>10}|{:>10}|{:>4}|{:>5}{:>5}|{:>9}|".format(x, adcDict[pin].name,
-                                                                                adcDict[pin].enabled,
-                                                                                adcDict[pin].friendlyName,
-                                                                                adcDict[pin].inputType,
-                                                                                adcDict[pin].gain,
-                                                                                adcDict[pin].scaleLow,
-                                                                                adcDict[pin].scaleHigh,
-                                                                                adcDict[pin].unit))
+        if adcDict[pin].enabled == 1:
+            print("|{:>2}|{:>4}|{:>5}|{:>10}|{:>10}|{:>4}|{:>7}{:>7}|{:>9}|".format(x, adcDict[pin].name,
+                                                                                    str(adcDict[pin].enabled),
+                                                                                    adcDict[pin].friendlyName,
+                                                                                    adcDict[pin].inputType,
+                                                                                    adcDict[pin].gain,
+                                                                                    adcDict[pin].scaleLow,
+                                                                                    adcDict[pin].scaleHigh,
+                                                                                    adcDict[pin].unit))
+        # If channel not enabled
+        else:
+            print("|{:>2}|{:>4}|{:>5}|{:>10}|{:>10}|{:>4}|{:>7}{:>7}|{:>9}|".format(x, adcDict[pin].name,
+                                                                                    str(adcDict[pin].enabled),
+                                                                                    "-",
+                                                                                    "-",
+                                                                                    "-",
+                                                                                    "-",
+                                                                                    "-",
+                                                                                    "-"))
 
 
 # Logging Script
@@ -181,7 +200,7 @@ def log():
     # Set up list to be printed to CSV
     adcValues = [0] * csvRows
     # Get timestamp for filename
-    timeStamp = datetime.now().strftime("%Y%m%d-%H%M%S.%f")
+    timeStamp = datetime.now().strftime("%Y%m%d-%H%M%S")
 
     # FILE MANAGEMENT
     print("\nDisk Usage:")
@@ -200,7 +219,7 @@ def log():
     # Add time in seconds to current datetime to give data it will run out of space
     timeRemDate = datetime.now() + timedelta(0, timeRemSeconds)
     print("With the current config, you will run out of space on approximately: {}"
-          "\nIf you need more space, use the UI to downlaod previous logs and delete them on the Pi."
+          "\nIf you need more space, use the UI to download previous logs and delete them on the Pi."
           .format(timeRemDate.strftime("%Y-%m-%d %H:%M:%S")))
 
     # Make copy of logConf.ini with new name that includes timestamp
@@ -209,7 +228,7 @@ def log():
     # CSV - Create/Open CSV file and print headers
     with open('files/outbox/raw{}.csv'.format(timeStamp), 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, dialect="excel", delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow(['Date/Time', 'Time Interval (Seconds)'] + adcHeader)
+        writer.writerow(['Date/Time', 'Time Interval (seconds)'] + adcHeader)
         print("\nStart Logging...\n")
 
         # Start live data thread
