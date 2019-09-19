@@ -19,7 +19,7 @@ class WindowTop(Frame):
         self.master = master
 
         # Changing the title of our master widget
-        self.master.title("Steer Energy Data Logger V1.1.0 Alpha")
+        self.master.title("Steer Energy Data Logger V1.1.3")
         self.pack()
 
         # Create Layout Frames
