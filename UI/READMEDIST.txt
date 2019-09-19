@@ -1,2 +1,2 @@
-# DataLogger
-Please read the User Manual for first time use
+# DataLogger V1.1.3
+Please read the Logger User Manual for first time use

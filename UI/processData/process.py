@@ -2,11 +2,11 @@
 # Program begins at init() creating the conversion list, creates an instance of fileSelect and triggers main functions
 # The File select constructor (__init__) calls the other functions dealing with selecting the CSV and logConf file
 # This creates variables which are used for loading in files.
-# init() then calls conversionSetup() which loads in the pre calculated m and c values (in y = mx + c).
+# init() then calls conversionSetup() which loads in the pre calculated m and c values (in y = mx + c) from the logConf.
 # These are stored in the 'conversion' list as a tuple
 # Then csvProcess is called which loads the csv and performs the convert() on each cell efficiently via pandas
-# A converted CSV is then written in the data directory. The other files are then move to the same location
-# Note 10 minutes to Pandas is a good tutorial to Pandas.
+# A converted CSV is then written in the data directory. The other files are then moved to the same location
+# Note 10 minutes to Pandas is a good tutorial to Pandas and would help with the understanding of this code.
 
 # Import Stuff
 import pandas as pd
@@ -77,16 +77,20 @@ class fileSelect:
             self.valid = False
         else:
             # Print the data found in the folder
-            print("\nData Found \nThe file's datestamps are shown below:")
+            print("\nData Found in '{}' - The Datestamps of the files are shown Below:".format(self.inboxDirectory))
             for pos, value in enumerate(self.fileSelection, start=1):
                 print("{}. {}".format(pos, value[0]))
             # Option Selection
             try:
-                option = int(input("\nSelect a file by its corresponding number: "))
+                option = int(input("\nPlease select a file (by its corresponding number): "))
                 # Check to see value can be chosen - note the numbers listed start at 1 but lists in python start at 0
                 if 0 < option <= len(self.fileSelection):
+                    # Allow user to put in custom name
+                    customName = str(input("Chosen Name for the CSV file: "))
+                    # Get timestamp of filename and combine with customName to create new filename
+                    timeStamp = self.fileSelection[option-1][0]
+                    self.chosenID = "-{}-{}".format(timeStamp, customName)
                     # Setting the filenames - note these are not the complete file paths
-                    self.chosenID = self.fileSelection[option-1][0]
                     self.rawCsvFile = self.fileSelection[option-1][1]
                     self.configFile = self.fileSelection[option-1][2]
                     # Works out filename for converted CSV file
@@ -110,11 +114,13 @@ class fileSelect:
         print("Moving Files...")
         try:
             # Converted CSV data is already in the correct place so just need to move raw data and config
-            os.rename(self.configFilePath, self.convertedDirectory + "/" + self.configFile)
-            os.rename(self.rawCsvFilePath, self.convertedDirectory + "/" + self.rawCsvFile)
+            # Update filenames to include new custom name chosen
+            os.rename(self.configFilePath, self.convertedDirectory + "/" + "logConf" + self.chosenID + ".ini")
+            os.rename(self.rawCsvFilePath, self.convertedDirectory + "/" + "raw" + self.chosenID + ".csv")
         except PermissionError:
             print("\nWARNING - Unable to move one or more files due to a Permission Error."
                   "\nCheck the files are not being used by another program or process.")
+        print("Success! - Converted File Saved To: '{}'".format(self.convertedCsvFilePath))
 
 
 # Function called by csvProcess which does the actual data conversion on each data item
@@ -172,6 +178,6 @@ def csvProcess():
     # Write Converted CSV Data
     print("\nWriting CSV...")
     df.to_csv(file.convertedCsvFilePath, sep=',', index=False)
-    # Moving raw data and config into data folder with the converted csv
+    # Moving raw data and config into data folder with the converted csv (it also prints success)
     file.fileCleanup()
-    print("\nSuccess!")
+
