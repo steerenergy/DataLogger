@@ -1,6 +1,6 @@
-# MAIN PROGRAM - Run this!
+# MAIN PROGRAM - Run this now!
 
-# Hide Matplotlib depreciation warning - temporary fix until pyisntaller updates
+# Hide matplotlib depreciation warning - temporary fix until pyisntaller updates
 # Check https://github.com/pyinstaller/pyinstaller/issues/3959 for more
 import warnings
 warnings.filterwarnings('ignore')
